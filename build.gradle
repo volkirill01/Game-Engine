@@ -1,0 +1,83 @@
+plugins {
+    id 'java'
+}
+
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 17
+
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+    jcenter()
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+}
+
+project.ext.lwjglVersion = "3.2.3"
+project.ext.jomlVersion = "1.9.23"
+project.ext.lwjglNatives = "natives-windows"
+project.ext.imguiVersion = '1.86.0'
+
+
+dependencies {
+    // Test
+    implementation 'commons-io:commons-io:2.0.1'
+    implementation 'org.reflections:reflections:0.10.2'
+    implementation 'org.jetbrains:annotations:20.1.0'
+
+    // PNGDecoder
+    implementation name: 'PNGDecoder'
+
+    // JUnion
+    implementation 'com.github.tehleo:junionc:1.1.1'
+
+    // Box2D
+    implementation name: 'jbox2d-library'
+
+    // Slick Util
+    implementation name: 'slick-util'
+
+    // Obj Parser
+    implementation name: 'obj-0.3.0'
+
+    // JUnit
+    testImplementation('junit:junit:4.13')
+
+    // GSON
+    implementation "io.github.spair:imgui-java-app:1.86.4"
+
+    // ImGUI stuff
+    implementation "io.github.spair:imgui-java-app:$imguiVersion"
+
+    // LWJGL stuff
+    implementation platform("org.lwjgl:lwjgl-bom:$lwjglVersion")
+
+    implementation "io.github.spair:imgui-java-binding:$imguiVersion"
+    implementation "io.github.spair:imgui-java-lwjgl3:$imguiVersion"
+
+    implementation "io.github.spair:imgui-java-natives-windows:$imguiVersion"
+
+    implementation 'com.google.code.gson:gson:2.9.1'
+
+    implementation "org.lwjgl:lwjgl"
+    implementation "org.lwjgl:lwjgl-assimp"
+    implementation "org.lwjgl:lwjgl-glfw"
+    implementation "org.lwjgl:lwjgl-nfd"
+    implementation "org.lwjgl:lwjgl-openal"
+    implementation "org.lwjgl:lwjgl-opengl"
+    implementation "org.lwjgl:lwjgl-stb"
+    runtimeOnly "org.lwjgl:lwjgl::$lwjglNatives"
+    runtimeOnly "org.lwjgl:lwjgl-assimp::$lwjglNatives"
+    runtimeOnly "org.lwjgl:lwjgl-glfw::$lwjglNatives"
+    runtimeOnly "org.lwjgl:lwjgl-nfd::$lwjglNatives"
+    runtimeOnly "org.lwjgl:lwjgl-openal::$lwjglNatives"
+    runtimeOnly "org.lwjgl:lwjgl-opengl::$lwjglNatives"
+    runtimeOnly "org.lwjgl:lwjgl-stb::$lwjglNatives"
+    implementation "org.joml:joml:${jomlVersion}"
+}
