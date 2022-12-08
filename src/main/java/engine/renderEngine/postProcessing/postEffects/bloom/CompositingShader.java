@@ -5,7 +5,7 @@ import engine.renderEngine.postProcessing.PostProcessShader;
 
 public class CompositingShader extends PostProcessShader {
 
-    private float bloomIntensity = 1.0f;
+    private float bloomIntensity = 0.3f;
 
     public CompositingShader(int fboWidth, int fboHeight) {
         super("Compositing", "engineFiles/shaders/postProcessing/bloom/compositingFragment.glsl", fboWidth, fboHeight);

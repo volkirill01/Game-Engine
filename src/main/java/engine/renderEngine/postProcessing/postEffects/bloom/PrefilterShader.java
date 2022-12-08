@@ -5,7 +5,7 @@ import engine.renderEngine.postProcessing.PostProcessShader;
 
 public class PrefilterShader extends PostProcessShader {
 
-	private float threshold = 1.035f;
+	private float threshold = 1.0f;
 
 	public PrefilterShader(int fboWidth, int fboHeight) {
 		super("Prefilter", "engineFiles/shaders/postProcessing/bloom/prefilterFragment.glsl", fboWidth, fboHeight);
@@ -13,7 +13,7 @@ public class PrefilterShader extends PostProcessShader {
 
 	@Override
 	public void imgui(boolean isLayerActive, String additionToId) {
-		threshold = EditorImGui.dragFloat("threshold", threshold);
+		threshold = EditorImGui.dragFloat("threshold", threshold, 0.02f, 0);
 	}
 
 	@Override

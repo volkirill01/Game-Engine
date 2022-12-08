@@ -14,8 +14,10 @@ public class BloomLayer extends PostProcessLayer {
     private int targetWidth;
     private int targetHeight;
 
+    boolean showBloomMask = false;
+
     private int startTexture;
-    int previewLayer = 10;
+    int previewLayer = 8;
 
     List<DownsampleShader> downsampleShaders = new ArrayList<>();
     List<UpsampleShader> upsampleShaders = new ArrayList<>();
@@ -41,8 +43,8 @@ public class BloomLayer extends PostProcessLayer {
         // second stage (blur)
         generateShaders(2);
         generateShaders(4);
-        generateShaders(6);
         generateShaders(8);
+//        generateShaders(16);
 
         // third stage (compositing)
         this.compositingShader = new CompositingShader(targetFboWidth, targetFboHeight);
@@ -85,6 +87,9 @@ public class BloomLayer extends PostProcessLayer {
         glBindTexture(GL_TEXTURE_2D, texture);
         this.renderer.renderQuad();
         this.shader.stop();
+
+        if (this.showBloomMask)
+            return;
 
         int lastImage = renderer.getOutputTexture();
 
@@ -155,18 +160,23 @@ public class BloomLayer extends PostProcessLayer {
 
     @Override
     public int getOutputTexture() {
+        if (showBloomMask)
+            return this.renderer.getOutputTexture();  // Prefilter
+
         return switch (previewLayer) {
-            case 0 -> this.startTexture;                                // Start texture
-            case 1 -> this.renderer.getOutputTexture();                 // Prefilter
-            case 2 -> this.downsampleRenderers.get(0).getOutputTexture();
-            case 3 -> this.downsampleRenderers.get(1).getOutputTexture();
-            case 4 -> this.downsampleRenderers.get(2).getOutputTexture();
-            case 5 -> this.downsampleRenderers.get(3).getOutputTexture();
-            case 6 -> this.upsampleRenderers.get(0).getOutputTexture();
-            case 7 -> this.upsampleRenderers.get(1).getOutputTexture();
-            case 8 -> this.upsampleRenderers.get(2).getOutputTexture();
-            case 9 -> this.upsampleRenderers.get(3).getOutputTexture();
-            case 10 -> this.compositingRenderer.getOutputTexture();      // Compositing
+            case 0 -> this.startTexture;                                    // Start texture
+            case 1 -> this.renderer.getOutputTexture();                     // Prefilter
+
+            case 2 -> this.downsampleRenderers.get(0).getOutputTexture();   // Blur
+            case 3 -> this.downsampleRenderers.get(1).getOutputTexture();   // Blur
+            case 4 -> this.downsampleRenderers.get(2).getOutputTexture();   // Blur
+//            case 5 -> this.downsampleRenderers.get(3).getOutputTexture();   // Blur
+            case 5 -> this.upsampleRenderers.get(0).getOutputTexture();     // Blur
+            case 6 -> this.upsampleRenderers.get(1).getOutputTexture();     // Blur
+            case 7 -> this.upsampleRenderers.get(2).getOutputTexture();     // Blur
+//            case 9 -> this.upsampleRenderers.get(3).getOutputTexture();    // Blur
+
+            case 8 -> this.compositingRenderer.getOutputTexture();         // Compositing
             default -> throw new IllegalStateException("Unexpected value: " + previewLayer);
         };
 
@@ -200,14 +210,17 @@ public class BloomLayer extends PostProcessLayer {
 
         @Override
         public void imgui(boolean isActive, String additionToId) {
+            if (EditorImGui.checkbox("Show Bloom Mask", this.showBloomMask))
+                this.showBloomMask = !this.showBloomMask;
+
             this.previewLayer = EditorImGui.inputInt("Preview Layer Index", this.previewLayer, 1, 0, 2 + downsampleShaders.size() + upsampleShaders.size());
 
             this.shader.imgui(isActive, additionToId);
 
-            for (int i = 0; i < upsampleRenderers.size(); i++) {
-                this.downsampleShaders.get(i).imgui(isActive, "Down" + i);
-                this.upsampleShaders.get(i).imgui(isActive, "Up" + i);
-            }
+//            for (int i = 0; i < upsampleRenderers.size(); i++) {
+//                this.downsampleShaders.get(i).imgui(isActive, "Down" + i);
+//                this.upsampleShaders.get(i).imgui(isActive, "Up" + i);
+//            }
 
             this.compositingShader.imgui(isActive, additionToId);
         }
