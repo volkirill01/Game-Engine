@@ -1,3 +1,4 @@
+import engine.TestFieldsWindow;
 import engine.entities.Camera;
 import engine.entities.GameObject;
 import engine.entities.Light;
@@ -221,6 +222,25 @@ public class Main {
         Window.get().currentScene.addGameObjectToScene(barrelGameObject);
 
 
+        RawModel testSphereModel = OBJLoader.loadOBJ("Assets/pbr-sphere-test/pbr-sphere-test.obj");
+        TexturedModel testSphereStaticModel = new TexturedModel(testSphereModel,
+                new Material(Loader.get().loadTexture("Assets/pbr-sphere-test/sphere_Base_Color.png")));
+        Material testSphereTexture = testSphereStaticModel.getTexture();
+
+        testSphereTexture.setMetallicMap(Loader.get().loadTexture("Assets/pbr-sphere-test/sphere_Metallic.png"));
+        testSphereTexture.setMetallicIntensity(1.0f);
+
+        testSphereTexture.setSpecularIntensity(1.0f);
+        testSphereTexture.setShineDumper(10.0f);
+        testSphereTexture.setReflectivity(1.0f);
+        testSphereTexture.setSpecularMap(Loader.get().loadTexture("Assets/pbr-sphere-test/sphere_Roughness.png"));
+
+        GameObject testSphereGameObject = new GameObject("Test Sphere");
+        testSphereGameObject.addComponent(new MeshRenderer(testSphereStaticModel));
+        testSphereGameObject.transform.set(new Vector3f(-110, 28, -48), new Vector3f(0), new Vector3f(3.0f));
+        Window.get().currentScene.addGameObjectToScene(testSphereGameObject);
+
+
         RawModel lanternModel = OBJLoader.loadOBJ("Assets/res/lantern/lantern.obj");
         TexturedModel lanternStaticModel = new TexturedModel(lanternModel,
                 new Material(Loader.get().loadTexture("Assets/res/lantern/lantern.png")));
@@ -283,6 +303,9 @@ public class Main {
         List<GuiTexture> guis = new ArrayList<>();
         GuiTexture gui = new GuiTexture(Loader.get().loadTexture("Assets/testGui.png"), new Vector2f(0.4f, 0.3f), 0, new Vector2f(0.2f, 0.2f));
         guis.add(gui);
+
+        GuiTexture gui2 = new GuiTexture(Loader.get().loadTexture("Assets/testGui.png"), new Vector2f(0.4f, 0.3f), 0, new Vector2f(0.2f, 0.2f));
+        guis.add(gui2);
 
 //        GuiTexture shadowMapGui = new GuiTexture(renderer.getShadowMapTexture(), new Vector2f(0.4f, 0.3f), 0, new Vector2f(0.2f, 0.2f));
 //        guis.add(shadowMapGui);
@@ -384,6 +407,8 @@ public class Main {
             grassGameObject.transform.increaseRotation(new Vector3f(0, -0.3f, 0));
             hardCode_cubeGameObject.transform.increaseRotation(new Vector3f(1, 1, 0));
             barrelGameObject.transform.increaseRotation(new Vector3f(1, 1, 0));
+
+            gui2.setTexture(TestFieldsWindow.testInts[0]);
 
 //            shadowMapGui.setRotation(shadowMapGui.getRotation() + 1);
 

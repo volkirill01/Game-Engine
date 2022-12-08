@@ -10,6 +10,9 @@ public class Material {
     private int textureWidth = 64; // TODO REPLACE THIS WITH TEXTURE CLASS
     private int textureHeight = 64;
 
+    private int metallicMap = 0;
+    private float metallicIntensity = 0.0f;
+
     private int specularMap = 0;
     private float specularIntensity = 0.0f;
 
@@ -33,6 +36,20 @@ public class Material {
     private int numberOfColumns = 1;
 
     public Material(int id) { this.textureID = id; }
+
+    public void setMetallicMap(int metallicMap) {
+        this.metallicMap = metallicMap;
+        if (this.metallicIntensity <= 0)
+            this.metallicIntensity = 0.5f;
+    }
+
+    public boolean hasMetallic() { return this.metallicMap != 0 && this.metallicIntensity > 0; }
+
+    public void setMetallicIntensity(float metallicIntensity) { this.metallicIntensity = metallicIntensity; }
+
+    public float getMetallicIntensity() { return this.metallicIntensity; }
+
+    public int getMetallicMap() { return this.metallicMap; }
 
     public void setSpecularMap(int specularMap) {
         this.specularMap = specularMap;

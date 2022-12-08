@@ -22,7 +22,7 @@ public class TestFieldsWindow {
             testFloats[i] = EditorImGui.dragFloat("Test Float (" + i + ")", testFloats[i]);
 
         for (int i = 0; i < testInts.length; i++)
-            testInts[i] = EditorImGui.dragInt("Test Int (" + i + ")", testInts[i]);
+            testInts[i] = EditorImGui.inputInt("Test Int (" + i + ")", testInts[i]);
 
         for (int i = 0; i < testStrings.length; i++)
             testStrings[i] = EditorImGui.inputText("Test String (" + i + ")", testStrings[i], "Test");
