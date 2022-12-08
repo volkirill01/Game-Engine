@@ -224,16 +224,19 @@ public class Main {
 
         RawModel testSphereModel = OBJLoader.loadOBJ("Assets/pbr-sphere-test/pbr-sphere-test.obj");
         TexturedModel testSphereStaticModel = new TexturedModel(testSphereModel,
+//                new Material(Loader.get().loadTexture("Assets/pbr-sphere-test/rusted-metall/rustediron2_basecolor.png")));
                 new Material(Loader.get().loadTexture("Assets/pbr-sphere-test/sphere_Base_Color.png")));
         Material testSphereTexture = testSphereStaticModel.getTexture();
 
         testSphereTexture.setMetallicMap(Loader.get().loadTexture("Assets/pbr-sphere-test/sphere_Metallic.png"));
+//        testSphereTexture.setMetallicMap(Loader.get().loadTexture("Assets/pbr-sphere-test/rusted-metall/rustediron2_metallic.png"));
         testSphereTexture.setMetallicIntensity(1.0f);
 
         testSphereTexture.setSpecularIntensity(1.0f);
         testSphereTexture.setShineDumper(10.0f);
         testSphereTexture.setReflectivity(1.0f);
         testSphereTexture.setSpecularMap(Loader.get().loadTexture("Assets/pbr-sphere-test/sphere_Roughness.png"));
+//        testSphereTexture.setSpecularMap(Loader.get().loadTexture("Assets/whitePixel.png"));
 
         GameObject testSphereGameObject = new GameObject("Test Sphere");
         testSphereGameObject.addComponent(new MeshRenderer(testSphereStaticModel));

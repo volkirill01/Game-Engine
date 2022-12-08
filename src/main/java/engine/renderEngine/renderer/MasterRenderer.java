@@ -34,10 +34,10 @@ public class MasterRenderer {
     private Matrix4f projectionMatrix;
 
     // PBR
-    private StaticShader shader = new StaticShader("engineFiles/shaders/entity/pbrEntityVertexShader.glsl", "engineFiles/shaders/entity/pbrEntityFragmentShader.glsl");
+//    private StaticShader shader = new StaticShader("engineFiles/shaders/entity/pbrEntityVertexShader.glsl", "engineFiles/shaders/entity/pbrEntityFragmentShader.glsl");
 
     // Default
-//    private StaticShader shader = new StaticShader("engineFiles/shaders/entity/vertexShader.glsl", "engineFiles/shaders/entity/fragmentShader.glsl");
+    private StaticShader shader = new StaticShader("engineFiles/shaders/entity/vertexShader.glsl", "engineFiles/shaders/entity/fragmentShader.glsl");
 
    // Cell shading
 //    private StaticShader shader = new StaticShader("engineFiles/shaders/entity/vertexShader.glsl", "engineFiles/shaders/entity/cellShader/cellFragmentShader.glsl"); // For cell shading

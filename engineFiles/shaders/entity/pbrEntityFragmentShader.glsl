@@ -157,6 +157,6 @@ void main() {
     // gamma correct
     color = pow(color, vec3(1.0 / 2.2));
 
-//    FragmentColor = vec4(color, 1.0);
-    FragmentColor = vec4(texture(roughnessMap, TexCoords).rgb, 1.0);
+    FragmentColor = vec4(color, 1.0);
+//    FragmentColor = vec4(texture(roughnessMap, TexCoords).rgb, 1.0);
 }
