@@ -2,31 +2,31 @@ package engine.imGui;
 
 import engine.TestFieldsWindow;
 import engine.renderEngine.Loader;
-import engine.renderEngine.postProcessing.PostProcessLayer;
-import engine.renderEngine.postProcessing.PostProcessing;
-import engine.toolbox.KeyListener;
+import engine.renderEngine.OBJLoader;
+import engine.renderEngine.models.RawModel;
+import engine.renderEngine.models.TexturedModel;
+import engine.renderEngine.textures.Material;
+import engine.renderEngine.textures.Texture;
 import engine.toolbox.Maths;
-import engine.toolbox.MouseListener;
 import engine.toolbox.customVariables.Color;
 import imgui.ImGui;
 import imgui.ImVec2;
 import imgui.ImVec4;
 import imgui.flag.*;
-import imgui.internal.ImGuiWindow;
-import imgui.internal.ImRect;
 import imgui.type.ImInt;
 import imgui.type.ImString;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
-import org.joml.Vector4f;
-
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT_CONTROL;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_W;
 
 public class EditorImGui {
 
     private static float leftPadding = 150.0f;
     private static float textVerticalOffset = 4.0f;
+
+    // Single line height
+    //      (ImGui.getTextLineHeight() + ImGui.getStyle().getFramePaddingY())
+    // Single line height with spacing
+    //      (ImGui.getTextLineHeight() + (ImGui.getStyle().getFramePaddingY() * 2.0f) + ImGui.getStyle().getItemSpacingY())
 
     public static void helpMarker(String description) { helpMarker("(?)", description); }
 
@@ -110,7 +110,7 @@ public class EditorImGui {
     }
 
     public static void header(String header) {
-        ImGui.pushID(header);
+        ImGui.pushID("Header" + header);
         ImGui.columns(2, "", false);
         ImGui.setColumnWidth(0, 1.5f);
         ImGui.nextColumn();
@@ -121,9 +121,9 @@ public class EditorImGui {
         ImGui.popID();
     }
 
-    public static void drawVec2Control(String label, Vector2f values) { drawVec2Control(label, values, 0.0f); }
+    public static Vector2f field_Vector2f(String label, Vector2f values) { return field_Vector2f(label, values, 0.0f); }
 
-    public static void drawVec2Control(String label, Vector2f values, float resetValue) {
+    public static Vector2f field_Vector2f(String label, Vector2f values, float resetValue) {
         ImGui.pushID(label);
 
         ImGui.columns(2, "", false);
@@ -171,11 +171,13 @@ public class EditorImGui {
 
         ImGui.columns(1);
         ImGui.popID();
+
+        return values;
     }
 
-    public static void drawVec3Control(String label, Vector3f values) { drawVec3Control(label, values, 0.0f); }
+    public static Vector3f field_Vector3f(String label, Vector3f values) { return field_Vector3f(label, values, 0.0f); }
 
-    public static void drawVec3Control(String label, Vector3f values, float resetValue) {
+    public static Vector3f field_Vector3f(String label, Vector3f values, float resetValue) {
         ImGui.pushID(label);
 
         ImGui.columns(2, "", false);
@@ -197,7 +199,7 @@ public class EditorImGui {
         ImGui.popStyleColor(3);
 
         ImGui.sameLine();
-        float[] vecValuesX = {values.x};
+        float[] vecValuesX = { values.x };
         ImGui.setNextItemWidth((ImGui.getContentRegionAvailX() / 3f) - (buttonSize.x - (buttonSize.x / 2) + (ImGui.getStyle().getItemSpacingX() * 2.5f)));
         ImGui.dragFloat("##x", vecValuesX, 0.1f);
         ImGui.sameLine();
@@ -211,7 +213,7 @@ public class EditorImGui {
         ImGui.popStyleColor(3);
 
         ImGui.sameLine();
-        float[] vecValuesY = {values.y};
+        float[] vecValuesY = { values.y };
         ImGui.setNextItemWidth((ImGui.getContentRegionAvailX() / 2f) - ((buttonSize.x / 2f) + ImGui.getStyle().getItemSpacingX()));
         ImGui.dragFloat("##y", vecValuesY, 0.1f);
         ImGui.popItemWidth();
@@ -226,7 +228,7 @@ public class EditorImGui {
         ImGui.popStyleColor(3);
 
         ImGui.sameLine();
-        float[] vecValuesZ = {values.z};
+        float[] vecValuesZ = { values.z };
         ImGui.setNextItemWidth(ImGui.getContentRegionAvailX());
         ImGui.dragFloat("##z", vecValuesZ, 0.1f);
         ImGui.popItemWidth();
@@ -239,15 +241,17 @@ public class EditorImGui {
 
         ImGui.columns(1);
         ImGui.popID();
+
+        return values;
     }
 
-    public static float dragFloat(String label, float value) { return dragFloat(label, value, 0.1f, -999_999_999, 999_999_999); }
+    public static float field_Float(String label, float value) { return field_Float(label, value, 0.1f, -999_999_999, 999_999_999); }
 
-    public static float dragFloat(String label, float value, float speed) { return dragFloat(label, value, speed, -999_999_999, 999_999_999); }
+    public static float field_Float(String label, float value, float speed) { return field_Float(label, value, speed, -999_999_999, 999_999_999); }
 
-    public static float dragFloat(String label, float value, float speed, float min) { return dragFloat(label, value, speed, min, 999_999_999); }
+    public static float field_Float(String label, float value, float speed, float min) { return field_Float(label, value, speed, min, 999_999_999); }
 
-    public static float dragFloat(String label, float value, float speed, float min, float max) {
+    public static float field_Float(String label, float value, float speed, float min, float max) {
         ImGui.pushID(label);
 
         ImGui.columns(2, "", false);
@@ -266,7 +270,13 @@ public class EditorImGui {
         return Maths.clamp(valArr[0], min, max);
     }
 
-    public static float sliderFloat(String label, float value, float speed, float min, float max) {
+    public static float slider_Float(String label, float value) { return slider_Float(label, value, 0.05f, 0, 1); }
+
+    public static float slider_Float(String label, float value, float speed) { return slider_Float(label, value, speed, 0, 1); }
+
+    public static float slider_Float(String label, float value, float speed, float min) { return slider_Float(label, value, speed, min, 1); }
+
+    public static float slider_Float(String label, float value, float speed, float min, float max) {
         ImGui.pushID(label);
 
         ImGui.columns(2, "", false);
@@ -306,9 +316,12 @@ public class EditorImGui {
 
         ImVec2 rightFieldPos = new ImVec2(startX + ImGui.getContentRegionAvailX() - dragFloatWidth, startY);
 
-        drawRectangle(new Vector2f(ImGui.getCursorPosX() + 2.0f, startY + 14.0f - (sliderHeight / 2.0f) - 2.0f), new Vector2f(ImGui.getContentRegionAvailX() + 4.0f - dragFloatWidth - 8.0f, sliderHeight + 4.0f), borderColor);
-        drawRectangle(new Vector2f(ImGui.getCursorPosX() + 5.0f, startY + 14.0f - (sliderHeight / 2.0f)), new Vector2f(ImGui.getContentRegionAvailX() - dragFloatWidth - 9.0f, sliderHeight), backgroundColor);
-        drawRectangle(new Vector2f(ImGui.getCursorPosX() + 4.0f, startY + 14.0f - (sliderHeight / 2.0f)), new Vector2f(pos - 2.0f, sliderHeight), fillColor);
+        float lineHeight = ImGui.getTextLineHeight() + ImGui.getStyle().getFramePaddingY();
+        float finalYPos = startY + (lineHeight / 4.0f) + (sliderHeight / 2.0f);
+
+        drawRectangle(new Vector2f(ImGui.getCursorPosX() + 2.0f, finalYPos - 2.0f), new Vector2f(ImGui.getContentRegionAvailX() + 4.0f - dragFloatWidth - 8.0f, sliderHeight + 4.0f), borderColor);
+        drawRectangle(new Vector2f(ImGui.getCursorPosX() + 5.0f, finalYPos), new Vector2f(ImGui.getContentRegionAvailX() - dragFloatWidth - 9.0f, sliderHeight), backgroundColor);
+        drawRectangle(new Vector2f(ImGui.getCursorPosX() + 4.0f, finalYPos), new Vector2f(pos - 2.0f, sliderHeight), fillColor);
 
         float[] valArr = { value };
 
@@ -339,13 +352,13 @@ public class EditorImGui {
         return Maths.clamp(valArr[0], min, max);
     }
 
-    public static int dragInt(String label, int value) { return dragInt(label, value, 1); }
+    public static int field_Int(String label, int value) { return field_Int(label, value, 1); }
 
-    public static int dragInt(String label, int value, int speed) { return dragInt(label, value, speed, -999_999_999, 999_999_999); }
+    public static int field_Int(String label, int value, int speed) { return field_Int(label, value, speed, -999_999_999, 999_999_999); }
 
-    public static int dragInt(String label, int value, int speed, int min) { return dragInt(label, value, speed, min, 999_999_999); }
+    public static int field_Int(String label, int value, int speed, int min) { return field_Int(label, value, speed, min, 999_999_999); }
 
-    public static int dragInt(String label, int value, int speed, int min, int max) {
+    public static int field_Int(String label, int value, int speed, int min, int max) {
         ImGui.pushID(label);
 
         ImGui.columns(2, "", false);
@@ -364,14 +377,14 @@ public class EditorImGui {
         return Maths.clamp(valArr[0], min, max);
     }
 
-    public static int inputInt(String label, int value) { return inputInt(label, value, 1, -999_999_999, 999_999_999); }
+    public static int field_Int_WithButtons(String label, int value) { return field_Int_WithButtons(label, value, 1, -999_999_999, 999_999_999); }
 
-    public static int inputInt(String label, int value, int step) { return inputInt(label, value, step, -999_999_999, 999_999_999); }
+    public static int field_Int_WithButtons(String label, int value, int step) { return field_Int_WithButtons(label, value, step, -999_999_999, 999_999_999); }
 
-    public static int inputInt(String label, int value, int step, int min) { return inputInt(label, value, step, min, 999_999_999); }
+    public static int field_Int_WithButtons(String label, int value, int step, int min) { return field_Int_WithButtons(label, value, step, min, 999_999_999); }
 
-    public static int inputInt(String label, int value, int step, int min, int max) {
-        ImGui.pushID(label);
+    public static int field_Int_WithButtons(String label, int value, int step, int min, int max) {
+        ImGui.pushID("Int_WithButtons-" + label);
 
         ImGui.columns(2, "", false);
         ImGui.setColumnWidth(0, leftPadding);
@@ -381,7 +394,9 @@ public class EditorImGui {
 
         ImInt val = new ImInt(value);
         ImGui.setNextItemWidth(ImGui.getContentRegionAvailX());
+        ImGui.pushStyleVar(ImGuiStyleVar.FramePadding, ImGui.getStyle().getFramePaddingX() * 2.0f, ImGui.getStyle().getFramePaddingY());
         ImGui.inputInt("##inputInt" + label, val, step);
+        ImGui.popStyleVar();
 
         ImGui.columns(1);
         ImGui.popID();
@@ -389,9 +404,9 @@ public class EditorImGui {
         return Maths.clamp(val.get(), min, max);
     }
 
-    public static boolean colorPicker3(String label, Color color) {
-        boolean res = false;
-        ImGui.pushID(label);
+    public static boolean filed_Color(String label, Color color) {
+        boolean isColorChange = false;
+        ImGui.pushID("ColorPicker3-" + label);
 
         ImGui.columns(2, "", false);
         ImGui.setColumnWidth(0, leftPadding);
@@ -403,18 +418,18 @@ public class EditorImGui {
         float[] imColor = { color.r / 255, color.g / 255, color.b / 255};
         if (ImGui.colorEdit3("##colorPicker" + label, imColor)) {
             color.set(imColor[0] * 255, imColor[1] * 255, imColor[2] * 255);
-            res = true;
+            isColorChange = true;
         }
 
         ImGui.columns(1);
         ImGui.popID();
 
-        return res;
+        return isColorChange;
     }
 
-    public static boolean colorPicker4(String label, Color color) {
-        boolean res = false;
-        ImGui.pushID(label);
+    public static boolean field_Color_WithAlpha(String label, Color color) {
+        boolean ifColorChange = false;
+        ImGui.pushID("ColorPicker4-" + label);
 
         ImGui.columns(2, "", false);
         ImGui.setColumnWidth(0, leftPadding);
@@ -426,17 +441,19 @@ public class EditorImGui {
         float[] imColor = { color.r / 255, color.g / 255, color.b / 255, color.a / 255 };
         if (ImGui.colorEdit4("##colorPicker" + label, imColor)) {
             color.set(imColor[0] * 255, imColor[1] * 255, imColor[2] * 255, imColor[3] * 255);
-            res = true;
+            ifColorChange = true;
         }
 
         ImGui.columns(1);
         ImGui.popID();
 
-        return res;
+        return ifColorChange;
     }
 
-    public static String inputText(String label, String text, String placeHolder) {
-        ImGui.pushID(label);
+    public static String field_Text(String label, String text) { return field_Text(label, text, ""); }
+
+    public static String field_Text(String label, String text, String placeHolder) {
+        ImGui.pushID("TextInput-" + label);
 
         ImGui.columns(2, "", false);
         ImGui.setColumnWidth(0, leftPadding);
@@ -468,8 +485,10 @@ public class EditorImGui {
         return text;
     }
 
-    public static String inputTextNoLabel(String variableName, String text, String placeHolder) {
-        ImGui.pushID(variableName);
+    public static String field_Text_NoLabel(String label, String text) { return field_Text_NoLabel(label, text, ""); }
+
+    public static String field_Text_NoLabel(String label, String text, String placeHolder) {
+        ImGui.pushID("TextInput_NoLabel-" + label);
 
         ImGui.setCursorPosX(ImGui.getCursorPosX() - 6f);
         float start = ImGui.getCursorPosX();
@@ -477,7 +496,7 @@ public class EditorImGui {
         ImGui.pushStyleVar(ImGuiStyleVar.FramePadding, 10.0f, ImGui.getStyle().getFramePaddingY());
         ImString outString = new ImString(text, 256);
 
-        if (ImGui.inputText("##" + variableName, outString)) {
+        if (ImGui.inputText("##" + label, outString)) {
             ImGui.popStyleVar();
             ImGui.popID();
             return outString.get();
@@ -495,12 +514,42 @@ public class EditorImGui {
         return text;
     }
 
-    public static boolean checkbox(String label, boolean value) {
-        ImGui.pushID(label);
+    public static boolean field_Boolean(String label, boolean value) { return field_Boolean(label, value, false); }
+
+    public static boolean field_Boolean(String label, boolean value, boolean onRight) {
+        ImGui.pushID("Boolean-" + label);
 
         ImGui.columns(2, "", false);
-//        ImGui.setColumnWidth(0, ImGui.getWindowWidth() - (ImGui.getStyle().getFramePaddingX() * 2.0f) - 50.0f - ImGui.getStyle().getWindowPaddingX()); // checkbox on right side
-        ImGui.setColumnWidth(0, leftPadding);
+        if (onRight)
+            ImGui.setColumnWidth(0, ImGui.getWindowWidth() - (ImGui.getStyle().getFramePaddingX() * 2.0f) - 50.0f - ImGui.getStyle().getWindowPaddingX()); // checkbox on right side
+        else
+            ImGui.setColumnWidth(0, leftPadding);
+
+        ImGui.setCursorPosY(ImGui.getCursorPosY() + textVerticalOffset);
+        ImGui.text("\t" + label);
+        ImGui.nextColumn();
+
+        ImGui.setNextItemWidth(ImGui.getContentRegionAvailX());
+        if (ImGui.checkbox("##checkboxField" + label, value))
+            value = !value;
+
+        ImGui.columns(1);
+        ImGui.popID();
+
+        return value;
+    }
+
+    public static boolean checkbox(String label, boolean value) { return checkbox(label, value, false); }
+
+    public static boolean checkbox(String label, boolean value, boolean onRight) {
+        ImGui.pushID("Checkbox-" + label);
+
+        ImGui.columns(2, "", false);
+        if (onRight)
+            ImGui.setColumnWidth(0, ImGui.getWindowWidth() - (ImGui.getStyle().getFramePaddingX() * 2.0f) - 50.0f - ImGui.getStyle().getWindowPaddingX()); // checkbox on right side
+        else
+            ImGui.setColumnWidth(0, leftPadding);
+
         ImGui.setCursorPosY(ImGui.getCursorPosY() + textVerticalOffset);
         ImGui.text("\t" + label);
         ImGui.nextColumn();
@@ -514,8 +563,57 @@ public class EditorImGui {
         return endValue;
     }
 
+    public static boolean collapsingHeader(String label) {
+        ImGui.pushID("CollapsingHeader-" + label);
+
+        ImVec4 idleColor = ImGui.getStyle().getColor(ImGuiCol.FrameBg);
+        ImVec4 hoveredColor = ImGui.getStyle().getColor(ImGuiCol.FrameBgHovered);
+        ImVec4 activeColor = ImGui.getStyle().getColor(ImGuiCol.FrameBgActive);
+
+        ImGui.pushStyleColor(ImGuiCol.Header, idleColor.x, idleColor.y, idleColor.z, idleColor.w);
+        ImGui.pushStyleColor(ImGuiCol.HeaderHovered, hoveredColor.x, hoveredColor.y, hoveredColor.z, hoveredColor.w);
+        ImGui.pushStyleColor(ImGuiCol.HeaderActive, activeColor.x, activeColor.y, activeColor.z, activeColor.w);
+        ImGui.pushStyleColor(ImGuiCol.Border, 0.0f, 0.0f, 0.0f, 0.0f);
+
+        boolean result = ImGui.collapsingHeader(label);
+        ImGui.popStyleColor(4);
+
+        ImGui.popID();
+
+        return result;
+    }
+
+    public static Enum field_Enum(String label, Enum enumValue) {
+        String[] enumValues = getEnumValues(enumValue.getClass());
+        String enumType = enumValue.name();
+        ImInt index = new ImInt(indexOf(enumType, enumValues));
+
+        if (EditorImGui.enumCombo(label, index, enumValues, enumValues.length))
+            return enumValue.getClass().getEnumConstants()[index.get()];
+
+        return enumValue;
+    }
+
+    private static int indexOf(String str, String[] arr) {
+        for (int i = 0; i < arr.length; i++)
+            if (str.equals(arr[i]))
+                return i;
+
+        return -1;
+    }
+
+    private static <T extends Enum<T>> String[] getEnumValues(Class<T> enumType) {
+        String[] enumValues = new String[enumType.getEnumConstants().length];
+        int i = 0;
+        for (T enumIntegerValues : enumType.getEnumConstants()) {
+            enumValues[i] = enumIntegerValues.name();
+            i++;
+        }
+        return enumValues;
+    }
+
     public static boolean enumCombo(String label, ImInt currentItem, String[] items, int popupMaxHeightInItems) {
-        ImGui.pushID(label);
+        ImGui.pushID("Enum-" + label);
 
         ImGui.columns(2, "", false);
         ImGui.setColumnWidth(0, leftPadding);
@@ -523,29 +621,36 @@ public class EditorImGui {
         ImGui.text("\t" + label);
         ImGui.nextColumn();
 
-        ImGui.pushStyleColor(ImGuiCol.FrameBg,
-                ImGui.getStyle().getColor(ImGuiCol.Button).x,
-                ImGui.getStyle().getColor(ImGuiCol.Button).y,
-                ImGui.getStyle().getColor(ImGuiCol.Button).z,
-                ImGui.getStyle().getColor(ImGuiCol.Button).w);
-        ImGui.pushStyleColor(ImGuiCol.FrameBgHovered,
-                ImGui.getStyle().getColor(ImGuiCol.ButtonHovered).x,
-                ImGui.getStyle().getColor(ImGuiCol.ButtonHovered).y,
-                ImGui.getStyle().getColor(ImGuiCol.ButtonHovered).z,
-                ImGui.getStyle().getColor(ImGuiCol.ButtonHovered).w);
-        ImGui.pushStyleColor(ImGuiCol.FrameBgActive,
-                ImGui.getStyle().getColor(ImGuiCol.ButtonActive).x,
-                ImGui.getStyle().getColor(ImGuiCol.ButtonActive).y,
-                ImGui.getStyle().getColor(ImGuiCol.ButtonActive).z,
-                ImGui.getStyle().getColor(ImGuiCol.ButtonActive).w);
-        ImGui.setNextItemWidth(ImGui.getContentRegionAvailX());
-        ImGui.pushStyleVar(ImGuiStyleVar.ItemSpacing, ImGui.getStyle().getItemSpacingX(), 10.0f);
-        boolean a = (ImGui.combo("##" + label, currentItem, items, popupMaxHeightInItems));
+        ImVec4 buttonHoveredColor = ImGui.getStyle().getColor(ImGuiCol.ButtonHovered);
+
+        ImVec2 startCursorPos = ImGui.getCursorPos();
+        ImGui.pushStyleColor(ImGuiCol.ButtonActive, buttonHoveredColor.x, buttonHoveredColor.y, buttonHoveredColor.z, buttonHoveredColor.w);
+        ImGui.pushStyleVar(ImGuiStyleVar.FramePadding, ImGui.getContentRegionAvailX() / 2.0f, ImGui.getStyle().getFramePaddingY());
+        ImGui.button("##Enum-Background");
+        ImGui.setItemAllowOverlap();
         ImGui.popStyleVar();
-        ImGui.popStyleColor(3);
+        ImGui.popStyleColor();
+        ImGui.setCursorPos(startCursorPos.x, startCursorPos.y);
+
+        ImGui.pushStyleColor(ImGuiCol.FrameBg, 0.0f, 0.0f, 0.0f, 0.0f);
+        ImGui.pushStyleColor(ImGuiCol.FrameBgHovered, 0.0f, 0.0f, 0.0f, 0.0f);
+        ImGui.pushStyleColor(ImGuiCol.FrameBgActive, 0.0f, 0.0f, 0.0f, 0.0f);
+        ImGui.pushStyleColor(ImGuiCol.Button, 0.0f, 0.0f, 0.0f, 0.0f);
+        ImGui.pushStyleColor(ImGuiCol.ButtonHovered, 0.0f, 0.0f, 0.0f, 0.0f);
+        ImGui.pushStyleColor(ImGuiCol.ButtonActive, 0.0f, 0.0f, 0.0f, 0.0f);
+        ImGui.setNextItemWidth(ImGui.getContentRegionAvailX());
+        ImGui.pushStyleVar(ImGuiStyleVar.ItemSpacing,
+                ImGui.getStyle().getFramePaddingX() * 6.0f,
+                ImGui.getStyle().getFramePaddingX());
+        ImGui.pushStyleVar(ImGuiStyleVar.FramePadding, (ImGui.getStyle().getFramePaddingX() * 2.0f), ImGui.getStyle().getFramePaddingY());
+        boolean a = (ImGui.combo("##" + label, currentItem, items, popupMaxHeightInItems));
+        ImGui.popStyleVar(2);
+        ImGui.popStyleColor(6);
 
         ImGui.columns(1);
         ImGui.popID();
+
+        ImGui.setCursorPos(ImGui.getCursorPosX(), startCursorPos.y + ImGui.getTextLineHeight() + (ImGui.getStyle().getFramePaddingY() * 2.0f) + ImGui.getStyle().getItemSpacingY());
 
         return a;
     }
@@ -580,8 +685,156 @@ public class EditorImGui {
         return value;
     }
 
+    public static void drawRectangle(ImVec2 position, ImVec2 scale, Color color) {
+        ImGui.setCursorPos(position.x, position.y);
+        ImGui.image(Loader.get().loadTexture("engineFiles/images/utils/whitePixel.png").getTextureID(), scale.x, scale.y, 0, 0, 0, 1, color.r, color.g, color.b, color.a);
+    }
+
     public static void drawRectangle(Vector2f position, Vector2f scale, Color color) {
         ImGui.setCursorPos(position.x, position.y);
-        ImGui.image(Loader.get().loadTexture("engineFiles/images/utils/whitePixel.png"), scale.x, scale.y, 0, 0, 0, 1, color.r, color.g, color.b, color.a);
+        ImGui.image(Loader.get().loadTexture("engineFiles/images/utils/whitePixel.png").getTextureID(), scale.x, scale.y, 0, 0, 0, 1, color.r, color.g, color.b, color.a);
+    }
+
+    public static boolean BeginButtonDropDownImage(int textureID, String popupLabel, ImVec2 buttonSize, boolean noBackground) {
+        ImVec2 pos = ImGui.getCursorPos();
+
+        ImVec2 size = new ImVec2(buttonSize.x, buttonSize.y);
+
+        if (noBackground) {
+            ImGui.pushStyleColor(ImGuiCol.Button, 0.0f, 0.0f, 0.0f, 0.0f);
+            ImGui.pushStyleColor(ImGuiCol.ButtonHovered, 0.0f, 0.0f, 0.0f, 0.0f);
+            ImGui.pushStyleColor(ImGuiCol.ButtonActive, 0.0f, 0.0f, 0.0f, 0.0f);
+            ImGui.pushStyleColor(ImGuiCol.Border, 0.0f, 0.0f, 0.0f, 0.0f);
+        }
+
+        boolean pressed = ImGui.imageButton(textureID, size.x, size.y, 0, 1, 1, 0);
+        if (noBackground)
+            ImGui.popStyleColor(4);
+
+        return BeginPopup(popupLabel, buttonSize, pos, pressed);
+    }
+
+    public static boolean BeginButtonDropDown(String label, ImVec2 buttonSize) {
+        ImVec2 pos = ImGui.getCursorPos();
+
+        ImVec2 size = new ImVec2(buttonSize.x, buttonSize.y);
+        boolean pressed = ImGui.button("##button", size.x, size.y);
+
+        return BeginPopup(label, buttonSize, pos, pressed);
+    }
+
+    public static boolean BeginPopup(String label, ImVec2 position, boolean isOpen) { return BeginPopup(label, new ImVec2(0.0f, 0.0f), position, isOpen); }
+
+    private static boolean BeginPopup(String label, ImVec2 buttonSize, ImVec2 position, boolean pressed) {
+        // Popup
+        ImVec2 popupPos = new ImVec2(ImGui.getWindowPosX() + position.x - buttonSize.x, ImGui.getWindowPosY() + position.y + buttonSize.y);
+
+        ImGui.setNextWindowPos(popupPos.x, popupPos.y);
+
+        if (pressed)
+            ImGui.openPopup(label);
+
+        if (ImGui.beginPopup(label)) {
+            ImVec4 buttonColor = ImGui.getStyle().getColor(ImGuiCol.Button);
+            ImGui.pushStyleColor(ImGuiCol.FrameBg, buttonColor.x, buttonColor.y, buttonColor.z, buttonColor.w);
+            ImGui.pushStyleColor(ImGuiCol.WindowBg, buttonColor.x, buttonColor.y, buttonColor.z, buttonColor.w);
+            ImGui.pushStyleColor(ImGuiCol.ChildBg, buttonColor.x, buttonColor.y, buttonColor.z, buttonColor.w);
+            ImGui.pushStyleVar(ImGuiStyleVar.ItemSpacing,
+                    ImGui.getStyle().getFramePaddingX() * 6.0f,
+                    ImGui.getStyle().getFramePaddingX());
+            return true;
+        }
+
+        return false;
+    }
+
+    public static void EndButtonDropDown() { EndPopup(); }
+
+    public static void EndPopup() {
+        ImGui.popStyleColor(3);
+        ImGui.popStyleVar();
+        ImGui.endPopup();
+    }
+
+    public static Object field_Asset(String label, Object field, Asset.AssetType assetType) {
+        ImGui.pushID("AssetField-" + label);
+
+        ImGui.columns(2, "", false);
+        ImGui.setColumnWidth(0, leftPadding);
+
+        ImGui.setCursorPosY(ImGui.getCursorPosY() + textVerticalOffset);
+        ImGui.text("\t" + label);
+        ImGui.nextColumn();
+
+        ImVec4 backgroundColor = ImGui.getStyle().getColor(ImGuiCol.FrameBg);
+
+        ImVec2 startCursorPos = ImGui.getCursorPos();
+        ImGui.pushStyleColor(ImGuiCol.Button, backgroundColor.x, backgroundColor.y, backgroundColor.z, backgroundColor.w);
+        ImGui.pushStyleColor(ImGuiCol.ButtonHovered, backgroundColor.x, backgroundColor.y, backgroundColor.z, backgroundColor.w);
+        ImGui.pushStyleColor(ImGuiCol.ButtonActive, backgroundColor.x, backgroundColor.y, backgroundColor.z, backgroundColor.w);
+        ImGui.pushStyleVar(ImGuiStyleVar.FramePadding, ImGui.getContentRegionAvailX() / 2.0f, ImGui.getStyle().getFramePaddingY());
+        ImGui.button("##AssetField-Background");
+        ImGui.popStyleVar();
+        ImGui.popStyleColor(3);
+        ImGui.setCursorPos(startCursorPos.x + (ImGui.getStyle().getFramePaddingX() * 2.0f), startCursorPos.y + ImGui.getStyle().getFramePaddingY());
+
+        if (ImGui.beginDragDropTarget() && ImGui.getDragDropPayload("ASSETS_WINDOW_PAYLOAD") != null) {
+            String[] payload = ImGui.getDragDropPayload("ASSETS_WINDOW_PAYLOAD");
+
+            if (payload[0].equals(assetType.name()) && ImGui.acceptDragDropPayload("ASSETS_WINDOW_PAYLOAD") != null) {
+                switch (assetType) {
+                    case Model -> {
+                        TexturedModel oldModel = (TexturedModel) field;
+                        RawModel model = OBJLoader.loadOBJ(payload[1]);
+
+                        Material material;
+                        if (oldModel != null)
+                            material = oldModel.getMaterial();
+                        else
+                            material = new Material(Loader.get().loadTexture("engineFiles/images/utils/whitePixel.png"));
+
+                        field = new TexturedModel(model, material);
+                    }
+                    case Image -> {
+                        field = Loader.get().loadTexture(payload[1]);
+                    }
+                }
+                System.out.println("Asset Field-" + payload[1]);
+            }
+            ImGui.endDragDropTarget();
+        }
+
+        String assetName = "null (" + assetType.name() + ")";
+        int assetIcon = 0;
+
+        if (field != null) {
+            switch (assetType) {
+                case Model -> {
+                    TexturedModel model = (TexturedModel) field;
+                    assetName = model.getRawModel().getFilePath();
+                    assetIcon = Loader.get().loadTexture("engineFiles/images/icons/icon=cube-solid-(32x32).png").getTextureID();
+                }
+                case Image -> {
+                    Texture texture = (Texture) field;
+                    assetName = texture.getFilepath();
+                    assetIcon = Loader.get().loadTexture("engineFiles/images/icons/icon=image-solid(32x32).png").getTextureID();
+                }
+            }
+        }
+        assetName = assetName.replace("\\", "/").split("/")[assetName.replace("\\", "/").split("/").length - 1];
+
+        if (field != null) {
+            ImGui.image(assetIcon, 16, 16, 0, 1, 1, 0);
+            ImGui.sameLine();
+            ImGui.setCursorPos(ImGui.getCursorPosX() + 1.5f, ImGui.getCursorPosY() - 1.0f);
+        }
+        ImGui.text(assetName.split("\\.")[0]);
+
+        ImGui.columns(1);
+        ImGui.popID();
+
+        ImGui.setCursorPos(ImGui.getCursorPosX(), ImGui.getCursorPosY() + ImGui.getStyle().getFramePaddingY());
+
+        return field;
     }
 }

@@ -2,7 +2,7 @@ package engine.renderEngine.postProcessing.postEffects.gaussianBlur;
 
 import engine.renderEngine.postProcessing.ImageRenderer;
 import engine.renderEngine.postProcessing.PostProcessLayer;
-import engine.renderEngine.postProcessing.PostProcessShader;
+import engine.renderEngine.postProcessing.postEffects.bloom.BloomLayer;
 
 import static org.lwjgl.opengl.GL30.*;
 
@@ -50,6 +50,12 @@ public class GaussianBlurLayer extends PostProcessLayer {
         this.renderer_vertical.cleanUp();
         this.shader.cleanUp();
     }
+
+    @Override
+    public BloomLayer copy() { return new BloomLayer(this.shader.getWidth(), this.shader.getHeight()) {
+        @Override
+        public String getPostEffectName() { return "Blur"; }
+    }; }
 
 //    @Override
 //    public PostProcessShader getShader() { return this.shader; }

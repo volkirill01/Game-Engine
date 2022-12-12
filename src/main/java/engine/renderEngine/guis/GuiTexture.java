@@ -1,24 +1,25 @@
 package engine.renderEngine.guis;
 
+import engine.renderEngine.textures.Texture;
 import org.joml.Vector2f;
 
 public class GuiTexture {
 
-    private int texture;
+    private Texture texture;
     private Vector2f position;
     private float rotation;
     private Vector2f scale;
 
-    public GuiTexture(int texture, Vector2f position, float rotation, Vector2f scale) {
+    public GuiTexture(Texture texture, Vector2f position, float rotation, Vector2f scale) {
         this.texture = texture;
         this.position = position;
         this.rotation = rotation;
         this.scale = scale;
     }
 
-    public int getTexture() { return this.texture; }
+    public Texture getTexture() { return this.texture; }
 
-    public void setTexture(int texture) { this.texture = texture; }
+    public void setTexture(Texture texture) { this.texture = texture; }
 
     public Vector2f getPosition() { return this.position; }
 

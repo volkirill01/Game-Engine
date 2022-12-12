@@ -24,4 +24,10 @@ public class StartPostProcessShader extends PostProcessShader {
 	public StartPostProcessShader copy() {
 		return new StartPostProcessShader(super.getWidth(), super.getHeight());
 	}
+
+	@Override
+	public void reset() {
+		this.gamma = 2.2f;
+		this.exposure = 0.5f;
+	}
 }

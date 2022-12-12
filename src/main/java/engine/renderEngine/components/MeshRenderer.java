@@ -1,6 +1,9 @@
 package engine.renderEngine.components;
 
+import engine.imGui.Asset;
+import engine.imGui.EditorImGui;
 import engine.renderEngine.models.TexturedModel;
+import engine.renderEngine.textures.TextureSliceMode;
 import org.joml.Vector2f;
 
 public class MeshRenderer extends ObjectRenderer {
@@ -19,12 +22,12 @@ public class MeshRenderer extends ObjectRenderer {
     }
 
     public Vector2f getTextureOffset() {
-        int column = textureIndex % model.getTexture().getNumberOfRows();
-        int row = textureIndex / model.getTexture().getNumberOfColumns();
+        int column = textureIndex % model.getMaterial().getNumberOfRows();
+        int row = textureIndex / model.getMaterial().getNumberOfColumns();
 
         return new Vector2f(
-                (float) column / (float) model.getTexture().getNumberOfRows(),
-                (float) row / (float) model.getTexture().getNumberOfColumns());
+                (float) column / (float) model.getMaterial().getNumberOfRows(),
+                (float) row / (float) model.getMaterial().getNumberOfColumns());
     }
 
     public TexturedModel getModel() { return this.model; }
@@ -32,12 +35,26 @@ public class MeshRenderer extends ObjectRenderer {
     public void setModel(TexturedModel model) { this.model = model; }
 
     @Override
-    public void start() {
+    public void start() { }
 
+    @Override
+    public void update() { }
+
+    @Override
+    public void imgui() {
+        if (this.model != null)
+            if (this.model.getMaterial().getTexture().getSliceMode() == TextureSliceMode.Multiple)
+                this.textureIndex = EditorImGui.field_Int_WithButtons("Texture Index", this.textureIndex);
+
+        this.model = (TexturedModel) EditorImGui.field_Asset("Model", this.model, Asset.AssetType.Model);
+
+        if (this.model != null)
+            model.getMaterial().imgui();
     }
 
     @Override
-    public void update() {
-
+    public void reset() {
+        this.model = null;
+        this.textureIndex = 0;
     }
 }

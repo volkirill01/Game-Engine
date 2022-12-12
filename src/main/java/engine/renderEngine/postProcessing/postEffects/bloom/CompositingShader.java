@@ -24,11 +24,16 @@ public class CompositingShader extends PostProcessShader {
 
     @Override
     public void imgui(boolean isLayerActive, String additionToId) {
-        this.bloomIntensity = EditorImGui.dragFloat("Bloom Intensity", bloomIntensity, 0.02f, 0);
+        this.bloomIntensity = EditorImGui.field_Float("Bloom Intensity", bloomIntensity, 0.02f, 0);
     }
 
     @Override
     public CompositingShader copy() {
         return new CompositingShader(this.getWidth(), this.getHeight());
+    }
+
+    @Override
+    public void reset() {
+        this.bloomIntensity = 0.3f;
     }
 }

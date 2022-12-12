@@ -27,12 +27,17 @@ public class DownsampleShader extends PostProcessShader {
     @Override
     public void imgui(boolean isLayerActive, String additionToId) {
         ImGui.pushID("Downsample" + additionToId);
-        this.resolutionMultiplayer = EditorImGui.dragFloat("Resolution Multiplayer", resolutionMultiplayer, 0.02f);
+        this.resolutionMultiplayer = EditorImGui.field_Float("Resolution Multiplayer", resolutionMultiplayer, 0.02f);
         ImGui.popID();
     }
 
     @Override
     public DownsampleShader copy() {
         return new DownsampleShader(this.getWidth(), this.getHeight());
+    }
+
+    @Override
+    public void reset() {
+        this.resolutionMultiplayer = 2.0f;
     }
 }

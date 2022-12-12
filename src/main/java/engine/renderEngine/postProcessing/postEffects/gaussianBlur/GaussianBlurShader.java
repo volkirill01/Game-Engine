@@ -25,7 +25,7 @@ public class GaussianBlurShader extends PostProcessShader {
     @Override
     public void imgui(boolean isLayerActive, String additionToId) {
         ImGui.pushID("GaussianBlurShader" + additionToId);
-        this.size = EditorImGui.dragFloat("Blur size", size, 0.05f, 0.05f);
+        this.size = EditorImGui.field_Float("Blur size", size, 0.05f, 0.05f);
         ImGui.popID();
     }
 
@@ -44,4 +44,9 @@ public class GaussianBlurShader extends PostProcessShader {
     }
 
     public void setSize(float newSize) { this.size = newSize; }
+
+    @Override
+    public void reset() {
+        this.size = 1.0f;
+    }
 }

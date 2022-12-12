@@ -19,8 +19,8 @@ public class WhiteBalanceShader extends PostProcessShader {
 
 	@Override
 	public void imgui(boolean isLayerActive, String additionToId) {
-		temperature = EditorImGui.dragFloat("Temperature", temperature, 0.05f, -1.7f, 1.7f);
-		tint = EditorImGui.dragFloat("Tint", tint, 0.05f, -1.7f, 1.7f);
+		temperature = EditorImGui.field_Float("Temperature", temperature, 0.05f, -1.7f, 1.7f);
+		tint = EditorImGui.field_Float("Tint", tint, 0.05f, -1.7f, 1.7f);
 	}
 
 	@Override
@@ -32,5 +32,11 @@ public class WhiteBalanceShader extends PostProcessShader {
 	@Override
 	public WhiteBalanceShader copy() {
 		return new WhiteBalanceShader(this.fboWidth, this.fboHeight);
+	}
+
+	@Override
+	public void reset() {
+		this.temperature = 0.0f;
+		this.tint = 0.0f;
 	}
 }

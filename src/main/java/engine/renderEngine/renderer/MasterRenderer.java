@@ -117,6 +117,9 @@ public class MasterRenderer {
     }
 
     private void processEntity(GameObject gameObject) {
+        if (gameObject.getComponent(MeshRenderer.class).getModel() == null)
+            return;
+
         TexturedModel entityModel = gameObject.getComponent(MeshRenderer.class).getModel();
         List<GameObject> batch = entities.get(entityModel);
         if (batch != null) {

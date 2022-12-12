@@ -1,22 +1,25 @@
 package engine.renderEngine.textures;
 
+import engine.imGui.Asset;
+import engine.imGui.EditorImGui;
 import engine.renderEngine.renderer.RenderCullSide;
 import engine.toolbox.customVariables.Color;
+import imgui.ImGui;
 import org.joml.Vector2f;
 
 public class Material {
 
-    private int textureID;
-    private int textureWidth = 64; // TODO REPLACE THIS WITH TEXTURE CLASS
-    private int textureHeight = 64;
+    private Texture texture;
 
-    private int metallicMap = 0;
+    private Texture metallicMap;
     private float metallicIntensity = 0.0f;
 
-    private int specularMap = 0;
+    private Texture specularMap;
     private float specularIntensity = 0.0f;
+    private float shineDumper = 10.0f;
+    private float reflectivity = 0.0f;
 
-    private int emissionMap = 0;
+    private Texture emissionMap;
     private float emissionIntensity = 0.0f;
     private boolean useAlbedoEmission = false;
 
@@ -25,9 +28,6 @@ public class Material {
     private Color color = new Color(255, 255, 255);
     private float alphaClip = 0.0f;
 
-    private float shineDumper = 1.0f;
-    private float reflectivity = 0.0f;
-
     private RenderCullSide renderCullSide = RenderCullSide.Front;
 
     private boolean useFakeLighting = false;
@@ -35,49 +35,61 @@ public class Material {
     private int numberOfRows = 1;
     private int numberOfColumns = 1;
 
-    public Material(int id) { this.textureID = id; }
+    public Material(Texture texture) { this.texture = texture; }
 
-    public void setMetallicMap(int metallicMap) {
+    public void setMetallicMap(Texture metallicMap) {
         this.metallicMap = metallicMap;
         if (this.metallicIntensity <= 0)
             this.metallicIntensity = 0.5f;
     }
 
-    public boolean hasMetallic() { return this.metallicMap != 0 && this.metallicIntensity > 0; }
+    public boolean hasMetallic() {
+        if (this.metallicMap == null)
+            return false;
+        return this.metallicMap.getTextureID() != 0 && this.metallicIntensity > 0;
+    }
 
     public void setMetallicIntensity(float metallicIntensity) { this.metallicIntensity = metallicIntensity; }
 
     public float getMetallicIntensity() { return this.metallicIntensity; }
 
-    public int getMetallicMap() { return this.metallicMap; }
+    public int getMetallicMap() { return this.metallicMap.getTextureID(); }
 
-    public void setSpecularMap(int specularMap) {
+    public void setSpecularMap(Texture specularMap) {
         this.specularMap = specularMap;
         if (this.specularIntensity <= 0)
             this.specularIntensity = 0.5f;
     }
 
-    public boolean hasSpecular() { return this.specularMap != 0 && this.specularIntensity > 0; }
+    public boolean hasSpecular() {
+        if (this.specularMap == null)
+            return false;
+        return this.specularMap.getTextureID() != 0 && this.specularIntensity > 0;
+    }
 
     public void setSpecularIntensity(float specularIntensity) { this.specularIntensity = specularIntensity; }
 
     public float getSpecularIntensity() { return this.specularIntensity; }
 
-    public int getSpecularMap() { return this.specularMap; }
+    public Texture getSpecularMap() { return this.specularMap; }
 
-    public void setEmissionMap(int emissionMap) {
+    public void setEmissionMap(Texture emissionMap) {
         this.emissionMap = emissionMap;
         if (this.emissionIntensity <= 0)
             this.emissionIntensity = 0.5f;
     }
 
-    public boolean hasEmission() { return this.emissionMap != 0 && this.emissionIntensity > 0; }
+    public boolean hasEmission() {
+        if (this.emissionMap == null)
+            return false;
+        return this.emissionMap.getTextureID() != 0 && this.emissionIntensity > 0;
+    }
 
     public void setEmissionIntensity(float emissionIntensity) { this.emissionIntensity = emissionIntensity; }
 
     public float getEmissionIntensity() { return this.emissionIntensity; }
 
-    public int getEmissionMap() { return this.emissionMap; }
+    public Texture getEmissionMap() { return this.emissionMap; }
 
     public boolean isUseAlbedoEmission() { return this.useAlbedoEmission; }
 
@@ -91,13 +103,9 @@ public class Material {
 
     public void setNumberOfColumns(int numberOfColumns) { this.numberOfColumns = numberOfColumns; }
 
-    public int getID() { return this.textureID; }
+    public Texture getTexture() { return this.texture; }
 
-    public void setTexture(int newTexture) { this.textureID = newTexture; }
-
-    public int getTextureWidth() { return this.textureWidth; }
-
-    public int getTextureHeight() { return this.textureHeight; }
+    public void setTexture(Texture newTexture) { this.texture = newTexture; }
 
     public Vector2f getTiling() { return this.tiling; }
 
@@ -126,4 +134,46 @@ public class Material {
     public boolean isUseFakeLighting() { return this.useFakeLighting; }
 
     public void setUseFakeLighting(boolean useFakeLighting) { this.useFakeLighting = useFakeLighting; }
+
+    public void imgui() {
+        if (EditorImGui.collapsingHeader("Material")) {
+            EditorImGui.header("Albedo");
+            EditorImGui.filed_Color("Color", color);
+            this.texture = (Texture) EditorImGui.field_Asset("Albedo", this.texture, Asset.AssetType.Image);
+
+            ImGui.separator();
+            EditorImGui.header("Metallic");
+            this.metallicMap = (Texture) EditorImGui.field_Asset("Metallic Map", this.metallicMap, Asset.AssetType.Image);
+            this.metallicIntensity = EditorImGui.field_Float("Metallicness", this.metallicIntensity, 0.02f, 0.0f, 1.0f);
+
+            ImGui.separator();
+            EditorImGui.header("Specular");
+            this.specularMap = (Texture) EditorImGui.field_Asset("Specular Map", this.specularMap, Asset.AssetType.Image);
+            this.specularIntensity = EditorImGui.field_Float("Specular", this.specularIntensity, 0.02f, 0.0f, 1.0f);
+            this.shineDumper = EditorImGui.field_Float("Shine Dumper", this.shineDumper, 0.02f, 0);
+            this.reflectivity = EditorImGui.field_Float("Reflectivity", this.reflectivity, 0.02f, 0);
+
+            ImGui.separator();
+            EditorImGui.header("Emission");
+            this.emissionMap = (Texture) EditorImGui.field_Asset("Emission Map", this.emissionMap, Asset.AssetType.Image);
+            this.emissionIntensity = EditorImGui.field_Float("Emission", this.emissionIntensity, 0.02f, 0.0f);
+            this.useAlbedoEmission = EditorImGui.field_Boolean("Use Albedo Emission", this.useAlbedoEmission);
+
+            ImGui.separator();
+            EditorImGui.header("Other");
+            this.alphaClip = EditorImGui.field_Float("Alpha Clip", this.alphaClip, 0.02f, 0.0f, 1.0f);
+
+            this.tiling = EditorImGui.field_Vector2f("Tiling", tiling, 1.0f);
+
+            this.renderCullSide = (RenderCullSide) EditorImGui.field_Enum("Render Cull Side", this.renderCullSide);
+
+            this.useFakeLighting = EditorImGui.field_Boolean("Use Fake Lighting", this.useFakeLighting);
+
+            this.texture.setSliceMode((TextureSliceMode) EditorImGui.field_Enum("Slice Mode", this.texture.getSliceMode()));
+            if (this.texture.getSliceMode() == TextureSliceMode.Multiple) {
+                this.numberOfRows = EditorImGui.field_Int_WithButtons("Number Of Rows", this.numberOfRows, 1, 0);
+                this.numberOfColumns = EditorImGui.field_Int_WithButtons("Number Of Columns", this.numberOfColumns, 1, 0);
+            }
+        }
+    }
 }

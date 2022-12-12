@@ -41,7 +41,7 @@ public class ShadowMapEntityRenderer {
 			RawModel rawModel = model.getRawModel();
 			bindModel(rawModel);
 			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_2D, model.getTexture().getID());
+			glBindTexture(GL_TEXTURE_2D, model.getMaterial().getTexture().getTextureID());
 			glDisable(GL_CULL_FACE);
 			for (GameObject gameObject : entities.get(model)) {
 				prepareInstance(gameObject);

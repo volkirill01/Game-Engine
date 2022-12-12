@@ -42,6 +42,8 @@ public abstract class Component {
         // (INVERT OF preSolve)
     }
 
+    public abstract void reset();
+
     public void imgui() {
         try {
             Field[] fields = this.getClass().getDeclaredFields();
@@ -60,22 +62,18 @@ public abstract class Component {
 
                 if (type == int.class) {
                     int val = (int)value;
-                    field.set(this, EditorImGui.dragInt(name, val));
+                    field.set(this, EditorImGui.field_Int(name, val));
                 } else if (type == float.class) {
                     float val = (float)value;
-                    field.set(this, EditorImGui.dragFloat(name, val));
+                    field.set(this, EditorImGui.field_Float(name, val));
                 } else if (type == boolean.class) {
-                    boolean val = (boolean)value;
-                    if (EditorImGui.checkbox(name, (boolean)value))
-                        field.set(this, !val);
+                    field.set(this, EditorImGui.field_Boolean(name, (boolean)value));
                 } else if (type == Vector2f.class) {
                     Vector2f val = (Vector2f)value;
-                    EditorImGui.drawVec2Control(name, val);
+                    val.set(EditorImGui.field_Vector2f(name, val));
                 } else if (type == Vector3f.class) {
                     Vector3f val = (Vector3f)value;
-                    float[] imVec = {val.x, val.y, val.z};
-                    if (ImGui.dragFloat3(name, imVec))
-                        val.set(imVec[0], imVec[1], imVec[2]);
+                    val.set(EditorImGui.field_Vector3f(name, val));
                 } else if (type == Vector4f.class) {
                     Vector4f val = (Vector4f)value;
                     float[] imVec = {val.x, val.y, val.z, val.w};
@@ -88,7 +86,7 @@ public abstract class Component {
                     if (EditorImGui.enumCombo(name, index, enumValues, enumValues.length))
                         field.set(this, type.getEnumConstants()[index.get()]);
                 } else if (type == String.class) {
-                    field.set(this, EditorImGui.inputText(name, (String)value, ""));
+                    field.set(this, EditorImGui.field_Text(name, (String)value, ""));
                 }
 
                 if (isPrivate)

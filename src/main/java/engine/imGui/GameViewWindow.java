@@ -18,7 +18,7 @@ public class GameViewWindow extends EditorImGuiWindow {
     private float leftX, rightX, topY, bottomY;
     private boolean isPlaying = false;
 
-    private ImVec2 windowPos = new ImVec2();
+    private Vector2f windowPos = new Vector2f();
 
     @Override
     public void imgui() {
@@ -119,7 +119,7 @@ public class GameViewWindow extends EditorImGuiWindow {
     }
 
     public boolean getWantCaptureMouse() {
-        if (GameObject.showAddTag)
+        if (GameObject.showAddTag || !ImGui.isWindowFocused(-1))
             return false;
 
         return MouseListener.getX() >= leftX && MouseListener.getX() <= rightX &&
@@ -143,7 +143,7 @@ public class GameViewWindow extends EditorImGuiWindow {
         return new ImVec2(aspectWidth, aspectHeight);
     }
 
-    private ImVec2 getCenteredPositionForViewport(ImVec2 aspectSize) {
+    private Vector2f getCenteredPositionForViewport(ImVec2 aspectSize) {
         ImVec2 windowSize = new ImVec2();
         ImGui.getContentRegionAvail(windowSize);
         windowSize.x -= ImGui.getScrollX();
@@ -152,7 +152,7 @@ public class GameViewWindow extends EditorImGuiWindow {
         float viewportX = (windowSize.x / 2.0f) - (aspectSize.x / 2.0f);
         float viewportY = (windowSize.y / 2.0f) - (aspectSize.y / 2.0f);
 
-        return new ImVec2(viewportX + ImGui.getCursorPosX(), viewportY + ImGui.getCursorPosY());
+        return new Vector2f(viewportX + ImGui.getCursorPosX(), viewportY + ImGui.getCursorPosY());
     }
 
     public Vector2f getTopLeftCorner() {

@@ -1,5 +1,7 @@
 package engine.renderEngine.postProcessing;
 
+import engine.TestFieldsWindow;
+import engine.components.Transform;
 import engine.imGui.EditorImGui;
 import engine.imGui.EditorImGuiWindow;
 import engine.renderEngine.Loader;
@@ -10,7 +12,6 @@ import imgui.flag.ImGuiCol;
 import imgui.flag.ImGuiComboFlags;
 import imgui.flag.ImGuiStyleVar;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class PostProcessingGui extends EditorImGuiWindow {
@@ -19,19 +20,18 @@ public class PostProcessingGui extends EditorImGuiWindow {
         ImGui.begin(" Post Processing ");
 
         EditorImGui.header("Ambient");
-        EditorImGui.colorPicker4("Ambient Light Color", PostProcessing.getAmbientLightColor());
-        PostProcessing.setAmbientLightIntensity(EditorImGui.dragFloat("Ambient Light Intensity", PostProcessing.getAmbientLightIntensity(), 0.02f, 0));
+        EditorImGui.field_Color_WithAlpha("Ambient Light Color", PostProcessing.getAmbientLightColor());
+        PostProcessing.setAmbientLightIntensity(EditorImGui.field_Float("Ambient Light Intensity", PostProcessing.getAmbientLightIntensity(), 0.02f, 0));
 
         ImGui.separator();
         EditorImGui.header("Fog");
-        EditorImGui.colorPicker3("Fog Color", PostProcessing.getFogColor());
-        PostProcessing.setFogDensity(EditorImGui.dragFloat("Fog Density", PostProcessing.getFogDensity() * 10, 0.02f, 0, 1) / 10);
-        PostProcessing.setFogSmoothness(EditorImGui.dragFloat("Fog Smoothness", PostProcessing.getFogSmoothness() / 10, 0.02f, 0.001f) * 10);
+        EditorImGui.filed_Color("Fog Color", PostProcessing.getFogColor());
+        PostProcessing.setFogDensity(EditorImGui.field_Float("Fog Density", PostProcessing.getFogDensity() * 10, 0.02f, 0, 1) / 10);
+        PostProcessing.setFogSmoothness(EditorImGui.field_Float("Fog Smoothness", PostProcessing.getFogSmoothness() / 10, 0.02f, 0.001f) * 10);
 
         ImGui.separator();
         EditorImGui.header("Post Processing Layers");
-        if (EditorImGui.checkbox("Use PostProcessing", PostProcessing.usePostProcessing))
-            PostProcessing.usePostProcessing = !PostProcessing.usePostProcessing;
+        PostProcessing.usePostProcessing = EditorImGui.field_Boolean("Use PostProcessing", PostProcessing.usePostProcessing);
         ImGui.separator();
 
         drawLayers();
@@ -39,18 +39,21 @@ public class PostProcessingGui extends EditorImGuiWindow {
         if (PostProcessing.getLayers().size() > 0)
             ImGui.separator();
 
-        if (EditorImGui.horizontalCenterButton("Add Post Effect", 60.0f))
-            ImGui.openPopup("##postEffectAdder");
+        float centerOfWindow = ImGui.getWindowContentRegionMaxX() / 2.0f;
+        boolean isOpen = EditorImGui.horizontalCenterButton("Add Post Effect", 60.0f);
+        float popupPosY = ImGui.getCursorPosY();
+        ImVec2 popupPosition = new ImVec2(centerOfWindow - 105.0f, popupPosY);
 
-        if (ImGui.beginPopup("##postEffectAdder")) {
+        if (EditorImGui.BeginPopup("PostEffectAdder", popupPosition, isOpen)) {
             for (PostProcessLayer layer : PostProcessing.getAllPostProcessLayers()) {
                 if (!layer.getPostEffectName().startsWith("##"))
                     if (ImGui.menuItem(layer.getPostEffectName()))
                         PostProcessing.addLayer(layer.copy());
             }
-            ImGui.endPopup();
+            EditorImGui.EndPopup();
         }
 
+        super.imgui();
         ImGui.end();
     }
 
@@ -65,7 +68,6 @@ public class PostProcessingGui extends EditorImGuiWindow {
             try {
                 PostProcessLayer layer = layers.get(i);
 
-                String current_item = "";
                 ImGui.pushID("##postProcessLayer" + i);
 
                 ImGui.columns(3, "", false);
@@ -102,28 +104,32 @@ public class PostProcessingGui extends EditorImGuiWindow {
 
                 //<editor-fold desc="Dropdown menu">
                 ImGui.sameLine();
-                ImGui.setCursorPos(ImGui.getWindowWidth() - (16.0f * 2.0f) + 3.0f - arrowsSize, ImGui.getCursorPosY() + (16.0f / 2.0f));
-                ImVec2 dropDownPos = ImGui.getCursorPos();
-                ImGui.image(Loader.get().loadTexture("engineFiles/images/utils/icon=ellipsis-solid(32x32).png"), 16, 16);
+                ImGui.setCursorPos(ImGui.getWindowWidth() - (16.0f * 2.0f) + 3.0f - arrowsSize - 7.0f, ImGui.getCursorPosY() + (16.0f / 2.0f) - 7.0f);
+                if (EditorImGui.BeginButtonDropDownImage(
+                        Loader.get().loadTexture("engineFiles/images/utils/icon=ellipsis-solid(32x32).png").getTextureID(),
+                        "PostProcessLayerMenu", new ImVec2(18, 18), true)) {
 
-                ImGui.setCursorPos(dropDownPos.x - 8.0f, dropDownPos.y - 8.0f);
-                ImGui.pushStyleVar(ImGuiStyleVar.WindowPadding, 8.0f, 6.0f);
-                ImGui.pushStyleColor(ImGuiCol.FrameBg, 0.0f, 0.0f, 0.0f, 0.0f);
-                ImGui.pushStyleColor(ImGuiCol.FrameBgHovered, 0.0f, 0.0f, 0.0f, 0.0f);
-                ImGui.pushStyleColor(ImGuiCol.FrameBgActive, 0.0f, 0.0f, 0.0f, 0.0f);
-                ImGui.pushStyleColor(ImGuiCol.Border, 0.0f, 0.0f, 0.0f, 0.0f);
+                    if (ImGui.menuItem("Reset"))
+                        layer.reset();
 
-                ImGui.pushStyleVar(ImGuiStyleVar.ItemSpacing, ImGui.getStyle().getItemSpacingX() * 2, ImGui.getStyle().getItemSpacingY() * 1.4f);
-                ImGui.pushStyleVar(ImGuiStyleVar.FramePadding, ImGui.getStyle().getFramePaddingX() * 2, ImGui.getStyle().getFramePaddingY() * 2);
-                if (ImGui.beginCombo("##postProcessLayerCombo", current_item, ImGuiComboFlags.NoArrowButton)) {
-                    if (ImGui.menuItem("Remove effect")) {
+                    ImGui.separator();
+                    if (ImGui.menuItem("Remove Layer"))
                         PostProcessing.removeLayer(layer);
-                    }
-                    EditorImGui.helpMarker("Help (?)", "Tooltip");
-                    ImGui.endCombo();
+
+                    if (i > 0) {
+                        if (ImGui.menuItem("Move Up"))
+                            PostProcessing.swapTwoLayers(i, i - 1);
+                    } else
+                        ImGui.textDisabled("Move Up"); // TODO IF MOVE UP OR DOWN DON'T WORK, REPLACE IF STATEMENTS
+
+                    if (i < layersCount - 1) {
+                        if (ImGui.menuItem("Move Down"))
+                            PostProcessing.swapTwoLayers(i, i + 1);
+                    } else
+                        ImGui.textDisabled("Move Down");
+
+                    EditorImGui.EndButtonDropDown();
                 }
-                ImGui.popStyleColor(4);
-                ImGui.popStyleVar(3);
                 //</editor-fold>
 
                 //<editor-fold desc="Arrows">

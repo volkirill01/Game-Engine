@@ -252,11 +252,11 @@ public class AssetsWindow extends EditorImGuiWindow {
             ImGui.endPopup();
         }
 
-//            if (ImGui.beginDragDropSource()) { // TODO пофиксить перемещение файлов
-//                ImGui.setDragDropPayload(payloadDragDropType, new String[]{assets.get(i).assetType.name(), assets.get(i).assetPath});
-//                ImGui.text(assets.get(i).assetName);
-//                ImGui.endDragDropSource();
-//            }
+        if (ImGui.beginDragDropSource()) { // TODO пофиксить перемещение файлов
+            ImGui.setDragDropPayload(payloadDragDropType, new String[]{assets.get(i).assetType.name(), assets.get(i).assetPath});
+            ImGui.text(assets.get(i).assetName);
+            ImGui.endDragDropSource();
+        }
 
         ImGui.popStyleColor();
         ImGui.popStyleVar();
@@ -360,7 +360,7 @@ public class AssetsWindow extends EditorImGuiWindow {
             float spriteWidth = thumbnailSize;
             float spriteHeight = thumbnailSize;
 
-            int id = assets.get(i).fileIcon;
+            int id = assets.get(i).fileIcon.getTextureID();
             ImGui.pushID(i);
 
             switch (assets.get(i).assetType) {
@@ -376,19 +376,16 @@ public class AssetsWindow extends EditorImGuiWindow {
                     }
 
                     if (ImGui.beginDragDropTarget()) {
-                        if (ImGui.acceptDragDropPayload(payloadDragDropType) == null) {
-                            ImGui.endDragDropTarget();
-                            break;
-                        }
-                        String[] payload = ImGui.getDragDropPayload(payloadDragDropType);
-
                         if (ImGui.acceptDragDropPayload(payloadDragDropType) != null) {
+                            String[] payload = ImGui.getDragDropPayload(payloadDragDropType);
+
                             File srcDir = new File(payload[1]);
                             File destDir = new File(assets.get(i).assetPath + "\\" + payload[1].replace("\\", "/").split("/")[payload[1].replace("\\", "/").split("/").length - 1]);
 
                             move(srcDir, destDir);
+
+                            ImGui.endDragDropTarget();
                         }
-                        ImGui.endDragDropTarget();
                     }
                     break;
                 case Scene:

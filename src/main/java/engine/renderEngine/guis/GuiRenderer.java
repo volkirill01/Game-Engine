@@ -30,7 +30,7 @@ public class GuiRenderer {
 //        glDisable(GL_CULL_FACE); // TODO DELETE
         for (GuiTexture gui : guis) {
             glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D, gui.getTexture());
+            glBindTexture(GL_TEXTURE_2D, gui.getTexture().getTextureID());
             Matrix4f transformationMatrix = Maths.createTransformationMatrix(gui.getPosition(), gui.getRotation(), gui.getScale());
             shader.loadUniformMatrix("transformationMatrix", transformationMatrix);
             glDrawArrays(GL_TRIANGLE_STRIP, 0, quad.getVertexCount());

@@ -14,7 +14,9 @@ public class TexturedModel {
 
     public RawModel getRawModel() { return rawModel; }
 
-    public Material getTexture() { return material; }
+    public void setMaterial(Material material) { this.material = material; }
+
+    public Material getMaterial() { return material; }
 
     public TexturedModel copy() { return new TexturedModel(this.rawModel, this.material); }
 }

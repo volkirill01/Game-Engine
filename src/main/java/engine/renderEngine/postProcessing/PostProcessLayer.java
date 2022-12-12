@@ -55,4 +55,8 @@ public class PostProcessLayer {
     public void setActive(boolean active) { this.isActive = active; }
 
     public PostProcessLayer copy() { return new PostProcessLayer(this.shader.copy()); }
+
+    public void reset() {
+        this.shader.reset();
+    }
 }

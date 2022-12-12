@@ -17,7 +17,7 @@ public class PowerShader extends PostProcessShader {
 
 	@Override
 	public void imgui(boolean isLayerActive, String additionToId) {
-		power = EditorImGui.dragFloat("Power", power, 0.04f);
+		power = EditorImGui.field_Float("Power", power, 0.04f);
 	}
 
 	@Override
@@ -28,5 +28,10 @@ public class PowerShader extends PostProcessShader {
 	@Override
 	public PowerShader copy() {
 		return new PowerShader(this.fboWidth, this.fboHeight);
+	}
+
+	@Override
+	public void reset() {
+		this.power = 0.03f;
 	}
 }

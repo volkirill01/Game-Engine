@@ -2,7 +2,7 @@ package engine.entities;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import engine.Settings;
+import engine.TestFieldsWindow;
 import engine.components.Component;
 import engine.components.ComponentDeserializer;
 import engine.components.Transform;
@@ -12,22 +12,17 @@ import engine.imGui.EditorImGui;
 import engine.renderEngine.Loader;
 import engine.renderEngine.Window;
 import engine.renderEngine.components.MeshRenderer;
-import engine.renderEngine.models.TexturedModel;
-import engine.renderEngine.postProcessing.PostProcessing;
-import engine.toolbox.MouseListener;
+import engine.renderEngine.components.ObjectRenderer;
 import engine.toolbox.customVariables.GameObjectTag;
 import imgui.ImGui;
 import imgui.ImVec2;
 import imgui.ImVec4;
-import imgui.flag.ImGuiCol;
-import imgui.flag.ImGuiComboFlags;
-import imgui.flag.ImGuiStyleVar;
-import imgui.flag.ImGuiWindowFlags;
+import imgui.flag.*;
 import imgui.type.ImString;
-import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class GameObject {
@@ -42,6 +37,11 @@ public class GameObject {
     private boolean doSerialization = true;
 
     private boolean isDeath = false;
+
+    private List<Class> addComponentBlackList = new ArrayList<>(){{
+        add(Transform.class);
+        add(ObjectRenderer.class);
+    }};
 
     public GameObject(String name) {
         this.name = name;
@@ -118,11 +118,11 @@ public class GameObject {
     public void start() { for (int i = 0; i < components.size(); i++) components.get(i).start(); }
 
     public boolean isHover() {
-        Vector2f start = new Vector2f(
-                transform.position.x - (transform.scale.x / 2.0f),
-                transform.position.y - (transform.scale.y / 2.0f));
-        Vector2f end = new Vector2f(start).add(new Vector2f(
-                transform.scale.x, transform.scale.y));
+//        Vector2f start = new Vector2f(
+//                transform.position.x - (transform.scale.x / 2.0f),
+//                transform.position.y - (transform.scale.y / 2.0f));
+//        Vector2f end = new Vector2f(start).add(new Vector2f(
+//                transform.scale.x, transform.scale.y));
 
 //        Vector2f startScreenf = MouseListener.worldToScreen(start);
 //        Vector2f endScreenf = MouseListener.worldToScreen(end);
@@ -147,11 +147,10 @@ public class GameObject {
     public void imgui() { // GameObject Inspector
         drawTags();
 
-        name = EditorImGui.inputTextNoLabel("Name", name, "Name");
+        name = EditorImGui.field_Text_NoLabel("Name", name, "Name");
         float checkboxSize = 37.0f;
 
         for (int i = 0; i < components.size(); i++) {
-            String current_item = "";
             ImGui.pushID("##component" + components.get(i).getUid());
 
 //            if (!components.get(i).isActive()) {  // ------------------------------------------
@@ -180,38 +179,47 @@ public class GameObject {
             //</editor-fold>
 
             ImGui.setColumnWidth(1, ImGui.getWindowWidth() - ImGui.getStyle().getWindowPaddingX() - checkboxSize);
-            boolean collapsingHeader = ImGui.collapsingHeader(components.get(i).getClass().getSimpleName());
-            ImVec2 headerPos = ImGui.getCursorPos();
+            boolean collapsingHeader = ImGui.collapsingHeader(components.get(i).getClass().getSimpleName(),
+                    components.get(i).getClass() == Transform.class ? ImGuiTreeNodeFlags.DefaultOpen :
+                    ImGuiTreeNodeFlags.None);
             ImGui.setItemAllowOverlap();
+
+            ImVec2 headerPos = ImGui.getCursorPos();
             //</editor-fold>
 
             //<editor-fold desc="Dropdown menu">
             ImGui.sameLine();
-            ImGui.setCursorPos(ImGui.getWindowWidth() - (16.0f * 2.0f) + 3.0f, ImGui.getCursorPosY() + (16.0f / 2.0f));
-            ImVec2 dropDownPos = ImGui.getCursorPos();
-            ImGui.image(Loader.get().loadTexture("engineFiles/images/utils/icon=ellipsis-solid(32x32).png"), 16, 16);
+            ImGui.setCursorPos(ImGui.getWindowWidth() - (16.0f * 2.0f) + 3.0f - 8.0f, ImGui.getCursorPosY() + (16.0f / 2.0f) - 8.0f);
 
-            ImGui.setCursorPos(dropDownPos.x - 8.0f, dropDownPos.y - 8.0f);
-            ImGui.pushStyleColor(ImGuiCol.FrameBg, 0.0f, 0.0f, 0.0f, 0.0f);
-            ImGui.pushStyleColor(ImGuiCol.FrameBgHovered, 0.0f, 0.0f, 0.0f, 0.0f);
-            ImGui.pushStyleColor(ImGuiCol.FrameBgActive, 0.0f, 0.0f, 0.0f, 0.0f);
-            ImGui.pushStyleColor(ImGuiCol.Border, 0.0f, 0.0f, 0.0f, 0.0f);
+            if (EditorImGui.BeginButtonDropDownImage(
+                    Loader.get().loadTexture("engineFiles/images/utils/icon=ellipsis-solid(32x32).png").getTextureID(),
+                    "ComponentMenu", new ImVec2(18, 18), true)) {
+                if (ImGui.menuItem("Reset"))
+                    components.get(i).reset();
 
-            ImGui.pushStyleVar(ImGuiStyleVar.WindowPadding, 8.0f, 6.0f);
-            ImGui.pushStyleVar(ImGuiStyleVar.ItemSpacing, ImGui.getStyle().getItemSpacingX() * 2, ImGui.getStyle().getItemSpacingY() * 1.4f);
-            ImGui.pushStyleVar(ImGuiStyleVar.FramePadding, ImGui.getStyle().getFramePaddingX() * 2, ImGui.getStyle().getFramePaddingY() * 2);
-            if (ImGui.beginCombo("##componentCombo", current_item, ImGuiComboFlags.NoArrowButton)) {
+                ImGui.separator();
                 if (components.get(i).getClass() != Transform.class) {
-                    if (ImGui.menuItem("Remove component")) {
+                    if (ImGui.menuItem("Remove Component")) {
                         removeComponent(components.get(i).getClass());
                         i--;
                     }
-                }
-                EditorImGui.helpMarker("Help (?)", "Tooltip");
-                ImGui.endCombo();
+                } else
+                    ImGui.textDisabled("Remove Component");
+
+                if (i > 1) {
+                    if (ImGui.menuItem("Move Up"))
+                        swapTwoComponents(i, i - 1);
+                } else
+                    ImGui.textDisabled("Move Up"); // TODO IF MOVE UP OR DOWN DON'T WORK, REPLACE IF STATEMENTS
+
+                if (i > 1 && i < components.size() - 1) {
+                    if (ImGui.menuItem("Move Down"))
+                        swapTwoComponents(i, i + 1);
+                } else
+                    ImGui.textDisabled("Move Down");
+
+                EditorImGui.EndButtonDropDown();
             }
-            ImGui.popStyleVar(3);
-            ImGui.popStyleColor(4);
             //</editor-fold>
 
             ImGui.columns(1);
@@ -225,13 +233,46 @@ public class GameObject {
 
             ImGui.popID();
         }
-
         ImGui.separator();
-        if (EditorImGui.horizontalCenterButton("Add component", 60.0f))
-            ImGui.openPopup("##componentAdder");
 
-        showAddComponentsList();
+        float centerOfWindow = ImGui.getWindowContentRegionMaxX() / 2.0f;
+        boolean isOpen = EditorImGui.horizontalCenterButton("Add component", 60.0f);
+        float popupPosY = ImGui.getCursorPosY();
+        ImVec2 popupPosition = new ImVec2(centerOfWindow - 105.0f, popupPosY);
+
+        if (EditorImGui.BeginPopup("ComponentAdder", popupPosition, isOpen)) {
+            List<Component> componentList = Component.getAllChild();
+            componentList.add(new MeshRenderer(null));
+            for (Component c : componentList) {
+                if (getComponent(c.getClass()) == null && !addComponentBlackList.contains(c.getClass()))
+                    if (ImGui.menuItem(c.getClass().getSimpleName())) {
+//                        if (c.getClass()== UIRenderer.class) {
+//                            SpriteRenderer spr = getComponent(SpriteRenderer.class);
+//                            removeComponent(SpriteRenderer.class);
+//                            ((UIRenderer) c).setTexture(spr.getTexture());
+//                            ((UIRenderer) c).setColor(spr.getColor());
+//                            ((UIRenderer) c).setDirty();
+//                            getComponent(Transform.class).zIndex++;
+//                            getComponent(Transform.class).zIndex--;
+//                            addComponent(c);
+//                        } else if (c.getClass()== MeshRenderer.class) {
+//                            MeshRenderer mesh = getComponent(MeshRenderer.class);
+//                            removeComponent(SpriteRenderer.class);
+//                            ((MeshRenderer) c).setTexture(mesh.getTexture());
+//                            ((MeshRenderer) c).setColor(mesh.getColor());
+//                            ((MeshRenderer) c).setDirty();
+//                            getComponent(Transform.class).zIndex++;
+//                            getComponent(Transform.class).zIndex--;
+//                            addComponent(c);
+//                        } else
+                        addComponent(c);
+                    }
+            }
+            EditorImGui.EndPopup();
+        }
     }
+
+    private void swapTwoComponents(int firstIndex, int secondIndex) { Collections.swap(components, firstIndex, secondIndex); }
 
     private void drawTags() {
         ImGui.beginMenuBar();
@@ -263,7 +304,7 @@ public class GameObject {
             ImGui.pushStyleColor(ImGuiCol.FrameBg, 0, 0, 0, 0);
             ImGui.pushStyleVar(ImGuiStyleVar.FramePadding, 8.0f, 3.0f);
             ImGui.setNextItemWidth(tmp.x + 14.0f);
-            tags.get(i).tag = drawTagInput("tag" + i, tags.get(i).tag, "Tag");
+            tags.get(i).tag = drawTagInput("tag" + i, tags.get(i).tag);
             ImGui.popStyleVar();
             ImGui.popStyleColor();
 
@@ -331,7 +372,7 @@ public class GameObject {
 
             ImGui.setNextItemWidth(ImGui.getContentRegionAvailX());
             ImGui.pushStyleVar(ImGuiStyleVar.FramePadding, 10.0f, ImGui.getStyle().getFramePaddingY());
-            newTagName = drawTagInput("newTagInput", newTagName, "Tag");
+            newTagName = drawTagInput("newTagInput", newTagName);
             ImGui.popStyleVar();
 
             ImGui.setCursorPosX(ImGui.getContentRegionAvailX() / 6.0f);
@@ -355,7 +396,7 @@ public class GameObject {
         }
     }
 
-    private String drawTagInput(String label, String text, String placeholder) {
+    private String drawTagInput(String label, String text) {
         ImGui.pushID(label);
 
         float start = ImGui.getCursorPosX();
@@ -370,7 +411,7 @@ public class GameObject {
             ImVec4 color = ImGui.getStyle().getColor(ImGuiCol.TextDisabled);
             ImGui.pushStyleColor(ImGuiCol.Text, color.x, color.y, color.z, color.w);
             ImGui.setCursorPosX(start + 10.0f);
-            ImGui.text(placeholder);
+            ImGui.text("Tag");
             ImGui.popStyleColor();
         }
         ImGui.popID();
@@ -378,38 +419,6 @@ public class GameObject {
             ImGui.setKeyboardFocusHere(-1);
 
         return text;
-    }
-
-    private void showAddComponentsList() {
-        for (Component c : Component.getAllChild()) {
-            if (ImGui.beginPopup("##componentAdder")) {
-                if (getComponent(c.getClass()) == null)
-                    if (ImGui.menuItem(c.getClass().getSimpleName())) {
-//                        if (c.getClass()== UIRenderer.class) {
-//                            SpriteRenderer spr = getComponent(SpriteRenderer.class);
-//                            removeComponent(SpriteRenderer.class);
-//                            ((UIRenderer) c).setTexture(spr.getTexture());
-//                            ((UIRenderer) c).setColor(spr.getColor());
-//                            ((UIRenderer) c).setDirty();
-//                            getComponent(Transform.class).zIndex++;
-//                            getComponent(Transform.class).zIndex--;
-//                            addComponent(c);
-//                        } else if (c.getClass()== MeshRenderer.class) {
-//                            MeshRenderer mesh = getComponent(MeshRenderer.class);
-//                            removeComponent(SpriteRenderer.class);
-//                            ((MeshRenderer) c).setTexture(mesh.getTexture());
-//                            ((MeshRenderer) c).setColor(mesh.getColor());
-//                            ((MeshRenderer) c).setDirty();
-//                            getComponent(Transform.class).zIndex++;
-//                            getComponent(Transform.class).zIndex--;
-//                            addComponent(c);
-//                        } else
-                        addComponent(c);
-                    }
-
-                ImGui.endPopup();
-            }
-        }
     }
 
     public void destroy() {
@@ -473,29 +482,4 @@ public class GameObject {
                 child.transform.mainParent = this;
         }
     }
-
-    public void setMainParentInChilds(GameObject parent) {
-        for (GameObject child : transform.childs) {
-            child.setMainParentInChilds(parent);
-            child.transform.mainParent = parent;
-        }
-    }
-
-//    public void increasePosition(Vector3f dPosition) { this.position.add(dPosition); }
-//
-//    public void increaseRotation(Vector3f dRotation) { this.rotation.add(dRotation); }
-//
-//    public void increaseScale(Vector3f dScale) { this.scale.add(dScale); }
-//
-//    public Vector3f getPosition() { return this.position; }
-//
-//    public void setPosition(Vector3f position) { this.position = position; }
-//
-//    public Vector3f getRotation() { return this.rotation; }
-//
-//    public void setRotation(Vector3f rotation) { this.rotation = rotation; }
-//
-//    public Vector3f getScale() { return this.scale; }
-//
-//    public void setScale(Vector3f scale) { this.scale = scale; }
 }

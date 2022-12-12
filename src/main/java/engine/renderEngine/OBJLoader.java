@@ -48,6 +48,6 @@ public class OBJLoader {
         for (int i = 0; i < normalsBArray.length; i++)
             normalsBArray[i] = normalsB.get(i);
 
-        return Loader.get().loadToVAO(verticesBArray, texCoordsBArray, normalsBArray, indicesBArray);
+        return Loader.get().loadToVAO(verticesBArray, texCoordsBArray, normalsBArray, indicesBArray, filepath);
     }
 }

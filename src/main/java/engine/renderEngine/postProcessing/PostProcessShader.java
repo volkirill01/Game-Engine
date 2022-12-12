@@ -52,4 +52,6 @@ public abstract class PostProcessShader extends ShaderProgram {
     public abstract void imgui(boolean isLayerActive, String additionToId);
 
     public abstract PostProcessShader copy();
+
+    public abstract void reset();
 }

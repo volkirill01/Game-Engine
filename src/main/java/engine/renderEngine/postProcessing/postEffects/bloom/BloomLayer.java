@@ -210,10 +210,9 @@ public class BloomLayer extends PostProcessLayer {
 
         @Override
         public void imgui(boolean isActive, String additionToId) {
-            if (EditorImGui.checkbox("Show Bloom Mask", this.showBloomMask))
-                this.showBloomMask = !this.showBloomMask;
+            this.showBloomMask = EditorImGui.field_Boolean("Show Bloom Mask", this.showBloomMask);
 
-            this.previewLayer = EditorImGui.inputInt("Preview Layer Index", this.previewLayer, 1, 0, 2 + downsampleShaders.size() + upsampleShaders.size());
+            this.previewLayer = EditorImGui.field_Int_WithButtons("Preview Layer Index", this.previewLayer, 1, 0, 2 + downsampleShaders.size() + upsampleShaders.size());
 
             this.shader.imgui(isActive, additionToId);
 
@@ -223,6 +222,16 @@ public class BloomLayer extends PostProcessLayer {
 //            }
 
             this.compositingShader.imgui(isActive, additionToId);
+        }
+
+        @Override
+        public void reset() {
+            this.shader.reset();
+            for (int i = 0; i < upsampleShaders.size(); i++) {
+                this.downsampleShaders.get(i).reset();
+                this.upsampleShaders.get(i).reset();
+            }
+            this.compositingShader.reset();
         }
     }; }
 }

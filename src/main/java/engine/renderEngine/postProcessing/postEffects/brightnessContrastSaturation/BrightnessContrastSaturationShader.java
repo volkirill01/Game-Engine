@@ -20,9 +20,9 @@ public class BrightnessContrastSaturationShader extends PostProcessShader {
 
 	@Override
 	public void imgui(boolean isLayerActive, String additionToId) {
-		brightness = EditorImGui.dragFloat("Brightness", brightness, 0.005f);
-		contrast = EditorImGui.dragFloat("Contrast", contrast, 0.005f);
-		saturation = EditorImGui.dragFloat("Saturation", saturation, 0.1f, 0.0f);
+		brightness = EditorImGui.field_Float("Brightness", brightness, 0.005f);
+		contrast = EditorImGui.field_Float("Contrast", contrast, 0.005f);
+		saturation = EditorImGui.field_Float("Saturation", saturation, 0.1f, 0.0f);
 	}
 
 	@Override
@@ -35,5 +35,12 @@ public class BrightnessContrastSaturationShader extends PostProcessShader {
 	@Override
 	public BrightnessContrastSaturationShader copy() {
 		return new BrightnessContrastSaturationShader(this.fboWidth, this.fboHeight);
+	}
+
+	@Override
+	public void reset() {
+		this.brightness = 0.0f;
+		this.contrast = 1.0f;
+		this.saturation = 1.0f;
 	}
 }

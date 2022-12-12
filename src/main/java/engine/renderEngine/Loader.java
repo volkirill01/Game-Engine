@@ -1,19 +1,19 @@
 package engine.renderEngine;
 
-import de.matthiasmann.twl.utils.PNGDecoder;
 import engine.renderEngine.models.RawModel;
+import engine.renderEngine.textures.Texture;
 import engine.renderEngine.textures.TextureData;
-import org.eclipse.core.commands.contexts.Context;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.EXTTextureFilterAnisotropic;
 import org.lwjgl.opengl.GL33;
 
-import java.io.FileInputStream;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.lwjgl.opengl.GL30.*;
 import static org.lwjgl.stb.STBImage.*;
@@ -25,6 +25,7 @@ public class Loader {
     private List<Integer> vaos = new ArrayList<>();
     private List<Integer> vbos = new ArrayList<>();
     private List<Integer> textures = new ArrayList<>();
+    private Map<String, Texture> texturesFiles = new HashMap<>();
 
     public static Loader get() {
         if (instance == null)
@@ -33,14 +34,14 @@ public class Loader {
         return instance;
     }
 
-    public RawModel loadToVAO(float[] positions, float[] textureCoords, float[] normals, int[] indices) {
+    public RawModel loadToVAO(float[] positions, float[] textureCoords, float[] normals, int[] indices, String filepath) {
         int vaoID = createVao();
         bindIndicesBuffer(indices);
         storeDataInAttributeList(0, 3, positions);
         storeDataInAttributeList(1, 2, textureCoords);
         storeDataInAttributeList(2, 3, normals);
         unbindVAO();
-        return new RawModel(vaoID, indices.length);
+        return new RawModel(vaoID, indices.length, filepath);
     }
 
     public int loadToVAO(float[] positions, float[] textureCoords) {
@@ -86,11 +87,14 @@ public class Loader {
         glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
 
-    public int loadTexture(String filepath) { return loadTexture(filepath, false, true); }
+    public Texture loadTexture(String filepath) { return loadTexture(filepath, false, true); }
 
-    public int loadTexture(String filepath, boolean useMipmaps) { return loadTexture(filepath, useMipmaps, false); }
+    public Texture loadTexture(String filepath, boolean useMipmaps) { return loadTexture(filepath, useMipmaps, false); }
 
-    public int loadTexture(String filepath, boolean useMipmaps, boolean useAnisotropicFiltering) {
+    public Texture loadTexture(String filepath, boolean useMipmaps, boolean useAnisotropicFiltering) {
+        if (texturesFiles.containsKey(filepath))
+            return texturesFiles.get(filepath);
+
         // Generate texture on GPU
         int textureID = glGenTextures();
         glBindTexture(GL_TEXTURE_2D, textureID);
@@ -135,6 +139,10 @@ public class Loader {
             float amount = Math.min(4.0f,  glGetFloat(EXTTextureFilterAnisotropic.GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT));
             glTexParameterf(GL_TEXTURE_2D, EXTTextureFilterAnisotropic.GL_TEXTURE_MAX_ANISOTROPY_EXT, amount);
         }
+
+        Texture texture = new Texture(textureID, filepath, width.get(0), height.get(0));
+
+        texturesFiles.put(filepath, texture);
 //        Texture texture = null;
 //        try {
 //            FileInputStream file = new FileInputStream(filePath);
@@ -147,7 +155,7 @@ public class Loader {
 //        int textureID = texture.getTextureID();
 //        textures.add(textureID);
 //        return textureID;
-        return textureID;
+        return texture;
     }
 
     public int loadCubeMap(String[] textureFiles) {

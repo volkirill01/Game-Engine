@@ -8,7 +8,6 @@ import engine.renderEngine.Loader;
 import engine.renderEngine.OBJLoader;
 import engine.renderEngine.components.MeshRenderer;
 import engine.renderEngine.font.fontMeshCreator.FontType;
-import engine.renderEngine.font.fontMeshCreator.GUIText;
 import engine.renderEngine.font.fontRendering.TextMaster;
 import engine.renderEngine.guis.GuiRenderer;
 import engine.renderEngine.guis.GuiTexture;
@@ -58,7 +57,7 @@ public class Main {
         MasterRenderer renderer = new MasterRenderer(camera);
         ParticleMaster.init(renderer.getProjectionMatrix());
 
-        FontType font = new FontType(Loader.get().loadTexture("Assets/fonts/candara.png", false), new File("Assets/fonts/candara.fnt"));
+        FontType font = new FontType(Loader.get().loadTexture("Assets/fonts/candara.png", false).getTextureID(), new File("Assets/fonts/candara.fnt"));
 //        GUIText text = new GUIText("Text", 5, font, new Vector2f(0.6f, 0.5f), 0.4f, true); // maxLineLength is horizontal size of text rect (1 - all screen width, 0.5 half of the screen)
 //        text.setFontParams(new Color(20, 20, 20), 7, 0.5f, 0.1f);
 //        text.setDropShadow(new Color(0, 0, 0, 60), new Vector2f(-0.001f, -0.001f), 0.04f, 0.2f);
@@ -143,34 +142,34 @@ public class Main {
         TexturedModel dragonStaticModel = new TexturedModel(dragonModel,
                 new Material(Loader.get().loadTexture("Assets/whitePixel.png")));
 
-        Material dragonTexture = dragonStaticModel.getTexture();
+        Material dragonTexture = dragonStaticModel.getMaterial();
         dragonTexture.setColor(new Color(0, 255, 0));
 
         GameObject dragonGameObject = new GameObject("Dragon");
         dragonGameObject.addComponent(new MeshRenderer(dragonStaticModel));
-        dragonGameObject.transform.set(new Vector3f(-106.0f, 18.0f, -21.0f), new Vector3f(0), new Vector3f(1.0f));
+        dragonGameObject.transform.set(new Vector3f(-106.0f, 18.0f, -21.0f), new Vector3f(0.0f), new Vector3f(1.0f));
         Window.get().currentScene.addGameObjectToScene(dragonGameObject);
 
 
         RawModel dragonModel2 = OBJLoader.loadOBJ("Assets/dragon.obj");
         TexturedModel dragonStaticModel2 = new TexturedModel(dragonModel2,
                 new Material(Loader.get().loadTexture("Assets/whitePixel.png")));
-        Material texture2 = dragonStaticModel2.getTexture();
-        texture2.setColor(new Color(255, 185, 0));
-        texture2.setShineDumper(10);
-        texture2.setReflectivity(1f);
+        Material texture2 = dragonStaticModel2.getMaterial();
+        texture2.setColor(new Color(237, 145, 8));
+        texture2.setShineDumper(14.0f);
+        texture2.setReflectivity(3.0f);
         texture2.setCullSided(RenderCullSide.Both);
 
         GameObject dragonGameObject2 = new GameObject("Dragon2");
         dragonGameObject2.addComponent(new MeshRenderer(dragonStaticModel2));
-        dragonGameObject2.transform.set(new Vector3f(-91.0f, 18.0f, -21.0f), new Vector3f(0), new Vector3f(1.0f));
+        dragonGameObject2.transform.set(new Vector3f(-91.0f, 18.0f, -21.0f), new Vector3f(0.0f), new Vector3f(1.0f));
         Window.get().currentScene.addGameObjectToScene(dragonGameObject2);
 
 
         RawModel grassModel = OBJLoader.loadOBJ("Assets/grass/grass.obj");
         TexturedModel grassStaticModel = new TexturedModel(grassModel,
                 new Material(Loader.get().loadTexture("Assets/grass/grass.png")));
-        Material grassTexture = grassStaticModel.getTexture();
+        Material grassTexture = grassStaticModel.getMaterial();
 
         grassTexture.setAlphaClip(0.05f);
         grassTexture.setUseFakeLighting(true);
@@ -178,14 +177,14 @@ public class Main {
 
         GameObject grassGameObject = new GameObject("Grass");
         grassGameObject.addComponent(new MeshRenderer(grassStaticModel));
-        grassGameObject.transform.set(new Vector3f(-100, 22, -57), new Vector3f(0), new Vector3f(0.01f));
+        grassGameObject.transform.set(new Vector3f(-100, 22, -57), new Vector3f(0.0f), new Vector3f(0.01f));
         Window.get().currentScene.addGameObjectToScene(grassGameObject);
 
 
         RawModel fernModel = OBJLoader.loadOBJ("Assets/res/fern.obj");
         TexturedModel fernStaticModel = new TexturedModel(fernModel,
                 new Material(Loader.get().loadTexture("Assets/res/fern.png")));
-        Material fernTexture = fernStaticModel.getTexture();
+        Material fernTexture = fernStaticModel.getMaterial();
 
         fernTexture.setNumberOfColumns(2);
         fernTexture.setNumberOfRows(2);
@@ -196,20 +195,20 @@ public class Main {
 
         GameObject fernGameObject = new GameObject("Fern");
         fernGameObject.addComponent(new MeshRenderer(fernStaticModel));
-        fernGameObject.transform.set(new Vector3f(-93, 19, -50), new Vector3f(0), new Vector3f(0.5f));
+        fernGameObject.transform.set(new Vector3f(-93, 19, -50), new Vector3f(0.0f), new Vector3f(0.5f));
         Window.get().currentScene.addGameObjectToScene(fernGameObject);
 
 
         GameObject fern2GameObject = new GameObject("Fern2");
         fern2GameObject.addComponent(new MeshRenderer(fernStaticModel.copy(), 3));
-        fern2GameObject.transform.set(new Vector3f(-93, 19, -42), new Vector3f(0), new Vector3f(0.5f));
+        fern2GameObject.transform.set(new Vector3f(-93, 19, -42), new Vector3f(0.0f), new Vector3f(0.5f));
         Window.get().currentScene.addGameObjectToScene(fern2GameObject);
 
 
         RawModel barrelModel = OBJLoader.loadOBJ("Assets/res/barrel/barrel.obj");
         TexturedModel barrelStaticModel = new TexturedModel(barrelModel,
                 new Material(Loader.get().loadTexture("Assets/res/barrel/barrel.png")));
-        Material barrelTexture = barrelStaticModel.getTexture();
+        Material barrelTexture = barrelStaticModel.getMaterial();
 
         barrelTexture.setSpecularIntensity(1f);
         barrelTexture.setShineDumper(10);
@@ -218,7 +217,7 @@ public class Main {
 
         GameObject barrelGameObject = new GameObject("Barrel");
         barrelGameObject.addComponent(new MeshRenderer(barrelStaticModel));
-        barrelGameObject.transform.set(new Vector3f(-110, 27, -70), new Vector3f(0), new Vector3f(0.5f));
+        barrelGameObject.transform.set(new Vector3f(-110, 27, -70), new Vector3f(0.0f), new Vector3f(0.5f));
         Window.get().currentScene.addGameObjectToScene(barrelGameObject);
 
 
@@ -226,7 +225,7 @@ public class Main {
         TexturedModel testSphereStaticModel = new TexturedModel(testSphereModel,
 //                new Material(Loader.get().loadTexture("Assets/pbr-sphere-test/rusted-metall/rustediron2_basecolor.png")));
                 new Material(Loader.get().loadTexture("Assets/pbr-sphere-test/sphere_Base_Color.png")));
-        Material testSphereTexture = testSphereStaticModel.getTexture();
+        Material testSphereTexture = testSphereStaticModel.getMaterial();
 
         testSphereTexture.setMetallicMap(Loader.get().loadTexture("Assets/pbr-sphere-test/sphere_Metallic.png"));
 //        testSphereTexture.setMetallicMap(Loader.get().loadTexture("Assets/pbr-sphere-test/rusted-metall/rustediron2_metallic.png"));
@@ -240,14 +239,14 @@ public class Main {
 
         GameObject testSphereGameObject = new GameObject("Test Sphere");
         testSphereGameObject.addComponent(new MeshRenderer(testSphereStaticModel));
-        testSphereGameObject.transform.set(new Vector3f(-110, 28, -48), new Vector3f(0), new Vector3f(3.0f));
+        testSphereGameObject.transform.set(new Vector3f(-110, 28, -48), new Vector3f(0.0f), new Vector3f(3.0f));
         Window.get().currentScene.addGameObjectToScene(testSphereGameObject);
 
 
         RawModel lanternModel = OBJLoader.loadOBJ("Assets/res/lantern/lantern.obj");
         TexturedModel lanternStaticModel = new TexturedModel(lanternModel,
                 new Material(Loader.get().loadTexture("Assets/res/lantern/lantern.png")));
-        Material lanternTexture = lanternStaticModel.getTexture();
+        Material lanternTexture = lanternStaticModel.getMaterial();
 
         lanternTexture.setEmissionIntensity(1.3f);
         lanternTexture.setEmissionMap(Loader.get().loadTexture("Assets/res/lantern/lanternS.png"));
@@ -255,19 +254,19 @@ public class Main {
 
         GameObject lanternGameObject = new GameObject("Lantern");
         lanternGameObject.addComponent(new MeshRenderer(lanternStaticModel));
-        lanternGameObject.transform.set(new Vector3f(-90, 25, -70), new Vector3f(0), new Vector3f(0.5f));
+        lanternGameObject.transform.set(new Vector3f(-90, 25, -70), new Vector3f(0.0f), new Vector3f(0.5f));
         Window.get().currentScene.addGameObjectToScene(lanternGameObject);
 
 
-        RawModel model = Loader.get().loadToVAO(vertices, textureCoords, new float[0], indices);
+        RawModel model = Loader.get().loadToVAO(vertices, textureCoords, new float[0], indices, "_Generated(Cube)");
         TexturedModel staticModel = new TexturedModel(model,
                 new Material(Loader.get().loadTexture("Assets/metalTexture.png")));
 
         GameObject hardCode_cubeGameObject = new GameObject("HardCode Cube");
-        hardCode_cubeGameObject.transform.set(new Vector3f(-79.0f, 18.8f, -22.1f), new Vector3f(0), new Vector3f(5.0f));
+        hardCode_cubeGameObject.transform.set(new Vector3f(-79.0f, 18.8f, -22.1f), new Vector3f(0.0f), new Vector3f(5.0f));
         MeshRenderer goMeshRenderer = new MeshRenderer(staticModel);
-        goMeshRenderer.getModel().getTexture().setCullSided(RenderCullSide.Both);
-        goMeshRenderer.getModel().getTexture().setTiling(new Vector2f(1.0f, 1.0f));
+        goMeshRenderer.getModel().getMaterial().setCullSided(RenderCullSide.Both);
+        goMeshRenderer.getModel().getMaterial().setTiling(new Vector2f(1.0f, 1.0f));
         hardCode_cubeGameObject.addComponent(goMeshRenderer);
         Window.get().currentScene.addGameObjectToScene(hardCode_cubeGameObject);
 //        // Entities
@@ -291,23 +290,23 @@ public class Main {
         // TERRAIN
         List<Terrain> terrains = new ArrayList<>();
 
-        TerrainTexture backgroundTexture = new TerrainTexture(Loader.get().loadTexture("Assets/res/grassy2.png"));
-        TerrainTexture rTexture = new TerrainTexture(Loader.get().loadTexture("Assets/res/mud.png"));
-        TerrainTexture gTexture = new TerrainTexture(Loader.get().loadTexture("Assets/res/grassFlowers.png"));
-        TerrainTexture bTexture = new TerrainTexture(Loader.get().loadTexture("Assets/res/path.png"));
+        TerrainTexture backgroundTexture = new TerrainTexture(Loader.get().loadTexture("Assets/res/grassy2.png").getTextureID());
+        TerrainTexture rTexture = new TerrainTexture(Loader.get().loadTexture("Assets/res/mud.png").getTextureID());
+        TerrainTexture gTexture = new TerrainTexture(Loader.get().loadTexture("Assets/res/grassFlowers.png").getTextureID());
+        TerrainTexture bTexture = new TerrainTexture(Loader.get().loadTexture("Assets/res/path.png").getTextureID());
 
         TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture);
-        TerrainTexture blendMap = new TerrainTexture(Loader.get().loadTexture("Assets/res/blendMap.png"));
+        TerrainTexture blendMap = new TerrainTexture(Loader.get().loadTexture("Assets/res/blendMap.png").getTextureID());
 
         terrains.add(new Terrain(-1, -1, texturePack, blendMap, "Assets/heightmap1.png"));
         // TERRAIN
 
         // GUIS
         List<GuiTexture> guis = new ArrayList<>();
-        GuiTexture gui = new GuiTexture(Loader.get().loadTexture("Assets/testGui.png"), new Vector2f(0.4f, 0.3f), 0, new Vector2f(0.2f, 0.2f));
+        GuiTexture gui = new GuiTexture(Loader.get().loadTexture("Assets/testGui.png"), new Vector2f(-0.8f, 0.8f), 0, new Vector2f(0.2f, 0.2f));
         guis.add(gui);
 
-        GuiTexture gui2 = new GuiTexture(Loader.get().loadTexture("Assets/testGui.png"), new Vector2f(0.4f, 0.3f), 0, new Vector2f(0.2f, 0.2f));
+        GuiTexture gui2 = new GuiTexture(Loader.get().loadTexture("Assets/testGui.png"), new Vector2f(0.8f, -0.8f), 0, new Vector2f(0.2f, 0.2f));
         guis.add(gui2);
 
 //        GuiTexture shadowMapGui = new GuiTexture(renderer.getShadowMapTexture(), new Vector2f(0.4f, 0.3f), 0, new Vector2f(0.2f, 0.2f));
@@ -336,7 +335,7 @@ public class Main {
 
         // Particles
 //        ParticleSystem simpleParticleSystem = new ParticleSystem(50, 25, 0.3f, 4);
-        ParticleTexture particleTexture = new ParticleTexture(Loader.get().loadTexture("Assets/fireParticles.png"), 6, 6);
+        ParticleTexture particleTexture = new ParticleTexture(Loader.get().loadTexture("Assets/fireParticles.png").getTextureID(), 6, 6);
         particleTexture.setAdditive(true);
         ParticleSystem complexParticleSystem = new ParticleSystem(particleTexture, 50, 25, 0.3f, 4, 1);
         complexParticleSystem.randomizeRotation();
@@ -402,7 +401,7 @@ public class Main {
             Vector3f terrainPoint = picker.getCurrentTerrainPoint();
             if (KeyListener.keyBeginPress(GLFW_KEY_E))
                 if (terrainPoint != null) {
-                    hardCode_cubeGameObject.transform.localPosition = terrainPoint.add(new Vector3f(0, 2.0f, 0));
+                    hardCode_cubeGameObject.transform.position = terrainPoint.add(new Vector3f(0, 2.0f, 0));
             }
 
             dragonGameObject.transform.increaseRotation(new Vector3f(0, 1, 0));
@@ -411,7 +410,7 @@ public class Main {
             hardCode_cubeGameObject.transform.increaseRotation(new Vector3f(1, 1, 0));
             barrelGameObject.transform.increaseRotation(new Vector3f(1, 1, 0));
 
-            gui2.setTexture(TestFieldsWindow.testInts[0]);
+            gui2.getTexture().setTextureID(TestFieldsWindow.testInts[0]);
 
 //            shadowMapGui.setRotation(shadowMapGui.getRotation() + 1);
 
@@ -430,7 +429,7 @@ public class Main {
 
             multisampleSceneFbo.resolveToFbo(GL_COLOR_ATTACHMENT0, outputFbo);
             if (false)
-                Window.setScreenImage(outputFbo.getColourTexture());
+                Window.setScreenImage(outputFbo.getColourTexture()); // Not PostProcessing at all
             else {
                 PostProcessing.doPostProcessing(outputFbo.getColourTexture());
                 Window.setScreenImage(PostProcessing.getFinalImage());

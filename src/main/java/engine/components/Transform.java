@@ -12,69 +12,58 @@ import java.util.List;
 
 public class Transform extends Component {
     public Vector3f position;
-    public Vector3f localPosition;
-    public Vector3f scale;
-    public Vector3f localScale;
-    public Vector3f localRotation;
     public Vector3f rotation;
+    public Vector3f scale;
+
     public transient GameObject parent = null;
     public transient GameObject mainParent = null;
     public List<GameObject> childs = new ArrayList<>();
 
-    public Transform() { init(new Vector3f(), new Vector3f(1.0f), new Vector3f(1.0f), new ArrayList<>()); }
+    public Transform() { init(new Vector3f(0.0f), new Vector3f(0.0f), new Vector3f(1.0f), new ArrayList<>()); }
 
-    public Transform(Vector3f position) { init(position, new Vector3f(1.0f), new Vector3f(1.0f), new ArrayList<>()); }
+    public Transform(Vector3f position) { init(position, new Vector3f(0.0f), new Vector3f(1.0f), new ArrayList<>()); }
 
-    public Transform(Vector3f position, Vector3f scale) { init(position, scale, new Vector3f(1.0f), new ArrayList<>()); }
+    public Transform(Vector3f position, Vector3f scale) { init(position, new Vector3f(0.0f), scale, new ArrayList<>()); }
 
-    public Transform(Vector3f position, Vector3f scale, ArrayList<GameObject> childs) { init(position, scale, new Vector3f(1.0f), childs); }
+    public Transform(Vector3f position, Vector3f scale, ArrayList<GameObject> childs) { init(position, new Vector3f(0.0f), scale, childs); }
 
-    public Transform(Vector3f position, Vector3f scale, Vector3f localRotation, ArrayList<GameObject> childs) { init(position, scale, localRotation, childs); }
+    public Transform(Vector3f position, Vector3f rotation, Vector3f scale, ArrayList<GameObject> childs) { init(position, rotation, scale, childs); }
 
-    public Transform(Vector3f position, Vector3f rotation, Vector3f scale) { init(position, scale, rotation, new ArrayList<>()); }
+    public Transform(Vector3f position, Vector3f rotation, Vector3f scale) { init(position, rotation, scale, new ArrayList<>()); }
 
-    public Transform(Vector3f position, ArrayList<GameObject> childs) { init(position, new Vector3f(1.0f), new Vector3f(1.0f), childs); }
+    public Transform(Vector3f position, ArrayList<GameObject> childs) { init(position, new Vector3f(0.0f), new Vector3f(1.0f), childs); }
 
-    public void init(Vector3f position, Vector3f scale, Vector3f rotation, ArrayList<GameObject> childs) {
+    public void init(Vector3f position, Vector3f rotation, Vector3f scale, ArrayList<GameObject> childs) {
         this.position = position;
-        this.localPosition = this.position;
         this.scale = scale;
-        this.localScale =  this.scale;
-        this.localRotation = rotation;
-        this.rotation = this.localRotation;
+        this.rotation = rotation;
         this.childs = childs;
     }
 
     public void set(Vector3f position, Vector3f rotation, Vector3f scale) {
-        this.localPosition = position;
-        this.localRotation = rotation;
-        this.localScale = scale;
+        this.position = position;
+        this.rotation = rotation;
+        this.scale = scale;
     }
 
-    public void increasePosition(Vector3f position) { this.localPosition.add(position); }
+    public void increasePosition(Vector3f position) { this.position.add(position); }
 
-    public void increaseRotation(Vector3f rotation) { this.localRotation.add(rotation); }
+    public void increaseRotation(Vector3f rotation) { this.rotation.add(rotation); }
 
-    public void increaseScale(Vector3f scale) { this.localScale.add(scale); }
+    public void increaseScale(Vector3f scale) { this.scale.add(scale); }
 
     @Override
     public void imgui() {
 //        EditorImGui.inputText("Parent", parent != null ? parent.name : "null", "");
 //        EditorImGui.inputText("Main Parent", mainParent != null ? mainParent.name : "null", "");
 
-        if (this.parent != null) {
-            EditorImGui.drawVec3Control("Position", this.localPosition);
-            EditorImGui.drawVec3Control("Rotation", this.rotation);
-            EditorImGui.drawVec3Control("Scale", this.localScale, 1.0f);
-        } else {
-            EditorImGui.drawVec3Control("Position", this.position);
-            EditorImGui.drawVec3Control("Rotation", this.rotation);
-            EditorImGui.drawVec3Control("Scale", this.scale, 1.0f);
-        }
+        this.position = EditorImGui.field_Vector3f("Position", this.position);
+        this.rotation = EditorImGui.field_Vector3f("Rotation", this.rotation);
+        this.scale = EditorImGui.field_Vector3f("Scale", this.scale, 1.0f);
     }
 
     public Transform copy() {
-        Transform copy = new Transform(new Vector3f(this.position), new Vector3f(this.scale), this.rotation, new ArrayList<>(childs));
+        Transform copy = new Transform(new Vector3f(this.position), new Vector3f(this.scale), new Vector3f(this.rotation), new ArrayList<>(childs));
 //        for (GameObject child : copy.childs)
 //            child.getComponent(SpriteRenderer.class).setDirty(); // TODO пофиксить баг с чёрными комиями
 
@@ -93,40 +82,47 @@ public class Transform extends Component {
 
     @Override
     public void update() { // TODO закончить изменение позиции на локальную и размера
-        if (parent != null) {
-            position = new Vector3f(
-                    (localPosition.x + mainParent.transform.localPosition.x) + parent.transform.localScale.x,
-                    (localPosition.y + mainParent.transform.localPosition.y) + parent.transform.localScale.y,
-                    (localPosition.z + mainParent.transform.localPosition.z) + parent.transform.localScale.z);
-            scale = new Vector3f(
-                    localScale.x * mainParent.transform.localScale.x,
-                    localScale.y * mainParent.transform.localScale.y,
-                    localScale.z * mainParent.transform.localScale.z);
-            localRotation = parent.transform.rotation.add(this.rotation);
-        } else {
-            position = localPosition;
-            scale = localScale;
-            localRotation = rotation;
-        }
+//        if (parent != null) {
+//            position = new Vector3f(
+//                    (localPosition.x + mainParent.transform.localPosition.x) + parent.transform.localScale.x,
+//                    (localPosition.y + mainParent.transform.localPosition.y) + parent.transform.localScale.y,
+//                    (localPosition.z + mainParent.transform.localPosition.z) + parent.transform.localScale.z);
+//            scale = new Vector3f(
+//                    localScale.x * mainParent.transform.localScale.x,
+//                    localScale.y * mainParent.transform.localScale.y,
+//                    localScale.z * mainParent.transform.localScale.z);
+//            localRotation = parent.transform.rotation.add(this.rotation);
+//        } else {
+//            position = localPosition;
+//            scale = localScale;
+//            localRotation = rotation;
+//        }
     }
 
     @Override
     public void editorUpdate() {
-        if (parent != null) {
-            position = new Vector3f(
-                    (localPosition.x + parent.transform.localPosition.x + mainParent.transform.localPosition.x),
-                    (localPosition.y + parent.transform.localPosition.y + mainParent.transform.localPosition.y),
-                    (localPosition.z + parent.transform.localPosition.z + mainParent.transform.localPosition.z));
-            scale = new Vector3f(
-                    localScale.x * mainParent.transform.localScale.x,
-                    localScale.y * mainParent.transform.localScale.y,
-                    localScale.z * mainParent.transform.localScale.z);
-            localRotation = parent.transform.rotation.add(this.rotation);
-        } else {
-            position = localPosition;
-            scale = localScale;
-            localRotation = rotation;
-        }
+//        if (parent != null) {
+//            position = new Vector3f(
+//                    (localPosition.x + parent.transform.localPosition.x + mainParent.transform.localPosition.x),
+//                    (localPosition.y + parent.transform.localPosition.y + mainParent.transform.localPosition.y),
+//                    (localPosition.z + parent.transform.localPosition.z + mainParent.transform.localPosition.z));
+//            scale = new Vector3f(
+//                    localScale.x * mainParent.transform.localScale.x,
+//                    localScale.y * mainParent.transform.localScale.y,
+//                    localScale.z * mainParent.transform.localScale.z);
+//            localRotation = parent.transform.rotation.add(this.rotation);
+//        } else {
+//            position = localPosition;
+//            scale = localScale;
+//            localRotation = rotation;
+//        }
+    }
+
+    @Override
+    public void reset() {
+        this.position = new Vector3f(0.0f);
+        this.rotation = new Vector3f(0.0f);
+        this.scale = new Vector3f(1.0f);
     }
 
     @Override
@@ -136,11 +132,8 @@ public class Transform extends Component {
 
         Transform t = (Transform)o;
         return  t.position.equals(this.position) &&
-                t.localPosition.equals(this.localPosition) &&
-                t.scale.equals(this.scale) &&
-                t.localScale.equals(this.localScale) &&
                 t.rotation == this.rotation &&
-                t.localRotation == this.localRotation &&
+                t.scale.equals(this.scale) &&
                 t.parent == this.parent &&
                 t.mainParent == this.mainParent &&
                 t.childs.equals(this.childs);
@@ -149,24 +142,23 @@ public class Transform extends Component {
     public void addChild(GameObject child) {
         this.childs.add(child);
 
-        Vector3f oldScale = child.transform.localScale;
-
-        child.transform.parent = this.gameObject;
-
-        if (this.mainParent != null) {
-            child.transform.mainParent = this.mainParent;
-            if (child.transform.childs != null)
-                gameObject.setMainParentInChilds(this.mainParent);
-        }
-        else {
-            child.transform.mainParent = this.gameObject;
-            if (child.transform.childs != null)
-                gameObject.setMainParentInChilds(this.gameObject);
-        }
-
-        child.transform.position = new Vector3f(child.transform.position.sub(this.gameObject.transform.localPosition));
-        child.transform.scale = new Vector3f(oldScale); // TODO пофиксить баг с изменением размера
-
+//        Vector3f oldScale = child.transform.scale;
+//
+//        child.transform.parent = this.gameObject;
+//
+//        if (this.mainParent != null) {
+//            child.transform.mainParent = this.mainParent;
+//            if (child.transform.childs != null)
+//                gameObject.setMainParentInChilds(this.mainParent);
+//        }
+//        else {
+//            child.transform.mainParent = this.gameObject;
+//            if (child.transform.childs != null)
+//                gameObject.setMainParentInChilds(this.gameObject);
+//        }
+//
+//        child.transform.position = new Vector3f(child.transform.position.sub(this.gameObject.transform.position));
+//        child.transform.scale = new Vector3f(oldScale); // TODO пофиксить баг с изменением размера
     }
 
     public void removeChild(GameObject child) {

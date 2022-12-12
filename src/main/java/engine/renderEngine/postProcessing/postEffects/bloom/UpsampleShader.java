@@ -26,12 +26,17 @@ public class UpsampleShader extends PostProcessShader {
     @Override
     public void imgui(boolean isLayerActive, String additionToId) {
         ImGui.pushID("Upsample" + additionToId);
-        this.filterRadius = EditorImGui.dragFloat("Filter Radius", filterRadius, 0.02f);
+        this.filterRadius = EditorImGui.field_Float("Filter Radius", filterRadius, 0.02f);
         ImGui.popID();
     }
 
     @Override
     public UpsampleShader copy() {
         return new UpsampleShader(this.getWidth(), this.getHeight());
+    }
+
+    @Override
+    public void reset() {
+        this.filterRadius = 0.005f;
     }
 }

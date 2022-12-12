@@ -15,6 +15,7 @@ import imgui.flag.*;
 import imgui.gl3.ImGuiImplGl3;
 import imgui.glfw.ImGuiImplGlfw;
 import imgui.type.ImBoolean;
+import org.apache.commons.lang3.SerializationUtils;
 
 import java.io.File;
 import java.util.Map;
@@ -226,8 +227,8 @@ public class ImGuiLayer {
         ImGui.pushStyleColor(ImGuiCol.BorderShadow, 0, 0, 0, 0);
 
         ImGui.pushStyleColor(ImGuiCol.FrameBg, 31, 31, 31, 255);
-        ImGui.pushStyleColor(ImGuiCol.FrameBgHovered, 36, 36, 36, 255);
-        ImGui.pushStyleColor(ImGuiCol.FrameBgActive, 42, 42, 42, 255);
+        ImGui.pushStyleColor(ImGuiCol.FrameBgHovered, 34, 34, 34, 255);
+        ImGui.pushStyleColor(ImGuiCol.FrameBgActive, 38, 38, 38, 255);
 
         ImGui.pushStyleColor(ImGuiCol.TitleBg, 15, 15, 15, 255);
         ImGui.pushStyleColor(ImGuiCol.TitleBgActive, 15, 15, 15, 255);
@@ -297,13 +298,13 @@ public class ImGuiLayer {
     public void update(float deltaTime, Scene currentScene) {
         startFrame(deltaTime);
 
-        if (windowOnFullscreen == null) {
+        if (this.windowOnFullscreen == null) {
             setupDockspace();
             currentScene.imgui();
             ImGui.showDemoWindow();
             gameViewWindow.imgui();
             console.imgui();
-//        scriptGraphWindow.imgui();
+    //        scriptGraphWindow.imgui();
             sceneHierarchyWindow.imgui();
             assetsWindow.imgui();
             assetsStructureWindow.imgui();
@@ -317,7 +318,7 @@ public class ImGuiLayer {
             ImGui.setNextWindowSize(viewport.getWorkSize().x, viewport.getWorkSize().y);
             ImGui.setNextWindowViewport(viewport.getID());
 
-            windowOnFullscreen.imgui();
+            this.windowOnFullscreen.imgui();
         }
 
         // TODO make window full screen on double click on tab bar
@@ -331,10 +332,10 @@ public class ImGuiLayer {
 //            ImGui.setNextWindowPos(this.windowOnFullscreen.windowPos.x, this.windowOnFullscreen.windowPos.y);
 //            this.windowOnFullscreen.imgui();
 //        }
-        this.windowOnFullscreen = windowOnFullscreen;
+        this.windowOnFullscreen = SerializationUtils.clone(windowOnFullscreen);
     }
 
-    public EditorImGuiWindow getWindowOnFullscreen() { return windowOnFullscreen; }
+    public EditorImGuiWindow getWindowOnFullscreen() { return this.windowOnFullscreen; }
 
     private void startFrame(final float deltaTime) {
         imGuiGlfw.newFrame();

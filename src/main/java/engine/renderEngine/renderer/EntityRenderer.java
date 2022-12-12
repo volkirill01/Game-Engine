@@ -47,7 +47,7 @@ public class EntityRenderer {
         glEnableVertexAttribArray(1);
         glEnableVertexAttribArray(2);
 
-        Material texture = model.getTexture();
+        Material texture = model.getMaterial();
         shader.loadUniformFloat("numberOfRows", texture.getNumberOfRows());
         shader.loadUniformFloat("numberOfColumns", texture.getNumberOfColumns());
 
@@ -107,7 +107,7 @@ public class EntityRenderer {
         if (texture.hasSpecular()) {
             shader.loadUniformInt("specularMap", 2);
             glActiveTexture(GL_TEXTURE2);
-            glBindTexture(GL_TEXTURE_2D, texture.getSpecularMap());
+            glBindTexture(GL_TEXTURE_2D, texture.getSpecularMap().getTextureID());
             shader.loadUniformFloat("specularIntensity", texture.getSpecularIntensity());
         } else {
             glActiveTexture(GL_TEXTURE2);
@@ -118,7 +118,7 @@ public class EntityRenderer {
         if (texture.hasEmission()) {
             shader.loadUniformInt("emissionMap", 3);
             glActiveTexture(GL_TEXTURE3);
-            glBindTexture(GL_TEXTURE_2D, texture.getEmissionMap());
+            glBindTexture(GL_TEXTURE_2D, texture.getEmissionMap().getTextureID());
             shader.loadUniformFloat("emissionIntensity", texture.getEmissionIntensity());
             shader.loadUniformBoolean("useAlbedoEmission", texture.isUseAlbedoEmission());
         } else {
@@ -129,7 +129,7 @@ public class EntityRenderer {
 
         shader.loadUniformInt("textureSampler", 0);
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, model.getTexture().getID());
+        glBindTexture(GL_TEXTURE_2D, model.getMaterial().getTexture().getTextureID());
     }
 
     private void unbindTexturedModel() {
@@ -140,7 +140,7 @@ public class EntityRenderer {
     }
 
     private void prepareInstance(GameObject gameObject) {
-        switch (gameObject.getComponent(MeshRenderer.class).getModel().getTexture().getCullSide()) {
+        switch (gameObject.getComponent(MeshRenderer.class).getModel().getMaterial().getCullSide()) {
             case Both -> glDisable(GL_CULL_FACE);
 
             case Front -> {

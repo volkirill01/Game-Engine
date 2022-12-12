@@ -28,22 +28,20 @@ public class VignetteShader extends PostProcessShader {
 
 	@Override
 	public void imgui(boolean isLayerActive, String additionToId) {
-		if (EditorImGui.checkbox("Is Squared", isSquared))
-			isSquared = !isSquared;
+		isSquared = EditorImGui.field_Boolean("Is Squared", isSquared);
 
 		if (isSquared) {
-			intensity = EditorImGui.dragFloat("Intensity", intensity, 0.005f, 0.0f, 1.0f);
-			radius = EditorImGui.dragFloat("Radius", radius, 0.05f, 0.0f, 10.0f);
-			softness = EditorImGui.dragFloat("Softness", softness, 0.01f, 0.001f, 1.0f);
+			intensity = EditorImGui.field_Float("Intensity", intensity, 0.005f, 0.0f, 1.0f);
+			radius = EditorImGui.field_Float("Radius", radius, 0.05f, 0.0f, 10.0f);
+			softness = EditorImGui.field_Float("Softness", softness, 0.01f, 0.001f, 1.0f);
 		} else {
-			if (EditorImGui.checkbox("Is Rounded", isRounded))
-				isRounded = !isRounded;
+			isRounded = EditorImGui.field_Boolean("Is Rounded", isRounded);
 
-			EditorImGui.drawVec2Control("Center", center, 0.5f);
+			EditorImGui.field_Vector2f("Center", center, 0.5f);
 
-			intensity = EditorImGui.dragFloat("Intensity", intensity, 0.005f, 0.0f, 1.0f);
-			radius = EditorImGui.dragFloat("Radius", radius, 0.05f, 0.0f, 3.0f);
-			softness = EditorImGui.dragFloat("Softness", softness, 0.05f, 0.001f, 3.0f);
+			intensity = EditorImGui.field_Float("Intensity", intensity, 0.005f, 0.0f, 1.0f);
+			radius = EditorImGui.field_Float("Radius", radius, 0.05f, 0.0f, 3.0f);
+			softness = EditorImGui.field_Float("Softness", softness, 0.05f, 0.001f, 3.0f);
 		}
 	}
 
@@ -61,5 +59,15 @@ public class VignetteShader extends PostProcessShader {
 	@Override
 	public VignetteShader copy() {
 		return new VignetteShader(this.fboWidth, this.fboHeight);
+	}
+
+	@Override
+	public void reset() {
+		this.isSquared = true;
+		this.isRounded = true;
+		this.center = new Vector2f(0.5f);
+		this.intensity = 1.0f;
+		this.radius = 2.0f;
+		this.softness = 0.01f;
 	}
 }

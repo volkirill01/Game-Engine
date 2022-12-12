@@ -13,7 +13,7 @@ public class PrefilterShader extends PostProcessShader {
 
 	@Override
 	public void imgui(boolean isLayerActive, String additionToId) {
-		threshold = EditorImGui.dragFloat("threshold", threshold, 0.02f, 0);
+		threshold = EditorImGui.field_Float("threshold", threshold, 0.02f, 0);
 	}
 
 	@Override
@@ -24,5 +24,10 @@ public class PrefilterShader extends PostProcessShader {
 	@Override
 	public PrefilterShader copy() {
 		return new PrefilterShader(super.getWidth(), super.getHeight());
+	}
+
+	@Override
+	public void reset() {
+		this.threshold = 1.0f;
 	}
 }
