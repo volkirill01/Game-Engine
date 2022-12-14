@@ -40,6 +40,7 @@ public class PostProcessingGui extends EditorImGuiWindow {
             ImGui.separator();
 
         float centerOfWindow = ImGui.getWindowContentRegionMaxX() / 2.0f;
+        ImGui.setCursorPosY(ImGui.getCursorPosY() + 6.0f);
         boolean isOpen = EditorImGui.horizontalCenterButton("Add Post Effect", 60.0f);
         float popupPosY = ImGui.getCursorPosY();
         ImVec2 popupPosition = new ImVec2(centerOfWindow - 105.0f, popupPosY);

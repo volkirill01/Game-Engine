@@ -1,6 +1,6 @@
 package engine.imGui;
 
-import engine.TestFieldsWindow;
+import engine.assets.Asset;
 import engine.renderEngine.Loader;
 import engine.renderEngine.OBJLoader;
 import engine.renderEngine.models.RawModel;
@@ -811,7 +811,7 @@ public class EditorImGui {
             switch (assetType) {
                 case Model -> {
                     TexturedModel model = (TexturedModel) field;
-                    assetName = model.getRawModel().getFilePath();
+                    assetName = model.getRawModel().getFilepath();
                     assetIcon = Loader.get().loadTexture("engineFiles/images/icons/icon=cube-solid-(32x32).png").getTextureID();
                 }
                 case Image -> {

@@ -178,7 +178,7 @@ public class Transform extends Component {
             if (getChildCount() > 0) {
                 level++;
                 for (GameObject child : this.childs) {
-                    Window.getImGuiLayer().getSceneHierarchy().globalGameObjectIndex++;
+                    Window.get().getImGuiLayer().getSceneHierarchy().globalGameObjectIndex++;
                     if (child != null)
                         child.transform.drawInSceneHierarchy(level);
                 }

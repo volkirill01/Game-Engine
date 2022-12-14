@@ -4,23 +4,25 @@ public class RawModel {
 
     private int vaoID;
     private int vertexCount;
-    private String filePath;
+    private String filepath;
 
     public RawModel(int vaoID, int vertexCount) {
         this.vaoID = vaoID;
         this.vertexCount = vertexCount;
-        this.filePath = "_Generated";
+        this.filepath = "_Generated";
     }
 
-    public RawModel(int vaoID, int vertexCount, String filePath) {
+    public RawModel(int vaoID, int vertexCount, String filepath) {
         this.vaoID = vaoID;
         this.vertexCount = vertexCount;
-        this.filePath = filePath;
+        this.filepath = filepath;
     }
 
     public int getVaoID() { return this.vaoID; }
 
     public int getVertexCount() { return this.vertexCount; }
 
-    public String getFilePath() { return this.filePath; }
+    public String getFilepath() { return this.filepath; }
+
+    public float getSizeMultiplayer() { return 1.0f; }
 }

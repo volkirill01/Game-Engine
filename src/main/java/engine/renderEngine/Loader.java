@@ -1,12 +1,19 @@
 package engine.renderEngine;
 
+import engine.assets.Asset;
+import engine.assets.assetsTypes.Asset_Model;
 import engine.renderEngine.models.RawModel;
 import engine.renderEngine.textures.Texture;
 import engine.renderEngine.textures.TextureData;
+import org.apache.commons.io.FileUtils;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.EXTTextureFilterAnisotropic;
 import org.lwjgl.opengl.GL33;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -27,12 +34,73 @@ public class Loader {
     private List<Integer> textures = new ArrayList<>();
     private Map<String, Texture> texturesFiles = new HashMap<>();
 
+    private Map<String, Asset_Model> modelsAssets = new HashMap<>();
+
     public static Loader get() {
         if (instance == null)
             instance = new Loader();
 
         return instance;
     }
+
+    public Asset_Model loadAsset_Model(String filepath) {
+        if (modelsAssets.containsKey(filepath))
+            return modelsAssets.get(filepath);
+
+        String[] tmp = filepath.replace("\\", "/").split("/");
+        String fileName = tmp[tmp.length - 1];
+
+        Asset_Model model = new Asset_Model(filepath, fileName,
+                loadMeta(filepath, "engineFiles/defaultAssets/defaultModel.meta"),
+                loadTexture("engineFiles/images/icons/icon=cube-solid-(256x256).png"));
+
+        modelsAssets.put(filepath, model);
+        return model;
+    }
+
+    public Map<String, Object> loadMeta(String filepath, String defaultData_filepath) {
+        Map<String, Object> data = new HashMap<>();
+        List<String> lines = loadFileMeta_Lines(filepath);
+
+        if (lines == null)
+            return loadMeta(defaultData_filepath, "");
+
+        for (String line : lines)
+            data.put(line.split(" = ")[0], line.split(" = ")[1]);
+
+        return data;
+    }
+
+    private List<String> loadFileMeta_Lines(String filepath) {
+        File modelMeta = new File(filepath.endsWith(".meta") ? filepath : filepath + ".meta");
+        List<String> lines = new ArrayList<>();
+
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(modelMeta));
+            String st;
+
+            while ((st = br.readLine()) != null)
+                lines.add(st);
+        } catch (IOException e) {
+            return null;
+//            throw new RuntimeException(e);
+        }
+
+        return lines;
+    }
+
+//    public void saveMeta(String filepath, Map<String, Object> data) {
+//        StringBuilder fileMeta = new StringBuilder();
+//
+//        for (String line : data.keySet())
+//            fileMeta.append(line).append(" = ").append(data.get(line)).append("\n");
+//
+//        try {
+//            FileUtils.writeStringToFile(new File(filepath + ".meta"), fileMeta.toString(), "UTF-8");
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 
     public RawModel loadToVAO(float[] positions, float[] textureCoords, float[] normals, int[] indices, String filepath) {
         int vaoID = createVao();

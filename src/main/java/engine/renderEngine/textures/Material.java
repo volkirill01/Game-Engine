@@ -1,6 +1,6 @@
 package engine.renderEngine.textures;
 
-import engine.imGui.Asset;
+import engine.assets.Asset;
 import engine.imGui.EditorImGui;
 import engine.renderEngine.renderer.RenderCullSide;
 import engine.toolbox.customVariables.Color;

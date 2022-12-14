@@ -46,6 +46,9 @@ public class ImGuiLayer {
 
     public float fontSize = 0.89f;
 
+    public static ImFont defaultText;
+    public static ImFont boldText;
+
     public ImGuiLayer(long glfwWindow, PickingTexture pickingTexture) {
         this.glfwWindow = glfwWindow;
         this.menuBar = new MenuBar();
@@ -171,13 +174,20 @@ public class ImGuiLayer {
         // Glyphs could be added per-font as well as per config used globally like here
         fontConfig.setGlyphRanges(fontAtlas.getGlyphRangesDefault());
 
+        ImFontConfig defaultFontConfig = new ImFontConfig();
+        defaultFontConfig.setPixelSnapH(true);
+        defaultFontConfig.setGlyphRanges(fontAtlas.getGlyphRangesDefault());
+
         // Fonts merge example
         fontConfig.setPixelSnapH(true);
-        fontAtlas.addFontFromFileTTF("engineFiles/fonts/segoeui.ttf", 20.0f * fontSize, fontConfig);
+        defaultText = fontAtlas.addFontFromFileTTF("engineFiles/fonts/segueui/segoeui.ttf", 20.0f * fontSize, defaultFontConfig);
         fontConfig.setMergeMode(true);
         fontConfig.setGlyphMinAdvanceX(13.0f); // Use if you want to make the icon monospaced
         short[] icons_ranges = { (short)0xEA5C, (short)0xF025, 0 }; // Min(0xEA5C), Max(0xF025) icons range // TODO -+-+- Change min and max
         fontAtlas.addFontFromFileTTF("engineFiles/fonts/icofont_all.ttf", 15.5f * fontSize, fontConfig, icons_ranges);
+
+        boldText = fontAtlas.addFontFromFileTTF("engineFiles/fonts/segueui/seguisb.ttf", 20.0f * fontSize, defaultFontConfig);
+
         fontAtlas.build();
         fontConfig.destroy(); // After all fonts were added we don't need this config more
 
@@ -308,8 +318,8 @@ public class ImGuiLayer {
             sceneHierarchyWindow.imgui();
             assetsWindow.imgui();
             assetsStructureWindow.imgui();
-            inspectorWindow.imgui();
             postProcessingWindow.imgui();
+            inspectorWindow.imgui();
 
             TestFieldsWindow.imgui();
         } else {

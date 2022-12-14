@@ -1,7 +1,12 @@
 package engine.imGui;
 
+import engine.TestFieldsWindow;
+import engine.assets.Asset;
 import engine.entities.GameObject;
 import engine.renderEngine.PickingTexture;
+import engine.renderEngine.Window;
+import imgui.ImVec2;
+import imgui.flag.ImGuiStyleVar;
 import imgui.flag.ImGuiWindowFlags;
 import org.joml.Vector4f;
 import imgui.ImGui;
@@ -10,6 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class InspectorWindow extends EditorImGuiWindow {
+
+    private Asset activeAsset;
+
     private List<GameObject> activeGameObjects;
     private List<Vector4f> activeGameObjectsOgColor;
     private GameObject activeGameObject;
@@ -24,18 +32,30 @@ public class InspectorWindow extends EditorImGuiWindow {
 
     @Override
     public void imgui() {
-        if (activeGameObjects.size() == 1 && activeGameObjects.get(0) != null) {
-            activeGameObject = activeGameObjects.get(0);
+        if (activeAsset != null) {
+            ImGui.begin(" \uEF4E Inspector ");
+
+            activeAsset.mainImgui();
+            activeAsset.imgui();
+        } else if (activeGameObjects.size() == 1 && activeGameObjects.get(0) != null) {
             ImGui.begin(" \uEF4E Inspector ", ImGuiWindowFlags.MenuBar);
+
+            activeGameObject = activeGameObjects.get(0);
             activeGameObject.imgui();
         } else {
             ImGui.begin(" \uEF4E Inspector ");
+
             ImGui.setCursorPosY(ImGui.getCursorPosY() + 20.0f);
             EditorImGui.horizontalCenteredText("Object not selected");
         }
+
         super.imgui();
         ImGui.end();
     }
+
+    public void setActiveAsset(Asset asset) { this.activeAsset = asset; }
+
+    public Asset getActiveAsset() { return this.activeAsset; }
 
     public GameObject getActiveGameObject() { return activeGameObjects.size() == 1 ? this.activeGameObjects.get(0) : null; }
 
@@ -59,6 +79,7 @@ public class InspectorWindow extends EditorImGuiWindow {
         if (go != null) {
             clearSelected();
             this.activeGameObjects.add(go);
+            this.activeAsset = null;
         }
     }
 

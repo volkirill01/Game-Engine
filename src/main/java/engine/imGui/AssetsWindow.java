@@ -1,37 +1,36 @@
 package engine.imGui;
 
+import engine.assets.Asset;
+import engine.assets.assetsTypes.*;
 import engine.renderEngine.Loader;
-import engine.renderEngine.textures.Material;
+import engine.renderEngine.Window;
 import engine.toolbox.SystemClipboard;
 import imgui.ImGui;
-import imgui.ImVec2;
 import imgui.ImVec4;
 import imgui.flag.*;
 import imgui.type.ImString;
 
 import org.apache.commons.io.FileUtils;
-import org.joml.Vector2f;
-import org.joml.Vector3f;
 
-import java.io.File;
-import java.io.IOException;
+import java.awt.*;
+import java.io.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 import java.util.List;
-import java.util.Objects;
 
 public class AssetsWindow extends EditorImGuiWindow {
 
     private static String payloadDragDropType = "ASSETS_WINDOW_PAYLOAD";
-    private static String windowName = " \uEF36 Project ";
+    private static String windowName = " \uEF36 Assets ";
 
     private List<Asset> assets = new ArrayList<>();
     private File[] oldContents;
     public String assetsDirectory = "Assets";
     private String currentDirectory = assetsDirectory;
-    private float padding = 8.0f;
-    private float thumbnailSize = 58.5f;
+    private final float defaultPadding = 8.0f;
+    private float padding = defaultPadding;
+    private final float defaultThumbnailSize = 50.0f;
+    private float thumbnailSize = defaultThumbnailSize;
 
     private boolean refrashingFiles = true;
 
@@ -54,24 +53,25 @@ public class AssetsWindow extends EditorImGuiWindow {
 
             if (content.isDirectory()) {
                 if (content.list().length > 0)
-                    assets.add(new Asset(filepath, fileName, Asset.AssetType.Folder, Loader.get().loadTexture("engineFiles/images/icons/icon=folder-solid-(256x256).png")));
+                    assets.add(new Asset_Folder(filepath, fileName, loadFolderData(filepath), false));
                 else
-                    assets.add(new Asset(filepath, fileName, Asset.AssetType.Folder, Loader.get().loadTexture("engineFiles/images/icons/icon=folder-open-regular-(256x256).png")));
+                    assets.add(new Asset_Folder(filepath, fileName, loadFolderData(filepath), true));
             } else if (content.isFile()) {
                 if (filepath.endsWith(".scene"))
-                    assets.add(new Asset(filepath, fileName, Asset.AssetType.Scene, Loader.get().loadTexture("engineFiles/images/icons/icon=scene-solid-(256x256).png")));
+                    assets.add(new Asset_Scene(filepath, fileName, loadSceneData(filepath)));
                 else if (filepath.endsWith(".png"))
-                    assets.add(new Asset(filepath, fileName, Asset.AssetType.Image, Loader.get().loadTexture(filepath)));
+                    assets.add(new Asset_Image(filepath, fileName, loadImageData(filepath), Loader.get().loadTexture(filepath)));
                 else if (filepath.endsWith(".ogg"))
-                    assets.add(new Asset(filepath, fileName, Asset.AssetType.Sound, Loader.get().loadTexture("engineFiles/images/icons/icon=volume-high-solid-(256x256).png")));
+                    assets.add(new Asset_Sound(filepath, fileName, loadSoundData(filepath)));
 //                else if (filepath.endsWith(".ttf"))
 //                    assets.add(new Asset(filepath, fileName, Asset.AssetType.Font, "engineFiles/images/icons/icon=font-solid-(256x256).png"));
                 else if (filepath.endsWith(".glsl"))
-                    assets.add(new Asset(filepath, fileName, Asset.AssetType.Shader, Loader.get().loadTexture("engineFiles/images/icons/icon=shader-file-solid-(256x256).png")));
+                    assets.add(new Asset_Shader(filepath, fileName, loadShaderData(filepath)));
                 else if (filepath.endsWith(".obj"))
-                    assets.add(new Asset(filepath, fileName, Asset.AssetType.Model, Loader.get().loadTexture("engineFiles/images/icons/icon=cube-solid-(256x256).png")));
-                else
-                    assets.add(new Asset(filepath, fileName, Asset.AssetType.Other, Loader.get().loadTexture("engineFiles/images/icons/icon=file-circle-question-(256x256).png")));
+                    assets.add(Loader.get().loadAsset_Model(filepath));
+//                    assets.add(new Asset_Model(filepath, fileName, loadModelData(filepath), Loader.get().loadTexture("engineFiles/images/icons/icon=cube-solid-(256x256).png")));
+                else // Other
+                    assets.add(new Asset_Other(filepath, fileName, loadText(filepath)));
             }
         }
 
@@ -90,6 +90,69 @@ public class AssetsWindow extends EditorImGuiWindow {
         assets = tmpArray2;
         currentDirectory = directory;
         oldContents = contents;
+    }
+
+    private Map<String, Object> loadFolderData(String filepath) {
+        Map<String, Object> data = new HashMap<>();
+        File folder = new File(filepath);
+
+        float size = getFolderSize(folder) / (1024 * 1024);
+        String[] tmp = ("" + size).split("\\.");
+        size = Float.parseFloat(tmp[0] + "." + tmp[1].charAt(0) + tmp[1].charAt(1));
+        data.put("size", size);
+
+        return data;
+    }
+
+    private float getFolderSize(File folder) {
+        long length = 0;
+
+        // listFiles() is used to list the
+        // contents of the given folder
+        File[] files = folder.listFiles();
+
+        int count = files.length;
+
+        // loop for traversing the directory
+        for (int i = 0; i < count; i++) {
+            if (files[i].isFile()) {
+                length += files[i].length();
+            }
+            else {
+                length += getFolderSize(files[i]);
+            }
+        }
+        return length;
+    }
+
+    private Map<String, Object> loadSceneData(String filepath) {
+        Map<String, Object> data = new HashMap<>();
+
+        return data;
+    }
+
+    private Map<String, Object> loadImageData(String filepath) {
+        Map<String, Object> data = new HashMap<>();
+
+        return data;
+    }
+
+    private Map<String, Object> loadSoundData(String filepath) {
+        Map<String, Object> data = new HashMap<>();
+
+        return data;
+    }
+
+    private Map<String, Object> loadShaderData(String filepath) {
+        Map<String, Object> data = new HashMap<>();
+
+        return data;
+    }
+
+    private Map<String, Object> loadText(String filepath) {
+        Map<String, Object> data = new HashMap<>();
+
+        return data;
     }
 
     private void goBackFolder() {
@@ -202,18 +265,26 @@ public class AssetsWindow extends EditorImGuiWindow {
     public void createNewFolder() {
         refrashingFiles = false;
         ImGui.setWindowFocus(windowName);
-        assets.add(new Asset(currentDirectory + currentNewFolderName, currentNewFolderName, Asset.AssetType.NewFolder, Loader.get().loadTexture("engineFiles/images/icons/icon=folder-solid-(256x256).png")));
+        assets.add(new Asset_Folder(currentDirectory + currentNewFolderName, currentNewFolderName, loadFolderData(currentDirectory + currentNewFolderName), false));
     }
 
     public void createNewScene() {
         refrashingFiles = false;
         ImGui.setWindowFocus(windowName);
-        assets.add(new Asset(currentDirectory + currentNewSceneName, currentNewSceneName, Asset.AssetType.NewScene, Loader.get().loadTexture("engineFiles/images/icons/icon=scene-solid-(256x256).png")));
+        assets.add(new Asset_Scene(currentDirectory + currentNewSceneName, currentNewSceneName, loadSceneData("engineFiles/defaultAssets/defaultScene.meta")));
     }
 
     private void popups(int i, ImVec4 borderColor) {
         ImGui.pushStyleVar(ImGuiStyleVar.WindowPadding, 8.0f, 6.0f);
         ImGui.pushStyleColor(ImGuiCol.Border, borderColor.x, borderColor.y, borderColor.z, borderColor.w);
+
+        ImVec4 buttonColor = ImGui.getStyle().getColor(ImGuiCol.Button);
+        ImGui.pushStyleColor(ImGuiCol.FrameBg, buttonColor.x, buttonColor.y, buttonColor.z, buttonColor.w);
+        ImGui.pushStyleColor(ImGuiCol.WindowBg, buttonColor.x, buttonColor.y, buttonColor.z, buttonColor.w);
+        ImGui.pushStyleColor(ImGuiCol.ChildBg, buttonColor.x, buttonColor.y, buttonColor.z, buttonColor.w);
+        ImGui.pushStyleVar(ImGuiStyleVar.ItemSpacing,
+                ImGui.getStyle().getFramePaddingX() * 6.0f,
+                ImGui.getStyle().getFramePaddingX());
 
         if (ImGui.beginPopupContextWindow("Create Asset", ImGuiPopupFlags.NoOpenOverItems | ImGuiPopupFlags.MouseButtonRight)) {
             if (ImGui.menuItem("Create New Folder"))
@@ -222,6 +293,18 @@ public class AssetsWindow extends EditorImGuiWindow {
                 createNewScene();
 
             ImGui.separator();
+            if (ImGui.menuItem("Open In Explorer")) {
+                try {
+                    Desktop.getDesktop().open(new File(currentDirectory));
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+            if (ImGui.menuItem("Refresh Assets"))
+                refreshAssets();
+            ImGui.separator();
+
             pasteButton();
 
             ImGui.endPopup();
@@ -236,6 +319,14 @@ public class AssetsWindow extends EditorImGuiWindow {
             pasteButton();
 
             ImGui.separator();
+            if (ImGui.menuItem("Open File")) {
+                try {
+                    Desktop.getDesktop().open(new File(assets.get(i).assetPath));
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
             if (ImGui.menuItem("Delete")) {
                 try {
                     File file1 = new File(assets.get(i).assetPath);
@@ -257,6 +348,9 @@ public class AssetsWindow extends EditorImGuiWindow {
             ImGui.text(assets.get(i).assetName);
             ImGui.endDragDropSource();
         }
+
+        ImGui.popStyleColor(3);
+        ImGui.popStyleVar();
 
         ImGui.popStyleColor();
         ImGui.popStyleVar();
@@ -291,8 +385,46 @@ public class AssetsWindow extends EditorImGuiWindow {
             ImGui.popStyleColor(3);
         }
 
-//        if (ImGui.button("\uEFD1 Refresh Assets"))
-//            refreshAssets();
+        List<String> filepathFolders = new ArrayList<>(List.of(currentDirectory.replace("\\", "/").split("/")));
+
+        ImGui.pushStyleVar(ImGuiStyleVar.FrameRounding, 0.0f);
+        ImGui.pushStyleVar(ImGuiStyleVar.FramePadding, 0.0f, ImGui.getStyle().getFramePaddingY());
+        ImGui.pushStyleColor(ImGuiCol.Button, 0.0f, 0.0f, 0.0f, 0.0f);
+        ImGui.pushStyleColor(ImGuiCol.ButtonHovered, 0.0f, 0.0f, 0.0f, 0.0f);
+        ImGui.pushStyleColor(ImGuiCol.ButtonActive, 0.0f, 0.0f, 0.0f, 0.0f);
+        ImGui.pushStyleColor(ImGuiCol.Border, 0.0f, 0.0f, 0.0f, 0.0f);
+
+        ImVec4 textDisabled = ImGui.getStyle().getColor(ImGuiCol.TextDisabled);
+        ImGui.pushStyleColor(ImGuiCol.Text, textDisabled.x, textDisabled.y, textDisabled.z, textDisabled.w);
+
+        ImGui.setCursorPosX(ImGui.getCursorPosX() + 5.0f);
+        for (int i = 0; i < filepathFolders.size(); i++) {
+            if (i < filepathFolders.size() - 1) {
+
+                if (ImGui.button(filepathFolders.get(i))) {
+                    StringBuilder directory = new StringBuilder(assetsDirectory);
+                    for (int j = 1; j <= i; j++)
+                        directory.append("/").append(filepathFolders.get(j));
+                    refreshAssets(directory.toString());
+                }
+
+                ImGui.sameLine();
+                ImGui.setCursorPosX(ImGui.getCursorPosX() - 2.0f);
+                ImGui.textDisabled("\uEAB8");
+                ImGui.sameLine();
+                ImGui.setCursorPosX(ImGui.getCursorPosX() - 2.0f);
+            } else {
+                ImGui.popStyleColor();
+                ImGui.pushFont(ImGuiLayer.boldText);
+
+                ImGui.setCursorPos(ImGui.getCursorPosX() - 1.0f, ImGui.getCursorPosY() - 1.0f);
+                ImGui.text(filepathFolders.get(i));
+
+                ImGui.popFont();
+            }
+        }
+        ImGui.popStyleColor(4);
+        ImGui.popStyleVar(2);
 
         ImGui.popStyleVar(3);
         ImGui.endMenuBar();
@@ -305,20 +437,23 @@ public class AssetsWindow extends EditorImGuiWindow {
 
         float[] floatThumbnailSize = { thumbnailSize };
         float[] floatPadding = { padding };
-        ImVec2 tmpThumbnailSize = new ImVec2();
-        ImVec2 tmpPadding = new ImVec2();
 
-        ImGui.calcTextSize(tmpThumbnailSize, "Thumbnail Size");
-        ImGui.calcTextSize(tmpPadding, "Padding");
-
-        ImGui.setCursorPosX(ImGui.getCursorPosX() - 2.0f);
-        ImGui.setNextItemWidth(ImGui.getContentRegionAvailX() / 2 - tmpThumbnailSize.x - (windowPaddingX / 2.0f));
-        if (ImGui.sliderFloat("Thumbnail Size", floatThumbnailSize, 16, 256))
+        ImGui.setCursorPos(ImGui.getCursorPosX() + 2.0f, ImGui.getCursorPosY() + 3.6f);
+        ImGui.text("Folders Size");
+        ImGui.sameLine();
+        ImGui.setCursorPos(ImGui.getCursorPosX() + 2.0f, ImGui.getCursorPosY() - 3.6f + 1.3f);
+        ImGui.setNextItemWidth(ImGui.getContentRegionAvailX() / 2.5f - (windowPaddingX / 2.0f));
+        if (ImGui.sliderFloat("##FoldersSize", floatThumbnailSize, 16, 256))
             thumbnailSize = floatThumbnailSize[0];
         ImGui.sameLine();
+
         float scrollbarSize = ImGui.getStyle().getScrollbarSize(); // TODO добавить проверку если есть скроллбар то это значение иначе 0
-        ImGui.setNextItemWidth(ImGui.getContentRegionAvailX() - tmpPadding.x - (windowPaddingX / 2.0f) - scrollbarSize);
-        if (ImGui.sliderFloat("Padding", floatPadding, 0, 32))
+        ImGui.setCursorPosX(ImGui.getCursorPosX() + 2.0f + 20.0f);
+        ImGui.text("Padding");
+        ImGui.sameLine();
+        ImGui.setCursorPosX(ImGui.getCursorPosX() + 2.0f);
+        ImGui.setNextItemWidth(ImGui.getContentRegionAvailX() - (windowPaddingX / 2.0f) - scrollbarSize);
+        if (ImGui.sliderFloat("##Padding", floatPadding, 0, 32))
             padding = floatPadding[0];
 
         ImGui.endChildFrame();
@@ -346,15 +481,23 @@ public class AssetsWindow extends EditorImGuiWindow {
 
         ImGui.columns(columnsCount, "", false);
 
-        ImVec4 color = new ImVec4(0, 0, 0, 0);
-        ImVec4 hoverColor = new ImVec4(1.0f, 1.0f, 1.0f, 0.07f);
-        ImGui.pushStyleColor(ImGuiCol.Border, color.x, color.y, color.z, color.w);
-        ImGui.pushStyleColor(ImGuiCol.BorderShadow, color.x, color.y, color.z, color.w);
-        ImGui.pushStyleColor(ImGuiCol.Button, color.x, color.y, color.z, color.w);
-        ImGui.pushStyleColor(ImGuiCol.ButtonHovered, hoverColor.x, hoverColor.y, hoverColor.z, hoverColor.w);
-        ImGui.pushStyleColor(ImGuiCol.ButtonActive, hoverColor.x, hoverColor.y, hoverColor.z, hoverColor.w);
+        ImVec4 color;
+        ImVec4 hoverColor;
 
         for (int i = 0; i < assets.size(); i++) {
+            if (Window.get().getImGuiLayer().getInspectorWindow().getActiveAsset() == assets.get(i)) {
+                color = new ImVec4(1.0f, 1.0f, 1.0f, 0.17f);
+                hoverColor = new ImVec4(1.0f, 1.0f, 1.0f, 0.23f);
+            } else {
+                color = new ImVec4(0, 0, 0, 0);
+                hoverColor = new ImVec4(1.0f, 1.0f, 1.0f, 0.07f);
+            }
+
+            ImGui.pushStyleColor(ImGuiCol.Border, 0.0f, 0.0f, 0.0f, 0.0f);
+            ImGui.pushStyleColor(ImGuiCol.Button, color.x, color.y, color.z, color.w);
+            ImGui.pushStyleColor(ImGuiCol.ButtonHovered, hoverColor.x, hoverColor.y, hoverColor.z, hoverColor.w);
+            ImGui.pushStyleColor(ImGuiCol.ButtonActive, hoverColor.x, hoverColor.y, hoverColor.z, hoverColor.w);
+
             ImGui.setCursorPosY(ImGui.getCursorPosY() + (windowPaddingY / 2.0f));
 
             float spriteWidth = thumbnailSize;
@@ -365,7 +508,9 @@ public class AssetsWindow extends EditorImGuiWindow {
 
             switch (assets.get(i).assetType) {
                 case Folder:
-                    ImGui.imageButton(id, spriteWidth, spriteHeight, 0, 1, 1, 0);
+                    if (ImGui.imageButton(id, spriteWidth, spriteHeight, 0, 1, 1, 0))
+                        Window.get().getImGuiLayer().getInspectorWindow().setActiveAsset(assets.get(i));
+
                     if (ImGui.isItemHovered() && ImGui.isMouseDoubleClicked(ImGuiMouseButton.Left)) {
                         try {
                             refreshAssets(assets.get(i).assetPath);
@@ -389,7 +534,9 @@ public class AssetsWindow extends EditorImGuiWindow {
                     }
                     break;
                 case Scene:
-                    ImGui.imageButton(id, spriteWidth, spriteHeight, 0, 1, 1, 0);
+                    if (ImGui.imageButton(id, spriteWidth, spriteHeight, 0, 1, 1, 0))
+                        Window.get().getImGuiLayer().getInspectorWindow().setActiveAsset(assets.get(i));
+
                     if (ImGui.isItemHovered() && ImGui.isMouseDoubleClicked(ImGuiMouseButton.Left)) {
 //                        System.out.println("Open scene '" + assets.get(i).assetPath + "'");
 //                        SceneManager.loadScene(assets.get(i).assetPath);
@@ -400,62 +547,65 @@ public class AssetsWindow extends EditorImGuiWindow {
                     float spriteH = 256;
                     float ratio = spriteW / spriteH;
 
-                    if (ImGui.imageButton(id, spriteWidth, spriteHeight, 0, 1, 1, 0)) {
-//                        System.out.println("Image file clicked '" + assets.get(i).assetPath + "'");
-//                        GameObject object = Prefabs.generateSpriteObject(assets.get(i).assetName, sprite, ratio, 1.0f); // TODO MOVE THIS IN TO TILE PALETTE
-                        // Attach this to the mouse cursor
-//                        Window.getLevelEditorStuff().getComponent(MouseControls.class).pickupObject(object);
-                    }
+                    if (ImGui.imageButton(id, spriteWidth, spriteHeight, 0, 1, 1, 0))
+                        Window.get().getImGuiLayer().getInspectorWindow().setActiveAsset(assets.get(i));
+
+
+//                    if (ImGui.imageButton(id, spriteWidth, spriteHeight, 0, 1, 1, 0)) {
+////                        System.out.println("Image file clicked '" + assets.get(i).assetPath + "'");
+////                        GameObject object = Prefabs.generateSpriteObject(assets.get(i).assetName, sprite, ratio, 1.0f); // TODO MOVE THIS IN TO TILE PALETTE
+//                        // Attach this to the mouse cursor
+////                        Window.getLevelEditorStuff().getComponent(MouseControls.class).pickupObject(object);
+//                    }
                     break;
                 case Model:
-//                    Mesh mesh = new Mesh();
-//                    mesh.setTexture(AssetPool.getTexture(assets.get(i).fileIcon));
-//                    mesh.setVertexCoords(new Vector3f[]{
-//                            new Vector3f(0.0f, 1.0f, 0.0f),
-//                            new Vector3f(-1.0f, -1.0f, 0.0f),
-//                            new Vector3f(1.0f, -1.0f, 0.0f)
-//                    });
-//                    mesh.setTexCoords(new Vector2f[]{
-//                            new Vector2f(1, 1),
-//                            new Vector2f(1, 0),
-//                            new Vector2f(0, 0)
-//                    });
-//                    mesh.setIndices(new int[]{
-//                            2, 1, 0
-//                    });
-//                    id = mesh.getTextureId();
-//
-                    if (ImGui.imageButton(id, spriteWidth, spriteHeight, 0, 1, 1, 0)) {
-////                        System.out.println("Model file clicked '" + assets.get(i).assetPath + "'");
-//
-//                        GameObject object = Prefabs.generateMeshObject(assets.get(i).assetName, mesh); // TODO MOVE THIS IN TO TILE PALETTE
-//                        // Attach this to the mouse cursor
-//                        Window.getLevelEditorStuff().getComponent(MouseControls.class).pickupObject(object);
-                    }
+                    if (ImGui.imageButton(id, spriteWidth, spriteHeight, 0, 1, 1, 0))
+                        Window.get().getImGuiLayer().getInspectorWindow().setActiveAsset(assets.get(i));
+
+//                    if (ImGui.imageButton(id, spriteWidth, spriteHeight, 0, 1, 1, 0)) {
+//////                        System.out.println("Model file clicked '" + assets.get(i).assetPath + "'");
+////
+////                        GameObject object = Prefabs.generateMeshObject(assets.get(i).assetName, mesh); // TODO MOVE THIS IN TO TILE PALETTE
+////                        // Attach this to the mouse cursor
+////                        Window.getLevelEditorStuff().getComponent(MouseControls.class).pickupObject(object);
+//                    }
                     break;
                 case Sound:
-                    if (ImGui.imageButton(id, spriteWidth, spriteHeight, 0, 1, 1, 0)) {
-//                        System.out.println("Sound file clicked '" + assets.get(i).assetPath + "'");
-//                        Sound sound = AssetPool.getSound(assets.get(i).assetPath);
-//
-//                        if (!sound.isPlaying()) sound.play();
-//                        else sound.stop();
-                    }
+                    if (ImGui.imageButton(id, spriteWidth, spriteHeight, 0, 1, 1, 0))
+                        Window.get().getImGuiLayer().getInspectorWindow().setActiveAsset(assets.get(i));
+
+
+//                    if (ImGui.imageButton(id, spriteWidth, spriteHeight, 0, 1, 1, 0)) {
+////                        System.out.println("Sound file clicked '" + assets.get(i).assetPath + "'");
+////                        Sound sound = AssetPool.getSound(assets.get(i).assetPath);
+////
+////                        if (!sound.isPlaying()) sound.play();
+////                        else sound.stop();
+//                    }
                     break;
                 case Font:
-                    if (ImGui.imageButton(id, spriteWidth, spriteHeight, 0, 1, 1, 0)) {
-//                        System.out.println("Font file clicked '" + assets.get(i).assetPath + "'");
-                    }
+                    if (ImGui.imageButton(id, spriteWidth, spriteHeight, 0, 1, 1, 0))
+                        Window.get().getImGuiLayer().getInspectorWindow().setActiveAsset(assets.get(i));
+
+//                    if (ImGui.imageButton(id, spriteWidth, spriteHeight, 0, 1, 1, 0)) {
+////                        System.out.println("Font file clicked '" + assets.get(i).assetPath + "'");
+//                    }
                     break;
                 case Shader:
-                    if (ImGui.imageButton(id, spriteWidth, spriteHeight, 0, 1, 1, 0)) {
-//                        System.out.println("Shader file clicked '" + assets.get(i).assetPath + "'");
-                    }
+                    if (ImGui.imageButton(id, spriteWidth, spriteHeight, 0, 1, 1, 0))
+                        Window.get().getImGuiLayer().getInspectorWindow().setActiveAsset(assets.get(i));
+
+//                    if (ImGui.imageButton(id, spriteWidth, spriteHeight, 0, 1, 1, 0)) {
+////                        System.out.println("Shader file clicked '" + assets.get(i).assetPath + "'");
+//                    }
                     break;
                 case Other:
-                    if (ImGui.imageButton(id, spriteWidth, spriteHeight, 0, 1, 1, 0)) {
-//                        System.out.println("Other file clicked '" + assets.get(i).assetPath + "'");
-                    }
+                    if (ImGui.imageButton(id, spriteWidth, spriteHeight, 0, 1, 1, 0))
+                        Window.get().getImGuiLayer().getInspectorWindow().setActiveAsset(assets.get(i));
+
+//                    if (ImGui.imageButton(id, spriteWidth, spriteHeight, 0, 1, 1, 0)) {
+////                        System.out.println("Other file clicked '" + assets.get(i).assetPath + "'");
+//                    }
                     break;
             }
 
@@ -476,7 +626,7 @@ public class AssetsWindow extends EditorImGuiWindow {
 
                         ImGui.nextColumn();
                         ImGui.popID();
-                        ImGui.popStyleColor(5);
+                        ImGui.popStyleColor(4);
                         ImGui.columns(1);
                         ImGui.end();
                         ImGui.popStyleVar();
@@ -496,7 +646,7 @@ public class AssetsWindow extends EditorImGuiWindow {
 
                         ImGui.nextColumn();
                         ImGui.popID();
-                        ImGui.popStyleColor(5);
+                        ImGui.popStyleColor(4);
                         ImGui.columns(1);
                         ImGui.end();
                         ImGui.popStyleVar();
@@ -512,8 +662,9 @@ public class AssetsWindow extends EditorImGuiWindow {
 
             ImGui.nextColumn();
             ImGui.popID();
+
+            ImGui.popStyleColor(4);
         }
-        ImGui.popStyleColor(5);
         ImGui.columns(1);
 
         super.imgui();

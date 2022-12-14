@@ -1,4 +1,5 @@
 import engine.TestFieldsWindow;
+import engine.assets.assetsTypes.Asset_Model;
 import engine.entities.Camera;
 import engine.entities.GameObject;
 import engine.entities.Light;
@@ -435,7 +436,7 @@ public class Main {
                 Window.setScreenImage(PostProcessing.getFinalImage());
             }
 
-            Window.getImGuiLayer().update(Window.getDelta(), Window.get().currentScene);
+            Window.get().getImGuiLayer().update(Window.getDelta(), Window.get().currentScene);
 
             Window.updateDisplay();
 

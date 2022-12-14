@@ -9,6 +9,7 @@ import engine.renderEngine.skybox.CubeMap;
 import engine.renderEngine.textures.Material;
 import engine.toolbox.Maths;
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
 
 import java.util.List;
 import java.util.Map;
@@ -156,8 +157,11 @@ public class EntityRenderer {
             case None -> { return; }
         }
 
+        Vector3f sizeMultiplayed = gameObject.transform.scale;
+        sizeMultiplayed = sizeMultiplayed.mul(gameObject.getComponent(MeshRenderer.class).getModel().getRawModel().getSizeMultiplayer());
+
         Matrix4f transformationMatrix = Maths.createTransformationMatrix(
-                gameObject.transform.position, gameObject.transform.rotation, gameObject.transform.scale);
+                gameObject.transform.position, gameObject.transform.rotation, sizeMultiplayed);
         shader.loadUniformMatrix("transformationMatrix", transformationMatrix);
         shader.loadUniformVector2("textureOffset", gameObject.getComponent(MeshRenderer.class).getTextureOffset());
     }

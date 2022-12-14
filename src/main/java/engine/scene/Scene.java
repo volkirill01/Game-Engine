@@ -258,6 +258,6 @@ public class Scene {
             Component.init(maxCompId);
         }
 
-        Window.getImGuiLayer().getInspectorWindow().clearSelected();
+        Window.get().getImGuiLayer().getInspectorWindow().clearSelected();
     }
 }

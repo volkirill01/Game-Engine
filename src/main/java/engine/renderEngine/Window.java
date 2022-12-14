@@ -156,7 +156,7 @@ public class Window implements Observer {
 
     public static int getScreenImage() { return screenImage; }
 
-    public static ImGuiLayer getImGuiLayer() { return imGuiLayer; }
+    public ImGuiLayer getImGuiLayer() { return imGuiLayer; }
 
     public static boolean isClosed() {
         return  glfwWindowShouldClose(get().glfwWindow);
@@ -199,13 +199,13 @@ public class Window implements Observer {
         switch (event.type) {
             case GameEngineStartPlay -> {
                 this.runtimePlaying = true;
-                Window.getImGuiLayer().getInspectorWindow().clearSelected();
+                Window.get().getImGuiLayer().getInspectorWindow().clearSelected();
 //                currentScene.save(); // TODO UNCOMMENT
                 Window.get().changeScene(new LevelSceneInitializer(SceneManager.getCurrentScene()));
             }
             case GameEngineStopPlay -> {
                 this.runtimePlaying = false;
-                Window.getImGuiLayer().getGameViewWindow().setNotPlaying();
+                Window.get().getImGuiLayer().getGameViewWindow().setNotPlaying();
                 Window.get().changeScene(new LevelEditorSceneInitializer(SceneManager.getCurrentScene()));
             }
             case LoadLevel -> Window.get().changeScene(new LevelEditorSceneInitializer(SceneManager.getCurrentScene()));

@@ -46,7 +46,7 @@ public class SceneHierarchyWindow extends EditorImGuiWindow {
 //            System.out.println("Error");
             return false;
         }
-        boolean isEven = Window.getImGuiLayer().getSceneHierarchy().globalGameObjectIndex % 2 != 0;
+        boolean isEven = Window.get().getImGuiLayer().getSceneHierarchy().globalGameObjectIndex % 2 != 0;
 
          if (isEven) {
             ImGui.pushStyleColor(ImGuiCol.Header, 255, 255, 255, 0);
@@ -58,7 +58,7 @@ public class SceneHierarchyWindow extends EditorImGuiWindow {
             ImGui.pushStyleColor(ImGuiCol.HeaderActive, 255, 255, 255, 15);
         }
 
-        if (Window.getImGuiLayer().getInspectorWindow().getActiveGameObject() != null && Window.getImGuiLayer().getInspectorWindow().getActiveGameObject().equals(obj)) {
+        if (Window.get().getImGuiLayer().getInspectorWindow().getActiveGameObject() != null && Window.get().getImGuiLayer().getInspectorWindow().getActiveGameObject().equals(obj)) {
             ImGui.popStyleColor(3);
             ImGui.pushStyleColor(0,
                     ImGui.getStyle().getColor(50).x,
@@ -102,12 +102,12 @@ public class SceneHierarchyWindow extends EditorImGuiWindow {
         ImGui.popStyleColor(3);
         ImGui.popStyleVar();
         ImGui.popID();
-        if (Window.getImGuiLayer().getInspectorWindow().getActiveGameObject() != null)
-            if (Window.getImGuiLayer().getInspectorWindow().getActiveGameObject().equals(obj))
+        if (Window.get().getImGuiLayer().getInspectorWindow().getActiveGameObject() != null)
+            if (Window.get().getImGuiLayer().getInspectorWindow().getActiveGameObject().equals(obj))
                 ImGui.popStyleColor(1);
 
         if (ImGui.isItemClicked())
-            Window.getImGuiLayer().getInspectorWindow().setActiveGameObject(obj);
+            Window.get().getImGuiLayer().getInspectorWindow().setActiveGameObject(obj);
 
         if (ImGui.beginDragDropSource()) {
             ImGui.setDragDropPayload(payloadDragDropType, obj); // Tooltip

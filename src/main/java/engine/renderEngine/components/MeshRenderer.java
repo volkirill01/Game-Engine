@@ -1,7 +1,8 @@
 package engine.renderEngine.components;
 
-import engine.imGui.Asset;
+import engine.assets.Asset;
 import engine.imGui.EditorImGui;
+import engine.renderEngine.Loader;
 import engine.renderEngine.models.TexturedModel;
 import engine.renderEngine.textures.TextureSliceMode;
 import org.joml.Vector2f;
@@ -39,6 +40,9 @@ public class MeshRenderer extends ObjectRenderer {
 
     @Override
     public void update() { }
+
+    @Override
+    public void editorUpdate() { }
 
     @Override
     public void imgui() {

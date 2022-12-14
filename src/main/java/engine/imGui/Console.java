@@ -12,12 +12,15 @@ import imgui.ImVec4;
 import imgui.flag.ImGuiCol;
 import imgui.flag.ImGuiStyleVar;
 import imgui.flag.ImGuiWindowFlags;
+import imgui.internal.ImGuiWindow;
 import imgui.type.ImInt;
 import imgui.type.ImString;
 
 import java.util.*;
 
 public class Console extends EditorImGuiWindow implements Observer{
+
+    private String filterText = "";
 
     public Console() {
         addToEventSystem();
@@ -63,7 +66,7 @@ public class Console extends EditorImGuiWindow implements Observer{
         clearOnPlay = EditorImGui.toggledButton("\uEE09 Clear On Play", clearOnPlay);
         pauseOnError = EditorImGui.toggledButton("\uEC72 Pause On Error", pauseOnError);
         drawFilterOptions();
-        String filterText = drawSearchInput("");
+        filterText = drawSearchInput(filterText);
 
         ImGui.popStyleVar(3);
         ImGui.endMenuBar();
@@ -138,7 +141,7 @@ public class Console extends EditorImGuiWindow implements Observer{
         ImGui.popStyleVar();
 
         ImGui.sameLine();
-        ImGui.setCursorPos(ImGui.getCursorPosX() - 20.5f, ImGui.getCursorPosY() - 8.0f);
+        ImGui.setCursorPos(ImGui.getCursorPosX() - 18.1f, ImGui.getCursorPosY() - 5.6f);
         ImGui.text("\uEEE4");
 
         ImGui.sameLine();
@@ -184,6 +187,7 @@ public class Console extends EditorImGuiWindow implements Observer{
         ImGui.setCursorPosY(ImGui.getCursorPosY() + 1.0f);
         float start = ImGui.getCursorPosX();
         float scrollbarSize = ImGui.getStyle().getScrollbarSize(); // TODO добавить проверку если есть скроллбар то это значение иначе 0
+
         ImGui.setNextItemWidth(ImGui.getContentRegionAvailX() + (ImGui.getStyle().getWindowPaddingX() - 3) + scrollbarSize);
         ImGui.pushStyleVar(ImGuiStyleVar.FramePadding, 23.0f, ImGui.getStyle().getFramePaddingY() - 1.0f);
         ImString outString = new ImString(text, 256);
@@ -198,7 +202,7 @@ public class Console extends EditorImGuiWindow implements Observer{
             return outString.get();
         }
         ImGui.setCursorPos(startCursorPos.x, startCursorPos.y);
-        ImGui.textDisabled("\uEC82 ");
+        ImGui.text("\uEC82 ");
 
         if (text.equals("")) {
             ImGui.setCursorPos(start + 23.0f, ImGui.getCursorPosY() - 1.0f);
@@ -217,7 +221,7 @@ public class Console extends EditorImGuiWindow implements Observer{
         else
             messages.add(new ConsoleMessage(type, text, color));
 
-        if (Window.getImGuiLayer().getGameViewWindow().isPlaying() && type == ConsoleMessage.MessageType.Error && pauseOnError)
+        if (Window.get().getImGuiLayer().getGameViewWindow().isPlaying() && type == ConsoleMessage.MessageType.Error && pauseOnError)
             EventSystem.notify(null, new Event(EventType.GameEngineStopPlay));
     }
 
@@ -226,7 +230,7 @@ public class Console extends EditorImGuiWindow implements Observer{
 
         for (ConsoleMessage.MessageType type : ConsoleMessage.MessageType.values()) {
             int messagesCount = 0;
-            for (ConsoleMessage consoleMessage : Window.getImGuiLayer().getConsole().messages)
+            for (ConsoleMessage consoleMessage : Window.get().getImGuiLayer().getConsole().messages)
                 if (type == consoleMessage.messageType)
                     messagesCount++;
 
@@ -237,14 +241,14 @@ public class Console extends EditorImGuiWindow implements Observer{
     }
 
     public static ConsoleMessage getLastMessage() {
-        if (Window.getImGuiLayer().getConsole().messages.size() > 0)
-            return Window.getImGuiLayer().getConsole().messages.get(Window.getImGuiLayer().getConsole().messages.size() - 1);
+        if (Window.get().getImGuiLayer().getConsole().messages.size() > 0)
+            return Window.get().getImGuiLayer().getConsole().messages.get(Window.get().getImGuiLayer().getConsole().messages.size() - 1);
         return new ConsoleMessage(ConsoleMessage.MessageType.Simple,  "");
     }
 
-    public static void log(ConsoleMessage.MessageType type, String text) { Window.getImGuiLayer().getConsole().send(type, text, new ImVec4()); }
+    public static void log(ConsoleMessage.MessageType type, String text) { Window.get().getImGuiLayer().getConsole().send(type, text, new ImVec4()); }
 
-    public static void log(ConsoleMessage.MessageType type, String text, ImVec4 color) { Window.getImGuiLayer().getConsole().send(type, text, color); }
+    public static void log(ConsoleMessage.MessageType type, String text, ImVec4 color) { Window.get().getImGuiLayer().getConsole().send(type, text, color); }
 
     @Override
     public void addToEventSystem() { EventSystem.addObserver(this); }
