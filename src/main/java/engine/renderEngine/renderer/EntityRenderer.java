@@ -48,49 +48,49 @@ public class EntityRenderer {
         glEnableVertexAttribArray(1);
         glEnableVertexAttribArray(2);
 
-        Material texture = model.getMaterial();
-        shader.loadUniformFloat("numberOfRows", texture.getNumberOfRows());
-        shader.loadUniformFloat("numberOfColumns", texture.getNumberOfColumns());
+        Material material = model.getMaterial();
+        shader.loadUniformFloat("numberOfRows", material.getNumberOfRows());
+        shader.loadUniformFloat("numberOfColumns", material.getNumberOfColumns());
 
-        shader.loadUniformVector2("tiling", texture.getTiling());
+        shader.loadUniformVector2("tiling", material.getTiling());
 
-        shader.loadUniformColor("color", texture.getColor());
+        shader.loadUniformColor("color", material.getColor());
 
-        shader.loadUniformFloat("shineDamper", texture.getShineDumper());
-        shader.loadUniformFloat("reflectivity", texture.getReflectivity());
+        shader.loadUniformFloat("shineDamper", material.getShineDumper());
+        shader.loadUniformFloat("reflectivity", material.getReflectivity());
 
-        shader.loadUniformFloat("alphaClip", texture.getAlphaClip());
-        shader.loadUniformBoolean("useFakeLighting", texture.isUseFakeLighting());
+        shader.loadUniformFloat("alphaClip", material.getAlphaClip());
+        shader.loadUniformBoolean("useFakeLighting", material.isUseFakeLighting());
 
 //        // PBR
-//        if (texture.hasMetallic()) {
+//        if (material.hasMetallic()) {
 //            shader.loadUniformInt("metallicMap", 1);
 //            glActiveTexture(GL_TEXTURE1);
-//            glBindTexture(GL_TEXTURE_2D, texture.getMetallicMap());
-//            shader.loadUniformFloat("metallicIntensity", texture.getMetallicIntensity());
+//            glBindTexture(GL_TEXTURE_2D, material.getMetallicMap());
+//            shader.loadUniformFloat("metallicIntensity", material.getMetallicIntensity());
 //        } else {
 //            glActiveTexture(GL_TEXTURE1);
 //            glBindTexture(GL_TEXTURE_2D, 0);
 //            shader.loadUniformFloat("metallicIntensity", 0);
 //        }
 //
-//        if (texture.hasSpecular()) {
+//        if (material.hasSpecular()) {
 //            shader.loadUniformInt("roughnessMap", 2);
 //            glActiveTexture(GL_TEXTURE2);
-//            glBindTexture(GL_TEXTURE_2D, texture.getSpecularMap());
-//            shader.loadUniformFloat("roughnessIntensity", texture.getSpecularIntensity());
+//            glBindTexture(GL_TEXTURE_2D, material.getSpecularMap().getTextureID());
+//            shader.loadUniformFloat("roughnessIntensity", material.getSpecularIntensity());
 //        } else {
 //            glActiveTexture(GL_TEXTURE2);
 //            glBindTexture(GL_TEXTURE_2D, 0);
 //            shader.loadUniformFloat("roughnessIntensity", 0);
 //        }
 //
-//        if (texture.hasEmission()) {
+//        if (material.hasEmission()) {
 //            shader.loadUniformInt("emissionMap", 3);
 //            glActiveTexture(GL_TEXTURE3);
-//            glBindTexture(GL_TEXTURE_2D, texture.getEmissionMap());
-//            shader.loadUniformFloat("emissionIntensity", texture.getEmissionIntensity());
-//            shader.loadUniformBoolean("useAlbedoEmission", texture.isUseAlbedoEmission());
+//            glBindTexture(GL_TEXTURE_2D, material.getEmissionMap().getTextureID());
+//            shader.loadUniformFloat("emissionIntensity", material.getEmissionIntensity());
+//            shader.loadUniformBoolean("useAlbedoEmission", material.isUseAlbedoEmission());
 //        } else {
 //            glActiveTexture(GL_TEXTURE3);
 //            glBindTexture(GL_TEXTURE_2D, 0);
@@ -99,29 +99,29 @@ public class EntityRenderer {
 //
 //        shader.loadUniformInt("albedoMap", 0);
 //        glActiveTexture(GL_TEXTURE0);
-//        glBindTexture(GL_TEXTURE_2D, model.getTexture().getID());
+//        glBindTexture(GL_TEXTURE_2D, material.getTexture().getTextureID());
 
         shader.loadUniformInt("enviromentMap", 1);
         glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_CUBE_MAP, reflectionCubeMap.getTexture());
 
-        if (texture.hasSpecular()) {
+        if (material.hasSpecular()) {
             shader.loadUniformInt("specularMap", 2);
             glActiveTexture(GL_TEXTURE2);
-            glBindTexture(GL_TEXTURE_2D, texture.getSpecularMap().getTextureID());
-            shader.loadUniformFloat("specularIntensity", texture.getSpecularIntensity());
+            glBindTexture(GL_TEXTURE_2D, material.getSpecularMap().getTextureID());
+            shader.loadUniformFloat("specularIntensity", material.getSpecularIntensity());
         } else {
             glActiveTexture(GL_TEXTURE2);
             glBindTexture(GL_TEXTURE_2D, 0);
             shader.loadUniformFloat("specularIntensity", -1);
         }
 
-        if (texture.hasEmission()) {
+        if (material.hasEmission()) {
             shader.loadUniformInt("emissionMap", 3);
             glActiveTexture(GL_TEXTURE3);
-            glBindTexture(GL_TEXTURE_2D, texture.getEmissionMap().getTextureID());
-            shader.loadUniformFloat("emissionIntensity", texture.getEmissionIntensity());
-            shader.loadUniformBoolean("useAlbedoEmission", texture.isUseAlbedoEmission());
+            glBindTexture(GL_TEXTURE_2D, material.getEmissionMap().getTextureID());
+            shader.loadUniformFloat("emissionIntensity", material.getEmissionIntensity());
+            shader.loadUniformBoolean("useAlbedoEmission", material.isUseAlbedoEmission());
         } else {
             glActiveTexture(GL_TEXTURE3);
             glBindTexture(GL_TEXTURE_2D, 0);

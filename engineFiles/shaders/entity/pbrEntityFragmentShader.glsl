@@ -97,9 +97,12 @@ vec3 fresnelSchlick(float HdotV, vec3 baseReflectivity) {
 // ----------------------------------------------------------------------------------------
 void main() {
     vec3 albedo = texture(albedoMap, TexCoords).rgb;
-    float metallic = rgb2hsv(texture(metallicMap, TexCoords).rgb).b * metallicIntensity;
-    float roughness = rgb2hsv(texture(roughnessMap, TexCoords).rgb).b * roughnessIntensity;
-    float ao = rgb2hsv(texture(aoMap, TexCoords).rgb).b;
+//    float metallic = rgb2hsv(texture(metallicMap, TexCoords).rgb).b * metallicIntensity;
+//    float roughness = rgb2hsv(texture(roughnessMap, TexCoords).rgb).b * roughnessIntensity;
+//    float ao = rgb2hsv(texture(aoMap, TexCoords).rgb).b;
+
+    float metallic = metallicIntensity;
+    float roughness = roughnessIntensity;
 
     vec3 N = normalize(Normal);
     vec3 V = normalize(camPos - WorldPos);

@@ -3,6 +3,7 @@ package engine.renderEngine;
 import engine.assets.Asset;
 import engine.assets.assetsTypes.*;
 import engine.renderEngine.models.RawModel;
+import engine.renderEngine.textures.FilterMode;
 import engine.renderEngine.textures.Texture;
 import engine.renderEngine.textures.TextureData;
 import org.apache.commons.io.FileUtils;
@@ -228,6 +229,41 @@ public class Loader {
         glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
 
+    public void updateTexture(Texture texture) {
+        // Generate texture on GPU
+        int textureID = texture.getTextureID();
+        glBindTexture(GL_TEXTURE_2D, textureID);
+
+        // Set texture parameters
+        // Repeat image in both directions
+        if (texture.isRepeatHorizontally())
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT); // X
+        if (texture.isRepeatVertically())
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT); // Y
+
+        if (texture.getFilterMode() == FilterMode.Nearest) {
+            // When stretch the texture image, pixelate it
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+            // When shrinking an image, pixelate it
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        } else if (texture.getFilterMode() == FilterMode.Linear) {
+            // When stretch the texture image, blur it
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+            // When shrinking an image, blur it
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        }
+
+        if (texture.isUseMipmaps()) {
+            glGenerateMipmap(GL_TEXTURE_2D);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+            glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_LOD_BIAS, -0.6f); // изменяем уровень mipmap чтобы они начинались с большей дистанции, чем меньше число тем дальше старт mipmap
+        } else if (texture.isUseAnisotropicFiltering()) {// use anisotropic filtering
+            glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_LOD_BIAS, 0);
+            float amount = Math.min(4.0f,  glGetFloat(EXTTextureFilterAnisotropic.GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT));
+            glTexParameterf(GL_TEXTURE_2D, EXTTextureFilterAnisotropic.GL_TEXTURE_MAX_ANISOTROPY_EXT, amount);
+        }
+    }
+
     public Texture loadTexture(String filepath) { return loadTexture(filepath, false, true); }
 
     public Texture loadTexture(String filepath, boolean useMipmaps) { return loadTexture(filepath, useMipmaps, false); }
@@ -284,18 +320,7 @@ public class Loader {
         Texture texture = new Texture(textureID, filepath, width.get(0), height.get(0));
 
         texturesFiles.put(filepath, texture);
-//        Texture texture = null;
-//        try {
-//            FileInputStream file = new FileInputStream(filePath);
-//            System.out.println(file.read());
-//            texture = TextureLoader.getTexture("PNG", file);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//
-//        int textureID = texture.getTextureID();
-//        textures.add(textureID);
-//        return textureID;
+
         return texture;
     }
 

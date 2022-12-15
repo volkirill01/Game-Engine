@@ -45,7 +45,10 @@ public class MeshRenderer extends ObjectRenderer {
     public void update() { }
 
     @Override
-    public void editorUpdate() { this.model.getRawModel().update(); }
+    public void editorUpdate() {
+        this.model.getRawModel().update();
+        this.model.getMaterial().getTexture().update();
+    }
 
     @Override
     public void imgui() {

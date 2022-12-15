@@ -79,8 +79,8 @@ void main() {
     }
 
     if (specularIntensity > 0) {
-        vec4 mapInfo = texture(specularMap, pass_textureCoords) * specularIntensity;
-        float mapBrightness = rgb2hsv(mapInfo.rgb).b;
+        vec4 mapInfo = texture(specularMap, pass_textureCoords);
+        float mapBrightness = rgb2hsv(mapInfo.rgb).b * specularIntensity;
         totalSpecular *= mapBrightness;
     }
 
