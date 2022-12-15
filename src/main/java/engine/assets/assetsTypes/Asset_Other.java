@@ -13,6 +13,6 @@ public class Asset_Other extends Asset {
 
     @Override
     public void imgui() {
-
+        super.saveMeta();
     }
 }

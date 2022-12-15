@@ -1,7 +1,5 @@
 package engine.renderEngine.postProcessing;
 
-import engine.TestFieldsWindow;
-import engine.components.Transform;
 import engine.imGui.EditorImGui;
 import engine.imGui.EditorImGuiWindow;
 import engine.renderEngine.Loader;
@@ -9,7 +7,6 @@ import imgui.ImGui;
 import imgui.ImVec2;
 import imgui.ImVec4;
 import imgui.flag.ImGuiCol;
-import imgui.flag.ImGuiComboFlags;
 import imgui.flag.ImGuiStyleVar;
 
 import java.util.List;

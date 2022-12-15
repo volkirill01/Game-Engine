@@ -1,22 +1,37 @@
 package engine.renderEngine.models;
 
+import engine.renderEngine.Loader;
+
+import java.util.Map;
+
 public class RawModel {
 
     private int vaoID;
     private int vertexCount;
     private String filepath;
 
+    private String metaFilepath;
+    private Map<String, Object> metaData;
+
     public RawModel(int vaoID, int vertexCount) {
         this.vaoID = vaoID;
         this.vertexCount = vertexCount;
         this.filepath = "_Generated";
+
+        this.metaFilepath = "engineFiles/defaultAssets/defaultModel.meta";
+        this.metaData = Loader.get().loadMeta(this.metaFilepath, this.metaFilepath);
     }
 
     public RawModel(int vaoID, int vertexCount, String filepath) {
         this.vaoID = vaoID;
         this.vertexCount = vertexCount;
         this.filepath = filepath;
+
+        this.metaFilepath = this.filepath;
+        this.metaData = Loader.get().loadMeta(this.metaFilepath, "engineFiles/defaultAssets/defaultModel.meta");
     }
+
+    public void update() { this.metaData = Loader.get().loadMeta(this.metaFilepath, "engineFiles/defaultAssets/defaultModel.meta"); }
 
     public int getVaoID() { return this.vaoID; }
 
@@ -24,5 +39,5 @@ public class RawModel {
 
     public String getFilepath() { return this.filepath; }
 
-    public float getSizeMultiplayer() { return 1.0f; }
+    public float getSizeMultiplayer() { return Float.parseFloat(this.metaData.get("modelSize").toString()); }
 }

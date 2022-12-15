@@ -1,5 +1,6 @@
 package engine.assets;
 
+import engine.renderEngine.Loader;
 import engine.renderEngine.textures.Texture;
 import imgui.ImGui;
 import imgui.ImVec2;
@@ -58,4 +59,6 @@ public abstract class Asset {
     }
 
     public abstract void imgui();
+
+    public void saveMeta() { Loader.get().saveMeta(assetPath, this.data); }
 }

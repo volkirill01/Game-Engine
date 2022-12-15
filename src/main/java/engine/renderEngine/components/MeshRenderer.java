@@ -7,6 +7,9 @@ import engine.renderEngine.models.TexturedModel;
 import engine.renderEngine.textures.TextureSliceMode;
 import org.joml.Vector2f;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class MeshRenderer extends ObjectRenderer {
 
     private TexturedModel model;
@@ -42,7 +45,7 @@ public class MeshRenderer extends ObjectRenderer {
     public void update() { }
 
     @Override
-    public void editorUpdate() { }
+    public void editorUpdate() { this.model.getRawModel().update(); }
 
     @Override
     public void imgui() {

@@ -157,7 +157,7 @@ public class EntityRenderer {
             case None -> { return; }
         }
 
-        Vector3f sizeMultiplayed = gameObject.transform.scale;
+        Vector3f sizeMultiplayed = new Vector3f(gameObject.transform.scale);
         sizeMultiplayed = sizeMultiplayed.mul(gameObject.getComponent(MeshRenderer.class).getModel().getRawModel().getSizeMultiplayer());
 
         Matrix4f transformationMatrix = Maths.createTransformationMatrix(

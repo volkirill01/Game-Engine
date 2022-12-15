@@ -58,20 +58,21 @@ public class AssetsWindow extends EditorImGuiWindow {
                     assets.add(new Asset_Folder(filepath, fileName, loadFolderData(filepath), true));
             } else if (content.isFile()) {
                 if (filepath.endsWith(".scene"))
-                    assets.add(new Asset_Scene(filepath, fileName, loadSceneData(filepath)));
+                    assets.add(Loader.get().loadAsset_Scene(filepath));
                 else if (filepath.endsWith(".png"))
-                    assets.add(new Asset_Image(filepath, fileName, loadImageData(filepath), Loader.get().loadTexture(filepath)));
+                    assets.add(Loader.get().loadAsset_Image(filepath, Loader.get().loadTexture(filepath)));
                 else if (filepath.endsWith(".ogg"))
-                    assets.add(new Asset_Sound(filepath, fileName, loadSoundData(filepath)));
+                    assets.add(Loader.get().loadAsset_Sound(filepath));
 //                else if (filepath.endsWith(".ttf"))
 //                    assets.add(new Asset(filepath, fileName, Asset.AssetType.Font, "engineFiles/images/icons/icon=font-solid-(256x256).png"));
                 else if (filepath.endsWith(".glsl"))
-                    assets.add(new Asset_Shader(filepath, fileName, loadShaderData(filepath)));
+                    assets.add(Loader.get().loadAsset_Shader(filepath));
                 else if (filepath.endsWith(".obj"))
                     assets.add(Loader.get().loadAsset_Model(filepath));
-//                    assets.add(new Asset_Model(filepath, fileName, loadModelData(filepath), Loader.get().loadTexture("engineFiles/images/icons/icon=cube-solid-(256x256).png")));
+                else if (filepath.endsWith(".meta"))
+                    continue;
                 else // Other
-                    assets.add(new Asset_Other(filepath, fileName, loadText(filepath)));
+                    assets.add(Loader.get().loadAsset_Other(filepath));
             }
         }
 
@@ -123,36 +124,6 @@ public class AssetsWindow extends EditorImGuiWindow {
             }
         }
         return length;
-    }
-
-    private Map<String, Object> loadSceneData(String filepath) {
-        Map<String, Object> data = new HashMap<>();
-
-        return data;
-    }
-
-    private Map<String, Object> loadImageData(String filepath) {
-        Map<String, Object> data = new HashMap<>();
-
-        return data;
-    }
-
-    private Map<String, Object> loadSoundData(String filepath) {
-        Map<String, Object> data = new HashMap<>();
-
-        return data;
-    }
-
-    private Map<String, Object> loadShaderData(String filepath) {
-        Map<String, Object> data = new HashMap<>();
-
-        return data;
-    }
-
-    private Map<String, Object> loadText(String filepath) {
-        Map<String, Object> data = new HashMap<>();
-
-        return data;
     }
 
     private void goBackFolder() {
@@ -271,7 +242,7 @@ public class AssetsWindow extends EditorImGuiWindow {
     public void createNewScene() {
         refrashingFiles = false;
         ImGui.setWindowFocus(windowName);
-        assets.add(new Asset_Scene(currentDirectory + currentNewSceneName, currentNewSceneName, loadSceneData("engineFiles/defaultAssets/defaultScene.meta")));
+        assets.add(new Asset_Scene(currentDirectory + currentNewSceneName, currentNewSceneName, Loader.get().loadMeta("engineFiles/defaultAssets/defaultScene.meta", "engineFiles/defaultAssets/defaultScene.meta")));
     }
 
     private void popups(int i, ImVec4 borderColor) {

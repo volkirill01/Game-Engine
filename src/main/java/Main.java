@@ -1,5 +1,4 @@
 import engine.TestFieldsWindow;
-import engine.assets.assetsTypes.Asset_Model;
 import engine.entities.Camera;
 import engine.entities.GameObject;
 import engine.entities.Light;
@@ -38,7 +37,7 @@ import java.util.List;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL30.*;
 
-public class Main {
+public class Main { // TODO FIX SAVE AND LOAD META FILES
 
     public static void main(String[] args) {
 

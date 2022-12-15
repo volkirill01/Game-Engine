@@ -15,5 +15,6 @@ public class Asset_Model extends Asset {
     @Override
     public void imgui() {
         this.data.replace("modelSize", EditorImGui.field_Float("Model Size", Float.parseFloat(this.data.get("modelSize").toString())));
+        super.saveMeta();
     }
 }

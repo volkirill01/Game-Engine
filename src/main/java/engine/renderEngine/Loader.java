@@ -1,7 +1,7 @@
 package engine.renderEngine;
 
 import engine.assets.Asset;
-import engine.assets.assetsTypes.Asset_Model;
+import engine.assets.assetsTypes.*;
 import engine.renderEngine.models.RawModel;
 import engine.renderEngine.textures.Texture;
 import engine.renderEngine.textures.TextureData;
@@ -34,7 +34,7 @@ public class Loader {
     private List<Integer> textures = new ArrayList<>();
     private Map<String, Texture> texturesFiles = new HashMap<>();
 
-    private Map<String, Asset_Model> modelsAssets = new HashMap<>();
+    private Map<String, Asset> assets = new HashMap<>();
 
     public static Loader get() {
         if (instance == null)
@@ -43,21 +43,93 @@ public class Loader {
         return instance;
     }
 
-    public Asset_Model loadAsset_Model(String filepath) {
-        if (modelsAssets.containsKey(filepath))
-            return modelsAssets.get(filepath);
+    //<editor-fold desc="Assets Files">
+    public Asset_Scene loadAsset_Scene(String filepath) {
+        if (assets.containsKey(filepath))
+            return (Asset_Scene) assets.get(filepath);
 
         String[] tmp = filepath.replace("\\", "/").split("/");
         String fileName = tmp[tmp.length - 1];
 
-        Asset_Model model = new Asset_Model(filepath, fileName,
-                loadMeta(filepath, "engineFiles/defaultAssets/defaultModel.meta"),
-                loadTexture("engineFiles/images/icons/icon=cube-solid-(256x256).png"));
+        Asset_Scene file = new Asset_Scene(filepath, fileName,
+                loadMeta(filepath, "engineFiles/defaultAssets/defaultScene.meta"));
 
-        modelsAssets.put(filepath, model);
-        return model;
+        assets.put(filepath, file);
+        return file;
     }
 
+    public Asset_Image loadAsset_Image(String filepath, Texture fileIcon) {
+        if (assets.containsKey(filepath))
+            return (Asset_Image) assets.get(filepath);
+
+        String[] tmp = filepath.replace("\\", "/").split("/");
+        String fileName = tmp[tmp.length - 1];
+
+        Asset_Image file = new Asset_Image(filepath, fileName,
+                loadMeta(filepath, "engineFiles/defaultAssets/defaultImage.meta"), fileIcon);
+
+        assets.put(filepath, file);
+        return file;
+    }
+
+    public Asset_Sound loadAsset_Sound(String filepath) {
+        if (assets.containsKey(filepath))
+            return (Asset_Sound) assets.get(filepath);
+
+        String[] tmp = filepath.replace("\\", "/").split("/");
+        String fileName = tmp[tmp.length - 1];
+
+        Asset_Sound file = new Asset_Sound(filepath, fileName,
+                loadMeta(filepath, "engineFiles/defaultAssets/defaultSound.meta"));
+
+        assets.put(filepath, file);
+        return file;
+    }
+    public Asset_Shader loadAsset_Shader(String filepath) {
+        if (assets.containsKey(filepath))
+            return (Asset_Shader) assets.get(filepath);
+
+        String[] tmp = filepath.replace("\\", "/").split("/");
+        String fileName = tmp[tmp.length - 1];
+
+        Asset_Shader file = new Asset_Shader(filepath, fileName,
+                loadMeta(filepath, "engineFiles/defaultAssets/defaultShader.meta"));
+
+        assets.put(filepath, file);
+        return file;
+    }
+
+    public Asset_Model loadAsset_Model(String filepath) {
+        if (assets.containsKey(filepath))
+            return (Asset_Model) assets.get(filepath);
+
+        String[] tmp = filepath.replace("\\", "/").split("/");
+        String fileName = tmp[tmp.length - 1];
+
+        Asset_Model file = new Asset_Model(filepath, fileName,
+                loadMeta(filepath, "engineFiles/defaultAssets/defaultModel.meta"),
+                loadTexture("engineFiles/images/icons/icon=cube-solid-(256x256).png")); // TODO DISPLAY MODEL (NOT STATIC ICON)
+
+        assets.put(filepath, file);
+        return file;
+    }
+
+    public Asset_Other loadAsset_Other(String filepath) {
+        if (assets.containsKey(filepath))
+            return (Asset_Other) assets.get(filepath);
+
+        String[] tmp = filepath.replace("\\", "/").split("/");
+        String fileName = tmp[tmp.length - 1];
+
+        Asset_Other file = new Asset_Other(filepath, fileName,
+                loadMeta(filepath, "engineFiles/defaultAssets/defaultOther.meta"));
+
+        assets.put(filepath, file);
+        return file;
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Meta Files">
     public Map<String, Object> loadMeta(String filepath, String defaultData_filepath) {
         Map<String, Object> data = new HashMap<>();
         List<String> lines = loadFileMeta_Lines(filepath);
@@ -89,18 +161,19 @@ public class Loader {
         return lines;
     }
 
-//    public void saveMeta(String filepath, Map<String, Object> data) {
-//        StringBuilder fileMeta = new StringBuilder();
-//
-//        for (String line : data.keySet())
-//            fileMeta.append(line).append(" = ").append(data.get(line)).append("\n");
-//
-//        try {
-//            FileUtils.writeStringToFile(new File(filepath + ".meta"), fileMeta.toString(), "UTF-8");
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
+    public void saveMeta(String filepath, Map<String, Object> data) {
+        StringBuilder fileMeta = new StringBuilder();
+
+        for (String line : data.keySet())
+            fileMeta.append(line).append(" = ").append(data.get(line)).append("\n");
+
+        try {
+            FileUtils.writeStringToFile(new File(filepath + ".meta"), fileMeta.toString(), "UTF-8");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    //</editor-fold>
 
     public RawModel loadToVAO(float[] positions, float[] textureCoords, float[] normals, int[] indices, String filepath) {
         int vaoID = createVao();

@@ -19,5 +19,6 @@ public class Asset_Folder extends Asset {
     @Override
     public void imgui() {
         ImGui.text("Size: " + size + "mb");
+        super.saveMeta();
     }
 }
