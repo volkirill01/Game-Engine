@@ -15,6 +15,7 @@ public class StaticShader extends ShaderProgram {
     public ShaderVariable[] lightColorVariables;
     public ShaderVariable[] lightIntensityVariables;
     public ShaderVariable[] lightAttenuationVariables;
+    public ShaderVariable[] lightRangeVariables;
 
     public StaticShader(String VERTEX_FILE, String FRAGMENT_FILE) { super(VERTEX_FILE, FRAGMENT_FILE); }
 
@@ -32,6 +33,7 @@ public class StaticShader extends ShaderProgram {
         lightColorVariables = new ShaderVariable[MAX_LIGHTS_COUNT];
         lightIntensityVariables = new ShaderVariable[MAX_LIGHTS_COUNT];
         lightAttenuationVariables = new ShaderVariable[MAX_LIGHTS_COUNT];
+        lightRangeVariables = new ShaderVariable[MAX_LIGHTS_COUNT];
         for (int i = 0; i < MAX_LIGHTS_COUNT; i++) {
             lightPositionVariables[i] = new ShaderVariable(
                     "lightPosition[" + i + "]",
@@ -52,6 +54,10 @@ public class StaticShader extends ShaderProgram {
             lightAttenuationVariables[i] = new ShaderVariable(
                     "attenuation[" + i + "]",
                     super.getUniformLocation("attenuation[" + i + "]"));
+
+            lightRangeVariables[i] = new ShaderVariable(
+                    "lightRange[" + i + "]",
+                    super.getUniformLocation("lightRange[" + i + "]"));
         }
     }
 
@@ -63,12 +69,14 @@ public class StaticShader extends ShaderProgram {
                 super.loadUniformColor(lightColorVariables[i].variableName, lists.get(i).getColor());
                 super.loadUniformFloat(lightIntensityVariables[i].variableName, lists.get(i).getIntensity());
                 super.loadUniformVector3(lightAttenuationVariables[i].variableName, lists.get(i).getAttenuation());
+                super.loadUniformFloat(lightRangeVariables[i].variableName, lists.get(i).getRange());
             } else {
                 super.loadUniformVector3(lightPositionVariables[i].variableName, new Vector3f(0.0f));
                 super.loadUniformVector3(lightRotationVariables[i].variableName, new Vector3f(0.0f));
                 super.loadUniformColor(lightColorVariables[i].variableName, Color.Black);
                 super.loadUniformFloat(lightIntensityVariables[i].variableName, 0.0f);
                 super.loadUniformVector3(lightAttenuationVariables[i].variableName, new Vector3f(1.0f, 0.0f, 0.0f));
+                super.loadUniformFloat(lightRangeVariables[i].variableName, 0.0f);
             }
         }
     }

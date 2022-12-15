@@ -165,7 +165,7 @@ public class MasterRenderer {
             processTerrain(terrain);
 
         for (GameObject gameObject : entities) {
-            if (gameObject.getComponent(Light.class) != null)
+            if (gameObject.getComponent(Light.class) != null && gameObject.getComponent(Light.class).isActive())
                 lights.add(gameObject.getComponent(Light.class));
 
             if (gameObject.getComponent(ObjectRenderer.class) == null)

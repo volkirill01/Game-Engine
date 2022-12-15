@@ -326,8 +326,8 @@ public class Main { // TODO FIX SAVE AND LOAD META FILES
         Window.get().currentScene.addGameObjectToScene(sun);
 
         GameObject blob = new GameObject("Blob");
-        blob.transform.set(new Vector3f(-90.0f, 24.0f, -70.0f), new Vector3f(0, 0, 0), new Vector3f(1.0f));
-        Light blobLightComponent = new Light(Color.Yellow, 5.0f, new Vector3f(1, 0.01f, 0.002f));
+        blob.transform.set(new Vector3f(-90.0f, 30.0f, -70.0f), new Vector3f(0, 0, 0), new Vector3f(1.0f));
+        Light blobLightComponent = new Light(Color.Yellow, 2.0f, new Vector3f(1.0f, 0.01f, 0.002f)); // 5.0f, 10.0f, 0.0f
         blob.addComponent(blobLightComponent);
         Window.get().currentScene.addGameObjectToScene(blob);
         // Light

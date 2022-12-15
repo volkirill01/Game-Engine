@@ -21,6 +21,8 @@ uniform vec3 lightColor[4]; // MAXIMUM COUNT OF LIGHTS PER ENTITY
 uniform float lightIntensity[4]; // MAXIMUM COUNT OF LIGHTS PER ENTITY
 uniform vec3 attenuation[4]; // MAXIMUM COUNT OF LIGHTS PER ENTITY
 
+uniform float lightRange[4]; // MAXIMUM COUNT OF LIGHTS PER ENTITY
+
 uniform vec3 fogColor;
 uniform vec3 ambientLightColor;
 uniform float ambientLightIntensity;

@@ -19,6 +19,7 @@ public class Light extends Component {
     private float intensity;
     private final Vector3f defaultAttenuation = new Vector3f(1, 0, 0);
     private Vector3f attenuation = new Vector3f(defaultAttenuation);
+    private float range = 1.0f;
 
     public Light(Color color, float intensity) {
         this.color = color;
@@ -67,8 +68,10 @@ public class Light extends Component {
         ImGui.spacing();
         this.intensity = EditorImGui.field_Float("Intensity", this.intensity, 0.02f, 0.0f);
 
-        if (this.lightType != LightType.Directional)
-            this.attenuation = EditorImGui.field_Vector3f("Attenuation", this.attenuation, new Vector3f(1.0f, 0.0f, 0.0f));
+        if (this.lightType != LightType.Directional) {
+            this.attenuation = EditorImGui.field_Vector3f("Attenuation", this.attenuation, new Vector3f(1, 0, 0));
+            this.range = EditorImGui.field_Float("Range", this.range, 0.02f);
+        }
     }
 
     @Override
@@ -77,4 +80,6 @@ public class Light extends Component {
         this.intensity = 1.0f;
         this.attenuation = new Vector3f(1, 0, 0);
     }
+
+    public float getRange() { return this.range; }
 }
