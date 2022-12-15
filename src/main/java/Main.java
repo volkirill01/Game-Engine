@@ -319,26 +319,17 @@ public class Main { // TODO FIX SAVE AND LOAD META FILES
         // GUIS
 
         // Light
-        List<Light> lights = new ArrayList<>();
-
         GameObject sun = new GameObject("Sun");
         sun.transform.set(new Vector3f(0.0f, 0.0f, 0.0f), new Vector3f(-18.0f, 10.0f, 20.0f), new Vector3f(1.0f));
         Light sunLightComponent = new Light(Color.White, 1.5f);
         sun.addComponent(sunLightComponent);
-        lights.add(sunLightComponent);
         Window.get().currentScene.addGameObjectToScene(sun);
 
         GameObject blob = new GameObject("Blob");
         blob.transform.set(new Vector3f(-90.0f, 24.0f, -70.0f), new Vector3f(0, 0, 0), new Vector3f(1.0f));
         Light blobLightComponent = new Light(Color.Yellow, 5.0f, new Vector3f(1, 0.01f, 0.002f));
         blob.addComponent(blobLightComponent);
-        lights.add(blobLightComponent);
         Window.get().currentScene.addGameObjectToScene(blob);
-
-//        lights.add(new Light(new Vector3f(-57.0f, 20.0f, -53.0f), Color.Green, 3.5f, new Vector3f(1, 0.01f, 0.002f)));
-//        lights.add(new Light(new Vector3f(-53.0f, 20.0f, -57.0f), Color.Red, 3.5f, new Vector3f(1, 0.01f, 0.002f)));
-
-//        lights.add(new Light(new Vector3f(-90, 27, -70), Color.Yellow, 1.5f, new Vector3f(1, 0.01f, 0.002f)));
         // Light
 
         Window.get().currentScene.addGameObjectToScene(player);
@@ -427,7 +418,7 @@ public class Main { // TODO FIX SAVE AND LOAD META FILES
 
             multisampleSceneFbo.bindFrameBuffer(); // all inside this affected by postProcessing
 
-            renderer.renderScene(Window.get().currentScene.getGameObjects(), normalMapEntities, terrains, lights, camera);
+            renderer.renderScene(Window.get().currentScene.getGameObjects(), normalMapEntities, terrains, camera);
             ParticleMaster.renderParticles(camera);
 
 //            cameraOutputGui.setTexture(PostProcessing.getFinalImage());

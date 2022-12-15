@@ -55,6 +55,8 @@ public class MasterRenderer {
     private SkyboxRenderer skyboxRenderer;
     private ShadowMapMasterRenderer shadowMapRenderer;
 
+    private List<Light> lights = new ArrayList<>();
+
     public MasterRenderer(Camera camera) {
         createProjectionMatrix();
         skyboxRenderer = new SkyboxRenderer(projectionMatrix);
@@ -156,11 +158,16 @@ public class MasterRenderer {
         glBindTexture(GL_TEXTURE_2D, getShadowMapTexture());
     }
 
-    public void renderScene(List<GameObject> entities, List<GameObject> normalMapEntities, List<Terrain> terrains, List<Light> lights, Camera camera) {
+    public void renderScene(List<GameObject> entities, List<GameObject> normalMapEntities, List<Terrain> terrains, Camera camera) {
+        lights.clear();
+
         for (Terrain terrain : terrains)
             processTerrain(terrain);
 
         for (GameObject gameObject : entities) {
+            if (gameObject.getComponent(Light.class) != null)
+                lights.add(gameObject.getComponent(Light.class));
+
             if (gameObject.getComponent(ObjectRenderer.class) == null)
                 continue;
             processEntity(gameObject);

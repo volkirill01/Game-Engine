@@ -163,7 +163,7 @@ public class Material {
             EditorImGui.header("Other");
             this.alphaClip = EditorImGui.field_Float("Alpha Clip", this.alphaClip, 0.02f, 0.0f, 1.0f);
 
-            this.tiling = EditorImGui.field_Vector2f("Tiling", tiling, 1.0f);
+            this.tiling = EditorImGui.field_Vector2f("Tiling", tiling, new Vector2f(1.0f));
 
             this.renderCullSide = (RenderCullSide) EditorImGui.field_Enum("Render Cull Side", this.renderCullSide);
 

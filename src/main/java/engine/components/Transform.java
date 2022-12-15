@@ -59,7 +59,7 @@ public class Transform extends Component {
 
         this.position = EditorImGui.field_Vector3f("Position", this.position);
         this.rotation = EditorImGui.field_Vector3f("Rotation", this.rotation);
-        this.scale = EditorImGui.field_Vector3f("Scale", this.scale, 1.0f);
+        this.scale = EditorImGui.field_Vector3f("Scale", this.scale, new Vector3f(1.0f));
     }
 
     public Transform copy() {

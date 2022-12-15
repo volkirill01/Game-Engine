@@ -121,9 +121,9 @@ public class EditorImGui {
         ImGui.popID();
     }
 
-    public static Vector2f field_Vector2f(String label, Vector2f values) { return field_Vector2f(label, values, 0.0f); }
+    public static Vector2f field_Vector2f(String label, Vector2f values) { return field_Vector2f(label, values, new Vector2f(0.0f)); }
 
-    public static Vector2f field_Vector2f(String label, Vector2f values, float resetValue) {
+    public static Vector2f field_Vector2f(String label, Vector2f values, Vector2f resetValues) {
         ImGui.pushID(label);
 
         ImGui.columns(2, "", false);
@@ -141,7 +141,7 @@ public class EditorImGui {
         ImGui.pushStyleColor(ImGuiCol.ButtonHovered, 224, 50, 43, 255);
         ImGui.pushStyleColor(ImGuiCol.ButtonActive, 204, 36, 29, 255);
         if (ImGui.button("X", buttonSize.x, buttonSize.y))
-            values.x = resetValue;
+            values.x = resetValues.x;
         ImGui.popStyleColor(3);
 
         ImGui.sameLine();
@@ -155,7 +155,7 @@ public class EditorImGui {
         ImGui.pushStyleColor(ImGuiCol.ButtonHovered, 172, 165, 40, 255);
         ImGui.pushStyleColor(ImGuiCol.ButtonActive, 152, 151, 26, 255);
         if (ImGui.button("Y", buttonSize.x, buttonSize.y))
-            values.y = resetValue;
+            values.y = resetValues.y;
         ImGui.popStyleColor(3);
 
         ImGui.sameLine();
@@ -175,9 +175,9 @@ public class EditorImGui {
         return values;
     }
 
-    public static Vector3f field_Vector3f(String label, Vector3f values) { return field_Vector3f(label, values, 0.0f); }
+    public static Vector3f field_Vector3f(String label, Vector3f values) { return field_Vector3f(label, values, new Vector3f(0.0f)); }
 
-    public static Vector3f field_Vector3f(String label, Vector3f values, float resetValue) {
+    public static Vector3f field_Vector3f(String label, Vector3f values, Vector3f resetValues) {
         ImGui.pushID(label);
 
         ImGui.columns(2, "", false);
@@ -195,7 +195,7 @@ public class EditorImGui {
         ImGui.pushStyleColor(ImGuiCol.ButtonHovered, 224, 50, 43, 255);
         ImGui.pushStyleColor(ImGuiCol.ButtonActive, 204, 36, 29, 255);
         if (ImGui.button("X", buttonSize.x, buttonSize.y))
-            values.x = resetValue;
+            values.x = resetValues.x;
         ImGui.popStyleColor(3);
 
         ImGui.sameLine();
@@ -209,7 +209,7 @@ public class EditorImGui {
         ImGui.pushStyleColor(ImGuiCol.ButtonHovered, 172, 165, 40, 255);
         ImGui.pushStyleColor(ImGuiCol.ButtonActive, 152, 151, 26, 255);
         if (ImGui.button("Y", buttonSize.x, buttonSize.y))
-            values.y = resetValue;
+            values.y = resetValues.y;
         ImGui.popStyleColor(3);
 
         ImGui.sameLine();
@@ -224,7 +224,7 @@ public class EditorImGui {
         ImGui.pushStyleColor(ImGuiCol.ButtonHovered, 89, 147, 150, 255);
         ImGui.pushStyleColor(ImGuiCol.ButtonActive, 69, 133, 136, 255);
         if (ImGui.button("Z", buttonSize.x, buttonSize.y))
-            values.z = resetValue;
+            values.z = resetValues.z;
         ImGui.popStyleColor(3);
 
         ImGui.sameLine();

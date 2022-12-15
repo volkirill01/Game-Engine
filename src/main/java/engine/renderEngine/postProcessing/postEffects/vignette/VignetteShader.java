@@ -37,7 +37,7 @@ public class VignetteShader extends PostProcessShader {
 		} else {
 			isRounded = EditorImGui.field_Boolean("Is Rounded", isRounded);
 
-			EditorImGui.field_Vector2f("Center", center, 0.5f);
+			EditorImGui.field_Vector2f("Center", center, new Vector2f(0.5f));
 
 			intensity = EditorImGui.field_Float("Intensity", intensity, 0.005f, 0.0f, 1.0f);
 			radius = EditorImGui.field_Float("Radius", radius, 0.05f, 0.0f, 3.0f);
