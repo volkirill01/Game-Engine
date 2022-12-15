@@ -21,6 +21,8 @@ uniform float fogDensity;
 uniform float fogGradient;
 
 uniform vec3 lightPosition[4]; // MAXIMUM COUNT OF LIGHTS PER ENTITY
+uniform vec3 attenuation[4]; // MAXIMUM COUNT OF LIGHTS PER ENTITY
+uniform vec3 lightRotation[4]; // MAXIMUM COUNT OF LIGHTS PER ENTITY
 
 uniform float useFakeLighting;
 
@@ -42,7 +44,10 @@ void main() {
 
     surfaceNormal = (transformationMatrix * vec4(actualNormal, 0.0)).xyz;
     for (int i = 0; i < 4; i++) {
-        toLightVector[i] = lightPosition[i] - worldPosition.xyz;
+        if (attenuation[i] == vec3(1, 0, 0))
+            toLightVector[i] = lightRotation[i];
+        else
+            toLightVector[i] = lightPosition[i] - worldPosition.xyz;
     }
     toCameraVector = (inverse(viewMatrix) * vec4(0.0, 0.0, 0.0, 1.0)).xyz - worldPosition.xyz;
 

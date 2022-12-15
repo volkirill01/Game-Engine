@@ -1,31 +1,25 @@
 package engine.entities;
 
+import engine.components.Component;
 import engine.toolbox.customVariables.Color;
 import org.joml.Vector3f;
 
-public class Light {
+public class Light extends Component {
 
-    private Vector3f position;
     private Color color;
     private float intensity;
     private Vector3f attenuation = new Vector3f(1, 0, 0);
 
-    public Light(Vector3f position, Color color, float intensity) {
-        this.position = position;
+    public Light(Color color, float intensity) {
         this.color = color;
         this.intensity = intensity;
     }
 
-    public Light(Vector3f position, Color color, float intensity, Vector3f attenuation) {
-        this.position = position;
+    public Light(Color color, float intensity, Vector3f attenuation) {
         this.color = color;
         this.intensity = intensity;
         this.attenuation = attenuation;
     }
-
-    public Vector3f getPosition() { return this.position; }
-
-    public void setPosition(Vector3f position) { this.position = position; }
 
     public Color getColor() { return this.color; }
 
@@ -38,4 +32,11 @@ public class Light {
     public Vector3f getAttenuation() { return this.attenuation; }
 
     public void setAttenuation(Vector3f attenuation) { this.attenuation = attenuation; }
+
+    @Override
+    public void reset() {
+        this.color = Color.White;
+        this.intensity = 1.0f;
+        this.attenuation = new Vector3f(1, 0, 0);
+    }
 }

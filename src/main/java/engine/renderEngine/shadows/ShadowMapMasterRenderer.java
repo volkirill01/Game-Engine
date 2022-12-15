@@ -71,7 +71,7 @@ public class ShadowMapMasterRenderer {
 	 */
 	public void render(Map<TexturedModel, List<GameObject>> entities, Light sun) {
 		shadowBox.update();
-		Vector3f sunPosition = sun.getPosition();
+		Vector3f sunPosition = sun.gameObject.transform.position;
 		Vector3f lightDirection = new Vector3f(-sunPosition.x, -sunPosition.y, -sunPosition.z);
 		prepare(lightDirection, shadowBox);
 		entityRenderer.render(entities);
