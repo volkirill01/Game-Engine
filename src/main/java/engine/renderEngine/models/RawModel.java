@@ -17,9 +17,6 @@ public class RawModel {
         this.vaoID = vaoID;
         this.vertexCount = vertexCount;
         this.filepath = "_Generated";
-
-        this.metaFilepath = "engineFiles/defaultAssets/defaultModel.meta";
-        this.metaData = Loader.get().loadMeta(this.metaFilepath, this.metaFilepath);
     }
 
     public RawModel(int vaoID, int vertexCount, String filepath) {
@@ -31,7 +28,10 @@ public class RawModel {
         this.metaData = Loader.get().loadMeta(this.metaFilepath, "engineFiles/defaultAssets/defaultModel.meta");
     }
 
-    public void update() { this.metaData = Loader.get().loadMeta(this.metaFilepath, "engineFiles/defaultAssets/defaultModel.meta"); }
+    public void update() {
+        if (!this.filepath.equals("_Generated"))
+            this.metaData = Loader.get().loadMeta(this.metaFilepath, "engineFiles/defaultAssets/defaultModel.meta");
+    }
 
     public int getVaoID() { return this.vaoID; }
 
@@ -39,5 +39,9 @@ public class RawModel {
 
     public String getFilepath() { return this.filepath; }
 
-    public float getSizeMultiplayer() { return Float.parseFloat(this.metaData.get("modelSize").toString()); }
+    public float getSizeMultiplayer() {
+        if (!this.filepath.equals("_Generated"))
+            return Float.parseFloat(this.metaData.get("modelSize").toString());
+        return 1.0f;
+    }
 }
