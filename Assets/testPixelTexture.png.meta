@@ -1,6 +1,6 @@
-filterMode = Bilinear
+filterMode = Nearest
 repeatHorizontally = true
 sliceMode = Single
 useMipmaps = false
 repeatVertically = true
-useAnisotropicFiltering = true
+useAnisotropicFiltering = false

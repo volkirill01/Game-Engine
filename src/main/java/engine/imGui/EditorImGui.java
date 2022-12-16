@@ -1,5 +1,6 @@
 package engine.imGui;
 
+import engine.TestFieldsWindow;
 import engine.assets.Asset;
 import engine.renderEngine.Loader;
 import engine.renderEngine.OBJLoader;
@@ -18,10 +19,19 @@ import imgui.type.ImString;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class EditorImGui {
 
     private static float leftPadding = 150.0f;
     private static float textVerticalOffset = 4.0f;
+
+    public enum BooleanType {
+        Checkbox,
+        Switch,
+        Bullet
+    }
 
     // Single line height
     //      (ImGui.getTextLineHeight() + ImGui.getStyle().getFramePaddingY())
@@ -110,9 +120,9 @@ public class EditorImGui {
     }
 
     public static void header(String header) {
-        ImGui.pushID("Header" + header);
+        ImGui.pushID("Header-" + header);
         ImGui.columns(2, "", false);
-        ImGui.setColumnWidth(0, 1.5f);
+        ImGui.setColumnWidth(0, -1.5f);
         ImGui.nextColumn();
 
         ImGui.text(header);
@@ -514,10 +524,12 @@ public class EditorImGui {
         return text;
     }
 
-    public static boolean field_Boolean(String label, boolean value) { return field_Boolean(label, value, false); }
+    public static boolean field_Boolean(String label, boolean value) { return field_Boolean(label, value, BooleanType.Checkbox, false); }
 
-    public static boolean field_Boolean(String label, boolean value, boolean onRight) {
-        ImGui.pushID("Boolean-" + label);
+    public static boolean field_Boolean(String label, boolean value, BooleanType type) { return field_Boolean(label, value, type, false); }
+
+    public static boolean field_Boolean(String label, boolean value, BooleanType type, boolean onRight) {
+        ImGui.pushID("Boolean(" + type.name() + ")-" + label);
 
         ImGui.columns(2, "", false);
         if (onRight)
@@ -529,9 +541,87 @@ public class EditorImGui {
         ImGui.text("\t" + label);
         ImGui.nextColumn();
 
-        ImGui.setNextItemWidth(ImGui.getContentRegionAvailX());
-        if (ImGui.checkbox("##checkboxField" + label, value))
-            value = !value;
+        if (type == BooleanType.Checkbox) {
+            ImGui.setNextItemWidth(ImGui.getContentRegionAvailX());
+            if (ImGui.checkbox("##booleanField" + label, value))
+                value = !value;
+        } else if (type == BooleanType.Switch) {
+            ImGui.pushStyleVar(ImGuiStyleVar.FrameRounding, 99.0f);
+            ImGui.pushStyleVar(ImGuiStyleVar.FramePadding, ImGui.getStyle().getFramePaddingY() * 2.0f + 9.5f, ImGui.getStyle().getFramePaddingY() - 5.0f);
+            ImGui.setCursorPos(ImGui.getCursorPosX(), ImGui.getCursorPosY() + 5.0f);
+            ImVec2 startPos = ImGui.getCursorPos();
+
+            ImVec4 backgroundColor = !value ? ImGui.getStyle().getColor(ImGuiCol.FrameBg) : ImGui.getStyle().getColor(ImGuiCol.Button);
+            ImVec4 backgroundHoverColor = !value ? ImGui.getStyle().getColor(ImGuiCol.FrameBgHovered) : ImGui.getStyle().getColor(ImGuiCol.ButtonHovered);
+
+            ImGui.pushStyleColor(ImGuiCol.Button, backgroundColor.x, backgroundColor.y, backgroundColor.z, backgroundColor.w);
+            ImGui.pushStyleColor(ImGuiCol.ButtonHovered, backgroundHoverColor.x, backgroundHoverColor.y, backgroundHoverColor.z, backgroundHoverColor.w);
+            ImGui.pushStyleColor(ImGuiCol.ButtonActive, backgroundHoverColor.x, backgroundHoverColor.y, backgroundHoverColor.z, backgroundHoverColor.w);
+            boolean background = ImGui.button("##background");
+            boolean isHover = ImGui.isItemHovered();
+            ImGui.popStyleColor(3);
+
+            ImGui.setItemAllowOverlap();
+            ImGui.popStyleVar();
+
+            float isOn = value ? (ImGui.getStyle().getFramePaddingY() * 2.0f + 7.0f) : 0.0f;
+            ImGui.pushStyleVar(ImGuiStyleVar.FramePadding, ImGui.getStyle().getFramePaddingY() + 6.0f, ImGui.getStyle().getFramePaddingY() - 3.0f);
+            ImGui.setCursorPos(startPos.x + isOn, startPos.y - 2.0f);
+
+            ImVec4 buttonColor = !isHover ? ImGui.getStyle().getColor(ImGuiCol.Button) : ImGui.getStyle().getColor(ImGuiCol.ButtonHovered);
+            ImVec4 buttonHoverColor = ImGui.getStyle().getColor(ImGuiCol.ButtonHovered);
+
+            buttonColor = new ImVec4(buttonColor.x + (value ? 0.06f : 0.0f), buttonColor.y + (value ? 0.06f : 0.0f), buttonColor.z + (value ? 0.06f : 0.0f), 1.0f);
+            buttonHoverColor = new ImVec4(buttonHoverColor.x + (value ? 0.06f : 0.0f), buttonHoverColor.y + (value ? 0.06f : 0.0f), buttonHoverColor.z + (value ? 0.06f : 0.0f), 1.0f);
+
+            ImGui.pushStyleColor(ImGuiCol.Button, buttonColor.x, buttonColor.y, buttonColor.z, buttonColor.w);
+            ImGui.pushStyleColor(ImGuiCol.ButtonHovered, buttonHoverColor.x, buttonHoverColor.y, buttonHoverColor.z, buttonHoverColor.w);
+            ImGui.pushStyleColor(ImGuiCol.ButtonActive, buttonHoverColor.x, buttonHoverColor.y, buttonHoverColor.z, buttonHoverColor.w);
+            boolean button = ImGui.button("##button");
+            ImGui.popStyleColor(3);
+            ImGui.popStyleVar(2);
+
+            if (background || button)
+                value = !value;
+        } else if (type == BooleanType.Bullet) {
+            ImGui.pushStyleVar(ImGuiStyleVar.FrameRounding, 99.0f);
+            ImGui.pushStyleVar(ImGuiStyleVar.FramePadding, ImGui.getStyle().getFramePaddingY() + 6.0f, ImGui.getStyle().getFramePaddingY() - 3.0f);
+            ImGui.setCursorPos(ImGui.getCursorPosX(), ImGui.getCursorPosY());
+            ImVec2 startPos = ImGui.getCursorPos();
+
+            ImVec4 backgroundColor = ImGui.getStyle().getColor(ImGuiCol.FrameBg);
+            ImVec4 backgroundHoverColor = ImGui.getStyle().getColor(ImGuiCol.FrameBgHovered);
+
+            ImGui.pushStyleColor(ImGuiCol.Button, backgroundColor.x, backgroundColor.y, backgroundColor.z, backgroundColor.w);
+            ImGui.pushStyleColor(ImGuiCol.ButtonHovered, backgroundHoverColor.x, backgroundHoverColor.y, backgroundHoverColor.z, backgroundHoverColor.w);
+            ImGui.pushStyleColor(ImGuiCol.ButtonActive, backgroundHoverColor.x, backgroundHoverColor.y, backgroundHoverColor.z, backgroundHoverColor.w);
+            boolean background = ImGui.button("##background");
+            boolean isHover = ImGui.isItemHovered();
+            ImGui.popStyleColor(3);
+
+            ImGui.setItemAllowOverlap();
+            ImGui.popStyleVar();
+
+            boolean button = false;
+            if (value) {
+                ImGui.pushStyleVar(ImGuiStyleVar.FramePadding, ImGui.getStyle().getFramePaddingY() + 0.5f, ImGui.getStyle().getFramePaddingY() - 8.5f);
+                ImGui.setCursorPos(startPos.x + 5.5f, startPos.y + 5.5f);
+
+                ImVec4 buttonColor = !isHover ? ImGui.getStyle().getColor(ImGuiCol.Button) : ImGui.getStyle().getColor(ImGuiCol.ButtonHovered);
+                ImVec4 buttonHoverColor = ImGui.getStyle().getColor(ImGuiCol.ButtonHovered);
+
+                ImGui.pushStyleColor(ImGuiCol.Button, buttonColor.x, buttonColor.y, buttonColor.z, buttonColor.w);
+                ImGui.pushStyleColor(ImGuiCol.ButtonHovered, buttonHoverColor.x, buttonHoverColor.y, buttonHoverColor.z, buttonHoverColor.w);
+                ImGui.pushStyleColor(ImGuiCol.ButtonActive, buttonHoverColor.x, buttonHoverColor.y, buttonHoverColor.z, buttonHoverColor.w);
+                button = ImGui.button("##button");
+                ImGui.popStyleColor(3);
+                ImGui.popStyleVar();
+            }
+            ImGui.popStyleVar();
+
+            if (background || button)
+                value = !value;
+        }
 
         ImGui.columns(1);
         ImGui.popID();
@@ -836,5 +926,143 @@ public class EditorImGui {
         ImGui.setCursorPos(ImGui.getCursorPosX(), ImGui.getCursorPosY() + ImGui.getStyle().getFramePaddingY());
 
         return field;
+    }
+
+
+    public static Texture field_Texture(String label, Texture field, Vector2f tiling, Vector2f offset) { return (Texture) field_Texture(label, field, tiling, offset, false, 0.0f, 0.0f, 0.0f).get(0); }
+
+    /**
+     * returns List of two objects (Texture, intensity)
+     */
+    public static List<Object> field_Texture(String label, Texture field, Vector2f tiling, Vector2f offset, float intensity) { return field_Texture(label, field, tiling, offset, true, intensity, 0.0f, 1.0f); }
+
+    /**
+     * returns List of two objects (Texture, intensity)
+     */
+    public static List<Object> field_Texture(String label, Texture field, Vector2f tiling, Vector2f offset, boolean useIntensity, float intensity, float intensityMin, float intensityMax) {
+        ImGui.pushID("TextureField-" + label);
+
+        ImGui.setCursorPosY(ImGui.getCursorPosY() + textVerticalOffset);
+        ImGui.text("\t" + label);
+        ImGui.setCursorPosX(ImGui.getCursorPosX() + leftPadding);
+
+        ImVec4 backgroundColor = ImGui.getStyle().getColor(ImGuiCol.FrameBg);
+        ImVec4 backgroundHoveredColor = ImGui.getStyle().getColor(ImGuiCol.FrameBgHovered);
+        ImVec4 backgroundActiveColor = ImGui.getStyle().getColor(ImGuiCol.FrameBgActive);
+
+        ImGui.setCursorPosY(ImGui.getCursorPosY() + 20.0f);
+        ImVec2 startCursorPos = ImGui.getCursorPos();
+
+        if (useIntensity) {
+            float[] tmpIntensity = { intensity };
+            ImGui.columns(2, "", false);
+            ImGui.setColumnWidth(0, leftPadding);
+            ImGui.setCursorPos(ImGui.getCursorPosX() - 2.0f, ImGui.getCursorPosY() - 17.0f);
+            ImGui.text("\t\tIntensity");
+            ImGui.nextColumn();
+            ImGui.setCursorPos(ImGui.getCursorPosX() - 2.0f, ImGui.getCursorPosY() - 20.0f);
+            ImGui.setNextItemWidth(ImGui.getContentRegionAvailX() - 124.0f);
+            ImGui.sliderFloat("##Intensity", tmpIntensity, intensityMin, intensityMax);
+            intensity = tmpIntensity[0];
+            ImGui.columns(1);
+        }
+
+        ImGui.setCursorPos(startCursorPos.x, startCursorPos.y + 19.0f);
+        tiling = EditorImGui.vector2("Tiling", tiling, new Vector2f(1.0f), 62.0f);
+        ImGui.setCursorPos(startCursorPos.x, startCursorPos.y + 49.0f);
+        offset = EditorImGui.vector2("Offset", offset, new Vector2f(0.0f), 62.0f);
+
+        ImGui.setCursorPos(startCursorPos.x, startCursorPos.y - 44.0f);
+        ImGui.setCursorPosX(ImGui.getContentRegionAvailX() + ImGui.getStyle().getWindowPaddingX() + 30.0f);
+        ImVec2 backgroundPosition = ImGui.getCursorPos();
+        ImGui.pushStyleColor(ImGuiCol.Button, backgroundColor.x, backgroundColor.y, backgroundColor.z, backgroundColor.w);
+        ImGui.pushStyleColor(ImGuiCol.ButtonHovered, backgroundHoveredColor.x, backgroundHoveredColor.y, backgroundHoveredColor.z, backgroundHoveredColor.w);
+        ImGui.pushStyleColor(ImGuiCol.ButtonActive, backgroundActiveColor.x, backgroundActiveColor.y, backgroundActiveColor.z, backgroundActiveColor.w);
+        ImGui.pushStyleVar(ImGuiStyleVar.FramePadding, 60.0f, 51.5f);
+        ImGui.button("##background");
+        ImGui.popStyleVar();
+        ImGui.popStyleColor(3);
+
+        ImVec2 finalPosition = ImGui.getCursorPos();
+
+        if (ImGui.beginDragDropTarget() && ImGui.getDragDropPayload("ASSETS_WINDOW_PAYLOAD") != null) {
+            String[] payload = ImGui.getDragDropPayload("ASSETS_WINDOW_PAYLOAD");
+
+            if (payload[0].equals(Asset.AssetType.Image.name()) && ImGui.acceptDragDropPayload("ASSETS_WINDOW_PAYLOAD") != null) {
+                field = Loader.get().loadTexture(payload[1]);
+                System.out.println("Texture Field-" + payload[1]);
+            }
+            ImGui.endDragDropTarget();
+        }
+
+        if (field == null) {
+            ImGui.setCursorPos(backgroundPosition.x + 28.0f, backgroundPosition.y + 50.0f);
+            ImGui.text("null (Image)");
+        } else {
+            ImGui.setCursorPos(backgroundPosition.x + 6.0f, backgroundPosition.y + 6.0f);
+            ImGui.image(field.getTextureID(), 109.0f, 109.0f, 0, 1, 1, 0);
+        }
+
+        ImGui.popID();
+
+        List<Object> result = new ArrayList<>();
+        result.add(field);
+        result.add(intensity);
+
+        ImGui.setCursorPos(finalPosition.x, finalPosition.y);
+
+        return result;
+    }
+
+    private static Vector2f vector2(String label, Vector2f values, Vector2f resetValues, float size) {
+        ImGui.pushID(label);
+
+        ImGui.columns(2, "", false);
+        ImGui.setColumnWidth(0, leftPadding);
+        ImGui.setCursorPosY(ImGui.getCursorPosY() + textVerticalOffset);
+        ImGui.text("\t\t" + label);
+        ImGui.nextColumn();
+
+        float lineHeight = ImGui.getFontSize() + ImGui.getStyle().getFramePaddingY() * 2.0f;
+        Vector2f buttonSize = new Vector2f(lineHeight, lineHeight);
+        float widthEach = (ImGui.calcItemWidth() - buttonSize.x * 2.0f) / 2.0f - (ImGui.getStyle().getItemSpacingX() * 1.5f);
+
+        ImGui.pushItemWidth(widthEach);
+        ImGui.pushStyleColor(ImGuiCol.Button, 204, 36, 29, 255);
+        ImGui.pushStyleColor(ImGuiCol.ButtonHovered, 224, 50, 43, 255);
+        ImGui.pushStyleColor(ImGuiCol.ButtonActive, 204, 36, 29, 255);
+        if (ImGui.button("X", buttonSize.x, buttonSize.y))
+            values.x = resetValues.x;
+        ImGui.popStyleColor(3);
+
+        ImGui.sameLine();
+        float[] vecValuesX = {values.x};
+        ImGui.setNextItemWidth((ImGui.getContentRegionAvailX() / 2f) - (buttonSize.x / 2) - ImGui.getStyle().getItemSpacingX() - size);
+        ImGui.dragFloat("##x", vecValuesX, 0.1f);
+        ImGui.sameLine();
+
+        ImGui.pushItemWidth(widthEach);
+        ImGui.pushStyleColor(ImGuiCol.Button, 152, 151, 26, 255);
+        ImGui.pushStyleColor(ImGuiCol.ButtonHovered, 172, 165, 40, 255);
+        ImGui.pushStyleColor(ImGuiCol.ButtonActive, 152, 151, 26, 255);
+        if (ImGui.button("Y", buttonSize.x, buttonSize.y))
+            values.y = resetValues.y;
+        ImGui.popStyleColor(3);
+
+        ImGui.sameLine();
+        float[] vecValuesY = {values.y};
+        ImGui.setNextItemWidth(ImGui.getContentRegionAvailX() - (size * 2.0f));
+        ImGui.dragFloat("##y", vecValuesY, 0.1f);
+        ImGui.popItemWidth();
+
+        ImGui.nextColumn();
+
+        values.x = vecValuesX[0];
+        values.y = vecValuesY[0];
+
+        ImGui.columns(1);
+        ImGui.popID();
+
+        return values;
     }
 }

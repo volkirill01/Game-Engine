@@ -1,2 +1,6 @@
+sliceMode = Single
+filterMode = Bilinear
 repeatHorizontally = true
 repeatVertically = true
+useMipmaps = false
+useAnisotropicFiltering = true

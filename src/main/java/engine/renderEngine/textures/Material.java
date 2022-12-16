@@ -37,6 +37,10 @@ public class Material {
 
     public Material(Texture texture) { this.texture = texture; }
 
+    public void update() {
+        this.texture.update();
+    }
+
     public void setMetallicMap(Texture metallicMap) {
         this.metallicMap = metallicMap;
         if (this.metallicIntensity <= 0)

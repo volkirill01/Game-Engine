@@ -1,6 +1,6 @@
 package engine.renderEngine.textures;
 
-public enum FilterMode {
+public enum TextureFilterMode {
     Nearest,
     Linear,
     Bilinear,

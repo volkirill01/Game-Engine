@@ -1,6 +1,7 @@
 package engine.renderEngine.renderer;
 
 import engine.entities.GameObject;
+import engine.renderEngine.Loader;
 import engine.renderEngine.components.MeshRenderer;
 import engine.renderEngine.models.RawModel;
 import engine.renderEngine.models.TexturedModel;
@@ -109,6 +110,7 @@ public class EntityRenderer {
             shader.loadUniformInt("specularMap", 2);
             glActiveTexture(GL_TEXTURE2);
             glBindTexture(GL_TEXTURE_2D, material.getSpecularMap().getTextureID());
+            Loader.get().updateTexture(material.getSpecularMap());
             shader.loadUniformFloat("specularIntensity", material.getSpecularIntensity());
         } else {
             glActiveTexture(GL_TEXTURE2);
@@ -120,6 +122,7 @@ public class EntityRenderer {
             shader.loadUniformInt("emissionMap", 3);
             glActiveTexture(GL_TEXTURE3);
             glBindTexture(GL_TEXTURE_2D, material.getEmissionMap().getTextureID());
+            Loader.get().updateTexture(material.getEmissionMap());
             shader.loadUniformFloat("emissionIntensity", material.getEmissionIntensity());
             shader.loadUniformBoolean("useAlbedoEmission", material.isUseAlbedoEmission());
         } else {
@@ -131,6 +134,7 @@ public class EntityRenderer {
         shader.loadUniformInt("textureSampler", 0);
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, model.getMaterial().getTexture().getTextureID());
+        Loader.get().updateTexture(model.getMaterial().getTexture());
     }
 
     private void unbindTexturedModel() {

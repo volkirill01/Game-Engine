@@ -3,7 +3,7 @@ package engine.renderEngine;
 import engine.assets.Asset;
 import engine.assets.assetsTypes.*;
 import engine.renderEngine.models.RawModel;
-import engine.renderEngine.textures.FilterMode;
+import engine.renderEngine.textures.TextureFilterMode;
 import engine.renderEngine.textures.Texture;
 import engine.renderEngine.textures.TextureData;
 import org.apache.commons.io.FileUtils;
@@ -231,22 +231,26 @@ public class Loader {
 
     public void updateTexture(Texture texture) {
         // Generate texture on GPU
-        int textureID = texture.getTextureID();
-        glBindTexture(GL_TEXTURE_2D, textureID);
+        glBindTexture(GL_TEXTURE_2D, texture.getTextureID());
 
         // Set texture parameters
         // Repeat image in both directions
         if (texture.isRepeatHorizontally())
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT); // X
+        else
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP); // X
+
         if (texture.isRepeatVertically())
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT); // Y
+        else
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP); // Y
 
-        if (texture.getFilterMode() == FilterMode.Nearest) {
+        if (texture.getFilterMode() == TextureFilterMode.Nearest) {
             // When stretch the texture image, pixelate it
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
             // When shrinking an image, pixelate it
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        } else if (texture.getFilterMode() == FilterMode.Linear) {
+        } else {                                          // if (texture.getFilterMode() == FilterMode.Linear)
             // When stretch the texture image, blur it
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
             // When shrinking an image, blur it
@@ -255,7 +259,11 @@ public class Loader {
 
         if (texture.isUseMipmaps()) {
             glGenerateMipmap(GL_TEXTURE_2D);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+            if (texture.getFilterMode() == TextureFilterMode.Nearest)
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+            else                                              // if (texture.getFilterMode() == FilterMode.Linear)
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+
             glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_LOD_BIAS, -0.6f); // изменяем уровень mipmap чтобы они начинались с большей дистанции, чем меньше число тем дальше старт mipmap
         } else if (texture.isUseAnisotropicFiltering()) {// use anisotropic filtering
             glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_LOD_BIAS, 0);
@@ -269,8 +277,10 @@ public class Loader {
     public Texture loadTexture(String filepath, boolean useMipmaps) { return loadTexture(filepath, useMipmaps, false); }
 
     public Texture loadTexture(String filepath, boolean useMipmaps, boolean useAnisotropicFiltering) {
-        if (texturesFiles.containsKey(filepath))
+        if (texturesFiles.containsKey(filepath)) {
+//            updateTexture(texturesFiles.get(filepath));
             return texturesFiles.get(filepath);
+        }
 
         // Generate texture on GPU
         int textureID = glGenTextures();

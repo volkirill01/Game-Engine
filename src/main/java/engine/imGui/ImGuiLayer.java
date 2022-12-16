@@ -222,7 +222,7 @@ public class ImGuiLayer {
 
         ImGui.pushStyleVar(ImGuiStyleVar.ScrollbarSize, 12.0f);
 
-        ImGui.pushStyleVar(ImGuiStyleVar.GrabRounding, 2.0f);
+        ImGui.pushStyleVar(ImGuiStyleVar.GrabRounding, 7.0f);
         ImGui.pushStyleVar(ImGuiStyleVar.TabRounding, 4.0f);
         ImGui.getStyle().setWindowMenuButtonPosition(1);
 

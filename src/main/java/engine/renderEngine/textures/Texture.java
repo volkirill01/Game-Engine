@@ -15,12 +15,6 @@ public class Texture {
     private int width;
     private int height;
 
-    private TextureSliceMode sliceMode = TextureSliceMode.Single;
-    private FilterMode filterMode = FilterMode.Bilinear;
-
-    private boolean useMipmaps = false;
-    private boolean useAnisotropicFiltering = true;
-
     public Texture(int textureID, String filepath, int width, int height) {
         this.textureID = textureID;
         this.filepath = filepath;
@@ -32,7 +26,6 @@ public class Texture {
     }
 
     public void update() {
-        Loader.get().updateTexture(this);
         if (!this.filepath.equals("_Generated"))
             this.metaData = Loader.get().loadMeta(this.metaFilepath, "engineFiles/defaultAssets/defaultImage.meta");
     }
@@ -51,33 +44,33 @@ public class Texture {
 
     public void setTextureID(int newID) { this.textureID = newID; } // TODO DELETE THIS
 
-    public TextureSliceMode getSliceMode() { return this.sliceMode; }
+    public TextureSliceMode getSliceMode() { return TextureSliceMode.valueOf(this.metaData.get("sliceMode").toString()); }
 
-    public void setSliceMode(TextureSliceMode sliceMode) { this.sliceMode = sliceMode; }
+    public void setSliceMode(TextureSliceMode sliceMode) { this.metaData.replace("sliceMode", sliceMode); }
 
-    public FilterMode getFilterMode() { return this.filterMode; }
+    public TextureFilterMode getFilterMode() { return TextureFilterMode.valueOf(this.metaData.get("filterMode").toString()); }
 
-    public void setFilterMode(FilterMode filterMode) { this.filterMode = filterMode; }
+    public void setFilterMode(TextureFilterMode filterMode) { this.metaData.replace("filterMode", filterMode);; }
 
-    public boolean isUseMipmaps() { return this.useMipmaps; }
+    public boolean isUseMipmaps() { return Boolean.parseBoolean(this.metaData.get("useMipmaps").toString()); }
 
     public void setUseMipmaps(boolean useMipmaps) {
-        this.useAnisotropicFiltering = !useMipmaps;
-        this.useMipmaps = useMipmaps;
+        this.metaData.replace("useAnisotropicFiltering", !useMipmaps);
+        this.metaData.replace("useMipmaps", useMipmaps);
     }
 
-    public boolean isUseAnisotropicFiltering() { return this.useAnisotropicFiltering; }
+    public boolean isUseAnisotropicFiltering() { return Boolean.parseBoolean(this.metaData.get("useAnisotropicFiltering").toString()); }
 
     public void setUseAnisotropicFiltering(boolean useAnisotropicFiltering) {
-        this.useMipmaps = !useAnisotropicFiltering;
-        this.useAnisotropicFiltering = useAnisotropicFiltering;
+        this.metaData.replace("useMipmaps", !useAnisotropicFiltering);
+        this.metaData.replace("useAnisotropicFiltering", useAnisotropicFiltering);
     }
 
     public boolean isRepeatHorizontally() { return Boolean.parseBoolean(this.metaData.get("repeatHorizontally").toString()); }
 
     public void setRepeatHorizontally(boolean repeatHorizontally) { this.metaData.replace("repeatHorizontally", repeatHorizontally); }
 
-    public boolean isRepeatVertically() { return Boolean.parseBoolean(this.metaData.get("repeatHorizontally").toString()); }
+    public boolean isRepeatVertically() { return Boolean.parseBoolean(this.metaData.get("repeatVertically").toString()); }
 
     public void setRepeatVertically(boolean repeatVertically) { this.metaData.replace("repeatVertically", repeatVertically); }
 }
