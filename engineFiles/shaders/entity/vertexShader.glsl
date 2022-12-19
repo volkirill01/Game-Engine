@@ -57,6 +57,10 @@ void main() {
     // reflectionVector
 
     float distance = length(positionRealitiveToCamera.xyz);
-    visibility = exp(-pow((distance * fogDensity), fogGradient));
-    visibility = clamp(visibility, 0.0, 1.0);
+    if (fogDensity > 0) {
+        visibility = exp(-pow((distance * fogDensity), fogGradient));
+        visibility = clamp(visibility, 0.0, 1.0);
+    } else {
+        visibility = 1.0;
+    }
 }

@@ -53,7 +53,7 @@ public class Loader {
         String fileName = tmp[tmp.length - 1];
 
         Asset_Scene file = new Asset_Scene(filepath, fileName,
-                loadMeta(filepath, "engineFiles/defaultAssets/defaultScene.meta"));
+                loadMeta(filepath, "engineFiles/defaultAssets/defaultScene.meta"), false);
 
         assets.put(filepath, file);
         return file;

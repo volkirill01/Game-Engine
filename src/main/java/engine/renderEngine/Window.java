@@ -146,10 +146,6 @@ public class Window implements Observer {
 
     public Scene getScene() { return currentScene; }
 
-    public static void loop() {
-
-    }
-
     public static float getTargetAspectRatio() { return 16.0f / 9.0f; }
 
     public static void setScreenImage(int _screenImage) { screenImage = _screenImage; }
@@ -200,7 +196,7 @@ public class Window implements Observer {
             case GameEngineStartPlay -> {
                 this.runtimePlaying = true;
                 Window.get().getImGuiLayer().getInspectorWindow().clearSelected();
-//                currentScene.save(); // TODO UNCOMMENT
+                currentScene.save();
                 Window.get().changeScene(new LevelSceneInitializer(SceneManager.getCurrentScene()));
             }
             case GameEngineStopPlay -> {
@@ -209,7 +205,7 @@ public class Window implements Observer {
                 Window.get().changeScene(new LevelEditorSceneInitializer(SceneManager.getCurrentScene()));
             }
             case LoadLevel -> Window.get().changeScene(new LevelEditorSceneInitializer(SceneManager.getCurrentScene()));
-//            case SaveLevel -> currentScene.save(); // TODO UNCOMMENT
+            case SaveLevel -> currentScene.save();
         }
     }
 }

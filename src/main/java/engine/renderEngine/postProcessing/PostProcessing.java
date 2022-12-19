@@ -26,6 +26,7 @@ public class PostProcessing {
 
 	private static Color ambientLightColor = new Color(255, 255, 255);
 	private static float ambientLightIntensity = 0.2f;
+	private static boolean useFog = false;
 	private static float fogDensity = 0.001f;
 	private static Color fogColor = new Color(128, 128, 128);
 	private static float fogSmoothness = 1.5f;
@@ -142,6 +143,10 @@ public class PostProcessing {
 	public static float getAmbientLightIntensity() { return ambientLightIntensity; }
 
 	public static void setAmbientLightIntensity(float intensity) { ambientLightIntensity = intensity; }
+
+	public static boolean isUseFog() { return useFog; }
+
+	public static void setUseFog(boolean use) { useFog = use; }
 
 	public static float getFogDensity() { return fogDensity; }
 

@@ -46,8 +46,8 @@ public class GameObject {
         this.tags = new ArrayList<>();
         this.components = new ArrayList<>();
 
-        addComponent(new Transform());
-        this.transform = getComponent(Transform.class);
+//        addComponent(new Transform());
+//        this.transform = getComponent(Transform.class);
 
         this.uid = ID_COUNTER++;
     }
@@ -91,6 +91,8 @@ public class GameObject {
         this.components.add(c);
         c.gameObject = this;
     }
+
+    public boolean hasComponent(Class component) { return this.components.contains(component); }
 
     public boolean hasTag(GameObjectTag tag) { return this.tags.contains(tag); }
 
@@ -183,6 +185,9 @@ public class GameObject {
             ImGui.nextColumn();
             //</editor-fold>
 
+            if (!components.get(i).isActive())
+                EditorImGui.pushDisabled();
+
             ImGui.setColumnWidth(1, ImGui.getWindowWidth() - ImGui.getStyle().getWindowPaddingX() - checkboxSize);
             boolean collapsingHeader = ImGui.collapsingHeader(components.get(i).getClass().getSimpleName(),
                     components.get(i).getClass() == Transform.class ? ImGuiTreeNodeFlags.DefaultOpen :
@@ -192,13 +197,16 @@ public class GameObject {
             ImVec2 headerPos = ImGui.getCursorPos();
             //</editor-fold>
 
+            if (!components.get(i).isActive())
+                EditorImGui.popDisabled();
+
             //<editor-fold desc="Dropdown menu">
             ImGui.sameLine();
             ImGui.setCursorPos(ImGui.getWindowWidth() - (16.0f * 2.0f) + 3.0f - 8.0f, ImGui.getCursorPosY() + (16.0f / 2.0f) - 8.0f);
 
             if (EditorImGui.BeginButtonDropDownImage(
                     Loader.get().loadTexture("engineFiles/images/utils/icon=ellipsis-solid(32x32).png").getTextureID(),
-                    "ComponentMenu", new ImVec2(18, 18), true)) {
+                    "ComponentMenu", new ImVec2(18, 18), components.get(i).isActive() ? ImGui.getStyle().getColor(ImGuiCol.Text) : ImGui.getStyle().getColor(ImGuiCol.TextDisabled), true)) {
                 if (ImGui.menuItem("Reset"))
                     components.get(i).reset();
 
@@ -230,11 +238,17 @@ public class GameObject {
             ImGui.columns(1);
             ImGui.setCursorPos(headerPos.x, headerPos.y);
 
+            if (!components.get(i).isActive())
+                EditorImGui.pushDisabled();
+
             if (collapsingHeader) {
                 components.get(i).imgui();
                 if (i < components.size() - 1)
                     ImGui.separator();
             }
+
+            if (!components.get(i).isActive())
+                EditorImGui.popDisabled();
 
             ImGui.popID();
         }

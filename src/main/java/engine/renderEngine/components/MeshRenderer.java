@@ -2,13 +2,9 @@ package engine.renderEngine.components;
 
 import engine.assets.Asset;
 import engine.imGui.EditorImGui;
-import engine.renderEngine.Loader;
 import engine.renderEngine.models.TexturedModel;
 import engine.renderEngine.textures.TextureSliceMode;
 import org.joml.Vector2f;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class MeshRenderer extends ObjectRenderer {
 

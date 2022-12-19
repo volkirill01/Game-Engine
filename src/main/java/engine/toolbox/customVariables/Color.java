@@ -50,6 +50,8 @@ public class Color {
 
     public static Color Black = new Color(0, 0, 0);
 
+    public static Color Gray = new Color(128, 128, 128);
+
     public static Color Yellow = new Color(255, 255, 0);
 
 }

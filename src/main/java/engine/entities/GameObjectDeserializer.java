@@ -3,6 +3,11 @@ package engine.entities;
 import com.google.gson.*;
 import engine.components.Component;
 import engine.components.Transform;
+import engine.renderEngine.Loader;
+import engine.renderEngine.OBJLoader;
+import engine.renderEngine.components.MeshRenderer;
+import engine.renderEngine.models.TexturedModel;
+import engine.renderEngine.textures.Material;
 import engine.toolbox.customVariables.GameObjectTag;
 
 import java.lang.reflect.Type;
@@ -20,6 +25,10 @@ public class GameObjectDeserializer implements JsonDeserializer<GameObject> {
         for (JsonElement e: components) {
             Component c = context.deserialize(e, Component.class);
             go.addComponent(c);
+            if (c.getClass() == MeshRenderer.class) {
+                MeshRenderer renderer = (MeshRenderer) c;
+                renderer.setModel(new TexturedModel(OBJLoader.loadOBJ(renderer.getModel().getRawModel().getFilepath()), new Material(Loader.get().loadTexture(renderer.getModel().getMaterial().getTexture().getFilepath()))));
+            }
         }
         if (childs != null)
             for (JsonElement e: childs) {

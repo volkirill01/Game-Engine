@@ -1,1 +1,91 @@
-[]
+[
+  {
+    "uid": 0,
+    "name": "Cube",
+    "tags": [],
+    "components": [
+      {
+        "type": "engine.components.Transform",
+        "properties": {
+          "position": {
+            "x": -100.0,
+            "y": 38.6,
+            "z": -95.6
+          },
+          "rotation": {
+            "x": -9.0,
+            "y": 25.1,
+            "z": 0.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          },
+          "childs": [],
+          "uid": 11,
+          "isActive": true
+        }
+      },
+      {
+        "type": "engine.renderEngine.components.MeshRenderer",
+        "properties": {
+          "model": {
+            "rawModel": {
+              "vaoID": 6,
+              "vertexCount": 36,
+              "filepath": "engineFiles/defaultMeshes/defaultCube.obj",
+              "metaFilepath": "engineFiles/defaultMeshes/defaultCube.obj",
+              "metaData": {
+                "modelSize": "0.5"
+              }
+            },
+            "material": {
+              "texture": {
+                "textureID": 41,
+                "filepath": "engineFiles/images/utils/whitePixel.png",
+                "metaFilepath": "engineFiles/images/utils/whitePixel.png",
+                "metaData": {
+                  "filterMode": "Bilinear",
+                  "numberOfColumns": "1",
+                  "repeatHorizontally": "true",
+                  "sliceMode": "Single",
+                  "useMipmaps": "false",
+                  "numberOfRows": "1",
+                  "repeatVertically": "true",
+                  "useAnisotropicFiltering": "true"
+                },
+                "width": 1,
+                "height": 1
+              },
+              "metallicIntensity": 0.0,
+              "specularIntensity": 0.0,
+              "shineDumper": 10.0,
+              "reflectivity": 0.0,
+              "emissionIntensity": 0.0,
+              "useAlbedoEmission": false,
+              "tiling": {
+                "x": 1.0,
+                "y": 1.0
+              },
+              "color": {
+                "r": 255.0,
+                "g": 255.0,
+                "b": 255.0,
+                "a": 255.0
+              },
+              "alphaClip": 0.0,
+              "renderCullSide": "Front",
+              "useFakeLighting": false
+            }
+          },
+          "textureIndex": 1,
+          "uid": 12,
+          "isActive": true
+        }
+      }
+    ],
+    "doSerialization": true,
+    "isDeath": false
+  }
+]

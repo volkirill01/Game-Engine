@@ -8,8 +8,12 @@ import engine.components.Transform;
 import engine.entities.Camera;
 import engine.entities.GameObject;
 import engine.entities.GameObjectDeserializer;
+import engine.renderEngine.Loader;
+import engine.renderEngine.OBJLoader;
 import engine.renderEngine.Window;
 import engine.renderEngine.components.MeshRenderer;
+import engine.renderEngine.models.TexturedModel;
+import engine.renderEngine.textures.Material;
 import org.joml.Vector3f;
 
 import java.io.FileWriter;
@@ -196,6 +200,8 @@ public class Scene {
 
     public GameObject createGameObject(String name) {
         GameObject go = new GameObject(name);
+        go.addComponent(new Transform());
+        go.transform = go.getComponent(Transform.class);
         return go;
     }
 

@@ -4,6 +4,7 @@ import engine.assets.Asset;
 import engine.assets.assetsTypes.*;
 import engine.renderEngine.Loader;
 import engine.renderEngine.Window;
+import engine.scene.SceneManager;
 import engine.toolbox.SystemClipboard;
 import imgui.ImGui;
 import imgui.ImVec4;
@@ -53,9 +54,9 @@ public class AssetsWindow extends EditorImGuiWindow {
 
             if (content.isDirectory()) {
                 if (content.list().length > 0)
-                    assets.add(new Asset_Folder(filepath, fileName, loadFolderData(filepath), false));
+                    assets.add(new Asset_Folder(filepath, fileName, loadFolderData(filepath), false, false));
                 else
-                    assets.add(new Asset_Folder(filepath, fileName, loadFolderData(filepath), true));
+                    assets.add(new Asset_Folder(filepath, fileName, loadFolderData(filepath), true, false));
             } else if (content.isFile()) {
                 if (filepath.endsWith(".scene"))
                     assets.add(Loader.get().loadAsset_Scene(filepath));
@@ -96,10 +97,16 @@ public class AssetsWindow extends EditorImGuiWindow {
     private Map<String, Object> loadFolderData(String filepath) {
         Map<String, Object> data = new HashMap<>();
         File folder = new File(filepath);
+        float size = 0.0f;
 
-        float size = getFolderSize(folder) / (1024 * 1024);
-        String[] tmp = ("" + size).split("\\.");
-        size = Float.parseFloat(tmp[0] + "." + tmp[1].charAt(0) + tmp[1].charAt(1));
+        try {
+            size = getFolderSize(folder) / (1024 * 1024);
+            String[] tmp = ("" + size).split("\\.");
+            size = Float.parseFloat(tmp[0] + "." + tmp[1].charAt(0) + tmp[1].charAt(1));
+        } catch (StringIndexOutOfBoundsException | NullPointerException e) {
+//                throw new RuntimeException(e);
+        }
+
         data.put("size", size);
 
         return data;
@@ -236,13 +243,13 @@ public class AssetsWindow extends EditorImGuiWindow {
     public void createNewFolder() {
         refrashingFiles = false;
         ImGui.setWindowFocus(windowName);
-        assets.add(new Asset_Folder(currentDirectory + currentNewFolderName, currentNewFolderName, loadFolderData(currentDirectory + currentNewFolderName), false));
+        assets.add(new Asset_Folder(currentDirectory + currentNewFolderName, currentNewFolderName, loadFolderData(currentDirectory + currentNewFolderName), false, true));
     }
 
     public void createNewScene() {
         refrashingFiles = false;
         ImGui.setWindowFocus(windowName);
-        assets.add(new Asset_Scene(currentDirectory + currentNewSceneName, currentNewSceneName, Loader.get().loadMeta("engineFiles/defaultAssets/defaultScene.meta", "engineFiles/defaultAssets/defaultScene.meta")));
+        assets.add(new Asset_Scene(currentDirectory + currentNewSceneName, currentNewSceneName, Loader.get().loadMeta("engineFiles/defaultAssets/defaultScene.meta", "engineFiles/defaultAssets/defaultScene.meta"), true));
     }
 
     private void popups(int i, ImVec4 borderColor) {
@@ -314,10 +321,12 @@ public class AssetsWindow extends EditorImGuiWindow {
             ImGui.endPopup();
         }
 
-        if (ImGui.beginDragDropSource()) { // TODO пофиксить перемещение файлов
-            ImGui.setDragDropPayload(payloadDragDropType, new String[]{assets.get(i).assetType.name(), assets.get(i).assetPath});
-            ImGui.text(assets.get(i).assetName);
-            ImGui.endDragDropSource();
+        if (refrashingFiles) {
+            if (ImGui.beginDragDropSource()) { // TODO пофиксить перемещение файлов
+                ImGui.setDragDropPayload(payloadDragDropType, new String[]{assets.get(i).assetType.name(), assets.get(i).assetPath});
+                ImGui.text(assets.get(i).assetName);
+                ImGui.endDragDropSource();
+            }
         }
 
         ImGui.popStyleColor(3);
@@ -509,8 +518,8 @@ public class AssetsWindow extends EditorImGuiWindow {
                         Window.get().getImGuiLayer().getInspectorWindow().setActiveAsset(assets.get(i));
 
                     if (ImGui.isItemHovered() && ImGui.isMouseDoubleClicked(ImGuiMouseButton.Left)) {
-//                        System.out.println("Open scene '" + assets.get(i).assetPath + "'");
-//                        SceneManager.loadScene(assets.get(i).assetPath);
+                        System.out.println("Open scene '" + assets.get(i).assetPath + "'");
+                        SceneManager.loadScene(assets.get(i).assetPath);
                     }
                     break;
                 case Image:
@@ -592,7 +601,7 @@ public class AssetsWindow extends EditorImGuiWindow {
 
                     if (result[1] != null && result[1].equals("false")) {
                         assets.remove(i);
-                        mkFile(currentNewSceneName.split("\\.")[0] + ".scene");
+                        mkFile(currentNewSceneName + ".scene");
                         refrashingFiles = true;
 
                         ImGui.nextColumn();

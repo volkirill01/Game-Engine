@@ -261,7 +261,7 @@ public class ImGuiLayer {
 
         ImGui.pushStyleColor(ImGuiCol.Header, 64, 64, 64, 255);
         ImGui.pushStyleColor(ImGuiCol.HeaderHovered, 74, 74, 74, 255);
-        ImGui.pushStyleColor(ImGuiCol.HeaderActive, 84, 84, 84, 255);
+        ImGui.pushStyleColor(ImGuiCol.HeaderActive, 54, 54, 54, 255);
 
         ImGui.pushStyleColor(ImGuiCol.Separator, 0, 0, 0, 100);
         ImGui.pushStyleColor(ImGuiCol.SeparatorHovered, 0, 0, 0, 100);

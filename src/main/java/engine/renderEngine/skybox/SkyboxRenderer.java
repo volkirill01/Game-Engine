@@ -95,6 +95,7 @@ public class SkyboxRenderer {
         shader.loadUniformMatrix("viewMatrix", viewMatrix);
 
         shader.loadUniformColor("fogColor", PostProcessing.getFogColor());
+        shader.loadUniformFloat("fogDensity", PostProcessing.isUseFog() ? PostProcessing.getFogDensity() : 0);
 
         glBindVertexArray(cube.getVaoID());
         glEnableVertexAttribArray(0);

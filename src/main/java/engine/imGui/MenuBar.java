@@ -1,5 +1,8 @@
 package engine.imGui;
 
+import engine.eventSystem.EventSystem;
+import engine.eventSystem.Events.Event;
+import engine.eventSystem.Events.EventType;
 import engine.toolbox.InputManager;
 import engine.toolbox.KeyListener;
 import engine.toolbox.Shortcut;
@@ -16,18 +19,18 @@ public class MenuBar {
         Shortcut saveShortcut = InputManager.getShortcut("saveScene");
         Shortcut loadShortcut = InputManager.getShortcut("loadScene");
 
-//        if (KeyListener.isKeyPressed(saveShortcut.firstKeyCode) && KeyListener.keyBeginPress(saveShortcut.secondKeyCode))
-//            EventSystem.notify(null, new Event(EventType.SaveLevel));
-//
-//        if (KeyListener.isKeyPressed(loadShortcut.firstKeyCode) && KeyListener.keyBeginPress(loadShortcut.secondKeyCode))
-//            EventSystem.notify(null, new Event(EventType.LoadLevel));
+        if (KeyListener.isKeyPressed(saveShortcut.firstKeyCode) && KeyListener.keyBeginPress(saveShortcut.secondKeyCode))
+            EventSystem.notify(null, new Event(EventType.SaveLevel));
+
+        if (KeyListener.isKeyPressed(loadShortcut.firstKeyCode) && KeyListener.keyBeginPress(loadShortcut.secondKeyCode))
+            EventSystem.notify(null, new Event(EventType.LoadLevel));
 
         if (ImGui.beginMenu("File")) {
-//            if (ImGui.menuItem("Save", saveShortcut.shortcutDisplayKeys))
-//                EventSystem.notify(null, new Event(EventType.SaveLevel));
-//
-//            if (ImGui.menuItem("Load", loadShortcut.shortcutDisplayKeys))
-//                EventSystem.notify(null, new Event(EventType.LoadLevel));
+            if (ImGui.menuItem("Save", saveShortcut.shortcutDisplayKeys))
+                EventSystem.notify(null, new Event(EventType.SaveLevel));
+
+            if (ImGui.menuItem("Load", loadShortcut.shortcutDisplayKeys))
+                EventSystem.notify(null, new Event(EventType.LoadLevel));
 
             ImGui.endMenu();
         }

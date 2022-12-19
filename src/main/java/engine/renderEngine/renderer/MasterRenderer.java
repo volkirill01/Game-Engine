@@ -78,12 +78,18 @@ public class MasterRenderer {
         shader.start();
 
         shader.loadLights(lights);
-
-        shader.loadUniformColor("fogColor", PostProcessing.getFogColor());
-        shader.loadUniformColor("ambientLightColor", PostProcessing.getAmbientLightColor());
         shader.loadUniformFloat("ambientLightIntensity", PostProcessing.getAmbientLightIntensity());
-        shader.loadUniformFloat("fogDensity", PostProcessing.getFogDensity());
-        shader.loadUniformFloat("fogGradient", PostProcessing.getFogSmoothness());
+        shader.loadUniformColor("ambientLightColor", PostProcessing.getAmbientLightColor());
+
+        if (PostProcessing.isUseFog()) {
+            shader.loadUniformColor("fogColor", PostProcessing.getFogColor());
+            shader.loadUniformFloat("fogDensity", PostProcessing.getFogDensity());
+            shader.loadUniformFloat("fogGradient", PostProcessing.getFogSmoothness());
+        } else {
+            shader.loadUniformColor("fogColor", Color.Black);
+            shader.loadUniformFloat("fogDensity", 0.0f);
+            shader.loadUniformFloat("fogGradient", 0.0f);
+        }
 
         Matrix4f viewMatrix = Maths.createViewMatrix(camera);
         shader.loadUniformMatrix("viewMatrix", viewMatrix);
@@ -102,11 +108,18 @@ public class MasterRenderer {
 
         terrainShader.loadLights(lights);
 
-        terrainShader.loadUniformColor("fogColor", PostProcessing.getFogColor());
         terrainShader.loadUniformColor("ambientLightColor", PostProcessing.getAmbientLightColor());
         terrainShader.loadUniformFloat("ambientLightIntensity", PostProcessing.getAmbientLightIntensity());
-        terrainShader.loadUniformFloat("fogDensity", PostProcessing.getFogDensity());
-        terrainShader.loadUniformFloat("fogGradient", PostProcessing.getFogSmoothness());
+
+        if (PostProcessing.isUseFog()) {
+            terrainShader.loadUniformColor("fogColor", PostProcessing.getFogColor());
+            terrainShader.loadUniformFloat("fogDensity", PostProcessing.getFogDensity());
+            terrainShader.loadUniformFloat("fogGradient", PostProcessing.getFogSmoothness());
+        } else {
+            terrainShader.loadUniformColor("fogColor", Color.Black);
+            terrainShader.loadUniformFloat("fogDensity", 0.0f);
+            terrainShader.loadUniformFloat("fogGradient", 0.0f);
+        }
 
         terrainShader.loadUniformMatrix("viewMatrix", viewMatrix);
 

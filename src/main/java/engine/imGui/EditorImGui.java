@@ -38,6 +38,32 @@ public class EditorImGui {
     // Single line height with spacing
     //      (ImGui.getTextLineHeight() + (ImGui.getStyle().getFramePaddingY() * 2.0f) + ImGui.getStyle().getItemSpacingY())
 
+    public static void pushDisabled() {
+        ImVec4 textDisabledColor = ImGui.getStyle().getColor(ImGuiCol.TextDisabled);
+        ImVec4 buttonDisabledColor = ImGui.getStyle().getColor(ImGuiCol.ButtonActive);
+        ImVec4 headerDisabledColor = ImGui.getStyle().getColor(ImGuiCol.HeaderActive);
+        ImVec4 frameDisabledColor = ImGui.getStyle().getColor(ImGuiCol.FrameBgActive);
+
+        ImGui.pushStyleColor(ImGuiCol.Text, textDisabledColor.x, textDisabledColor.y, textDisabledColor.z, textDisabledColor.w);
+        ImGui.pushStyleColor(ImGuiCol.CheckMark, textDisabledColor.x, textDisabledColor.y, textDisabledColor.z, textDisabledColor.w);
+
+        ImGui.pushStyleColor(ImGuiCol.Button, buttonDisabledColor.x, buttonDisabledColor.y, buttonDisabledColor.z, buttonDisabledColor.w);
+        ImGui.pushStyleColor(ImGuiCol.ButtonHovered, buttonDisabledColor.x, buttonDisabledColor.y, buttonDisabledColor.z, buttonDisabledColor.w);
+        ImGui.pushStyleColor(ImGuiCol.ButtonActive, buttonDisabledColor.x, buttonDisabledColor.y, buttonDisabledColor.z, buttonDisabledColor.w);
+
+        ImGui.pushStyleColor(ImGuiCol.Header, headerDisabledColor.x, headerDisabledColor.y, headerDisabledColor.z, headerDisabledColor.w);
+        ImGui.pushStyleColor(ImGuiCol.HeaderHovered, headerDisabledColor.x, headerDisabledColor.y, headerDisabledColor.z, headerDisabledColor.w);
+        ImGui.pushStyleColor(ImGuiCol.HeaderActive, headerDisabledColor.x, headerDisabledColor.y, headerDisabledColor.z, headerDisabledColor.w);
+
+        ImGui.pushStyleColor(ImGuiCol.FrameBg, frameDisabledColor.x, frameDisabledColor.y, frameDisabledColor.z, frameDisabledColor.w);
+        ImGui.pushStyleColor(ImGuiCol.FrameBgHovered, frameDisabledColor.x, frameDisabledColor.y, frameDisabledColor.z, frameDisabledColor.w);
+        ImGui.pushStyleColor(ImGuiCol.FrameBgActive, frameDisabledColor.x, frameDisabledColor.y, frameDisabledColor.z, frameDisabledColor.w);
+    }
+
+    public static void popDisabled() {
+        ImGui.popStyleColor(11);
+    }
+
     public static void helpMarker(String description) { helpMarker("(?)", description); }
 
     public static void helpMarker(String customMarker, String description) {
@@ -785,7 +811,7 @@ public class EditorImGui {
         ImGui.image(Loader.get().loadTexture("engineFiles/images/utils/whitePixel.png").getTextureID(), scale.x, scale.y, 0, 0, 0, 1, color.r, color.g, color.b, color.a);
     }
 
-    public static boolean BeginButtonDropDownImage(int textureID, String popupLabel, ImVec2 buttonSize, boolean noBackground) {
+    public static boolean BeginButtonDropDownImage(int textureID, String popupLabel, ImVec2 buttonSize, ImVec4 color, boolean noBackground) {
         ImVec2 pos = ImGui.getCursorPos();
 
         ImVec2 size = new ImVec2(buttonSize.x, buttonSize.y);
@@ -797,7 +823,7 @@ public class EditorImGui {
             ImGui.pushStyleColor(ImGuiCol.Border, 0.0f, 0.0f, 0.0f, 0.0f);
         }
 
-        boolean pressed = ImGui.imageButton(textureID, size.x, size.y, 0, 1, 1, 0);
+        boolean pressed = ImGui.imageButton(textureID, size.x, size.y, 0, 1, 1, 0, 4, 0, 0, 0, 0, color.x, color.y, color.z, color.w);
         if (noBackground)
             ImGui.popStyleColor(4);
 

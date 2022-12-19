@@ -22,9 +22,17 @@ public class PostProcessingGui extends EditorImGuiWindow {
 
         ImGui.separator();
         EditorImGui.header("Fog");
+        PostProcessing.setUseFog(EditorImGui.field_Boolean("Use Fog", PostProcessing.isUseFog()));
+
+        if (!PostProcessing.isUseFog())
+            EditorImGui.pushDisabled();
+
         EditorImGui.filed_Color("Fog Color", PostProcessing.getFogColor());
         PostProcessing.setFogDensity(EditorImGui.field_Float("Fog Density", PostProcessing.getFogDensity() * 10, 0.02f, 0, 1) / 10);
         PostProcessing.setFogSmoothness(EditorImGui.field_Float("Fog Smoothness", PostProcessing.getFogSmoothness() / 10, 0.02f, 0.001f) * 10);
+
+        if (!PostProcessing.isUseFog())
+            EditorImGui.popDisabled();
 
         ImGui.separator();
         EditorImGui.header("Post Processing Layers");
@@ -78,26 +86,16 @@ public class PostProcessingGui extends EditorImGuiWindow {
                 //</editor-fold>
 
                 //<editor-fold desc="Header">
-                if (!layer.isActive()) {  // ------------------------------------------
-                    ImVec4 buttonDisabledColor = ImGui.getStyle().getColor(ImGuiCol.ButtonActive);
-                    ImVec4 textDisabledColor = ImGui.getStyle().getColor(ImGuiCol.TextDisabled);
-
-                    ImGui.pushStyleColor(ImGuiCol.Text, textDisabledColor.x, textDisabledColor.y, textDisabledColor.z, textDisabledColor.w);
-                    ImGui.pushStyleColor(ImGuiCol.CheckMark, textDisabledColor.x, textDisabledColor.y, textDisabledColor.z, textDisabledColor.w);
-
-                    ImGui.pushStyleColor(ImGuiCol.Button, buttonDisabledColor.x, buttonDisabledColor.y, buttonDisabledColor.z, buttonDisabledColor.w);
-                    ImGui.pushStyleColor(ImGuiCol.ButtonHovered, buttonDisabledColor.x, buttonDisabledColor.y, buttonDisabledColor.z, buttonDisabledColor.w);
-                    ImGui.pushStyleColor(ImGuiCol.ButtonActive, buttonDisabledColor.x, buttonDisabledColor.y, buttonDisabledColor.z, buttonDisabledColor.w);
-
-                    ImGui.pushStyleColor(ImGuiCol.Header, buttonDisabledColor.x, buttonDisabledColor.y, buttonDisabledColor.z, buttonDisabledColor.w);
-                    ImGui.pushStyleColor(ImGuiCol.HeaderHovered, buttonDisabledColor.x, buttonDisabledColor.y, buttonDisabledColor.z, buttonDisabledColor.w);
-                    ImGui.pushStyleColor(ImGuiCol.HeaderActive, buttonDisabledColor.x, buttonDisabledColor.y, buttonDisabledColor.z, buttonDisabledColor.w);
-                }
+                if (!layer.isActive())  // ------------------------------------------
+                    EditorImGui.pushDisabled();
 
                 ImGui.setColumnWidth(1, ImGui.getWindowWidth() - ImGui.getStyle().getWindowPaddingX() - checkboxSize - arrowsSize);
                 boolean collapsingHeader = ImGui.collapsingHeader(layer.getPostEffectName());
                 ImVec2 headerPos = ImGui.getCursorPos();
                 ImGui.setItemAllowOverlap();
+
+                if (!layer.isActive())  // ------------------------------------------
+                    EditorImGui.popDisabled();
                 //</editor-fold>
 
                 //<editor-fold desc="Dropdown menu">
@@ -105,7 +103,7 @@ public class PostProcessingGui extends EditorImGuiWindow {
                 ImGui.setCursorPos(ImGui.getWindowWidth() - (16.0f * 2.0f) + 3.0f - arrowsSize - 7.0f, ImGui.getCursorPosY() + (16.0f / 2.0f) - 7.0f);
                 if (EditorImGui.BeginButtonDropDownImage(
                         Loader.get().loadTexture("engineFiles/images/utils/icon=ellipsis-solid(32x32).png").getTextureID(),
-                        "PostProcessLayerMenu", new ImVec2(18, 18), true)) {
+                        "PostProcessLayerMenu", new ImVec2(18, 18), layer.isActive() ? ImGui.getStyle().getColor(ImGuiCol.Text) : ImGui.getStyle().getColor(ImGuiCol.TextDisabled), true)) {
 
                     if (ImGui.menuItem("Reset"))
                         layer.reset();
@@ -129,6 +127,9 @@ public class PostProcessingGui extends EditorImGuiWindow {
                     EditorImGui.EndButtonDropDown();
                 }
                 //</editor-fold>
+
+                if (!layer.isActive())  // ------------------------------------------
+                    EditorImGui.pushDisabled();
 
                 //<editor-fold desc="Arrows">
                 ImGui.nextColumn();
@@ -224,7 +225,7 @@ public class PostProcessingGui extends EditorImGuiWindow {
                 }
 
                 if (!layer.isActive())
-                    ImGui.popStyleColor(8); // ------------------------------------------
+                    EditorImGui.popDisabled(); // ------------------------------------------
 
                 ImGui.popID();
             } catch (Exception e) {

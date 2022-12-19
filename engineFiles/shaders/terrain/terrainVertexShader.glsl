@@ -39,15 +39,20 @@ void main() {
     surfaceNormal = (transformationMatrix * vec4(normal, 0.0)).xyz;
     for (int i = 0; i < 4; i++) {
         if (attenuation[i] == vec3(1, 0, 0))
-            toLightVector[i] = lightRotation[i];
+        toLightVector[i] = lightRotation[i];
         else
-            toLightVector[i] = lightPosition[i] - worldPosition.xyz;
+        toLightVector[i] = lightPosition[i] - worldPosition.xyz;
     }
     toCameraVector = (inverse(viewMatrix) * vec4(0.0, 0.0, 0.0, 1.0)).xyz - worldPosition.xyz;
 
     float distance = length(positionRealitiveToCamera.xyz);
-    visibility = exp(-pow((distance * fogDensity), fogGradient));
-    visibility = clamp(visibility, 0.0, 1.0);
+
+    if (fogDensity > 0) {
+        visibility = exp(-pow((distance * fogDensity), fogGradient));
+        visibility = clamp(visibility, 0.0, 1.0);
+    } else {
+        visibility = 1.0;
+    }
 
     distance = distance - (shadowDistance - transitionDistance);
     distance = distance / transitionDistance;
