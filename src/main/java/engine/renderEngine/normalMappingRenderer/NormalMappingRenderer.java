@@ -55,7 +55,8 @@ public class NormalMappingRenderer {
 		GL20.glEnableVertexAttribArray(1);
 		GL20.glEnableVertexAttribArray(2);
 		Material texture = model.getMaterial();
-		shader.loadNumberOfRows(texture.getNumberOfRows());
+		shader.loadNumberOfRows(texture.getTexture().getNumberOfRows());
+		shader.loadNumberOfColumns(texture.getTexture().getNumberOfColumns());
 //		if (texture.isHasTransparency()) {
 //			MasterRenderer.disableCulling();
 //		}

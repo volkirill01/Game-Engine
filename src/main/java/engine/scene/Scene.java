@@ -196,8 +196,6 @@ public class Scene {
 
     public GameObject createGameObject(String name) {
         GameObject go = new GameObject(name);
-//        go.addComponent(new Transform());
-//        go.transform = go.getComponent(Transform.class);
         return go;
     }
 

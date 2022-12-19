@@ -1,23 +1,12 @@
 #version 400 core
-layout (location=0) in vec3 aPos;
-layout (location=1) in vec4 aColor;
-layout (location=2) in vec2 aTexCoords;
-layout (location=3) in float aTexId;
-layout (location=4) in float aEntityId;
 
-uniform mat4 uProjection;
-uniform mat4 uView;
+in vec3 position;
+in vec2 textureCoordinates;
 
-out vec4 fColor;
-out vec2 fTexCoords;
-out float fTexId;
-out float fEntityId;
+uniform mat4 transformationMatrix;
+uniform mat4 projectionMatrix;
+uniform mat4 viewMatrix;
 
 void main() {
-    fColor = aColor;
-    fTexCoords = aTexCoords;
-    fTexId = aTexId;
-    fEntityId = aEntityId;
-
-    gl_Position = uProjection * uView * vec4(aPos, 1.0);
+    gl_Position = projectionMatrix * viewMatrix * transformationMatrix * vec4(position, 1.0);
 }

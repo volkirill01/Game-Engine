@@ -23,6 +23,7 @@ public class NormalMappingShader extends ShaderProgram {
 	private int location_reflectivity;
 	private int location_skyColour;
 	private int location_numberOfRows;
+	private int location_numberOfColumns;
 	private int location_offset;
 	private int location_plane;
 	private int location_modelTexture;
@@ -47,6 +48,7 @@ public class NormalMappingShader extends ShaderProgram {
 		location_reflectivity = super.getUniformLocation("reflectivity");
 		location_skyColour = super.getUniformLocation("skyColour");
 		location_numberOfRows = super.getUniformLocation("numberOfRows");
+		location_numberOfColumns = super.getUniformLocation("numberOfRows");
 		location_offset = super.getUniformLocation("offset");
 		location_plane = super.getUniformLocation("plane");
 		location_modelTexture = super.getUniformLocation("modelTexture");
@@ -71,6 +73,10 @@ public class NormalMappingShader extends ShaderProgram {
 	
 	protected void loadNumberOfRows(int numberOfRows){
 		super.loadFloat(location_numberOfRows, numberOfRows);
+	}
+
+	protected void loadNumberOfColumns(int numberOfColumns){
+		super.loadFloat(location_numberOfColumns, numberOfColumns);
 	}
 	
 	protected void loadOffset(float x, float y){
@@ -118,7 +124,4 @@ public class NormalMappingShader extends ShaderProgram {
 		eyeSpacePos = viewMatrix.transform(eyeSpacePos);
 		return new Vector3f(eyeSpacePos.x, eyeSpacePos.y, eyeSpacePos.z);
 	}
-	
-	
-
 }

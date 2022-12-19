@@ -311,6 +311,7 @@ public class ImGuiLayer {
         if (this.windowOnFullscreen == null) {
             setupDockspace();
             currentScene.imgui();
+            TestFieldsWindow.imgui();
             ImGui.showDemoWindow();
             gameViewWindow.imgui();
             console.imgui();
@@ -321,7 +322,6 @@ public class ImGuiLayer {
             postProcessingWindow.imgui();
             inspectorWindow.imgui();
 
-            TestFieldsWindow.imgui();
         } else {
             ImGuiViewport viewport = ImGui.getMainViewport();
             ImGui.setNextWindowPos(viewport.getWorkPos().x, viewport.getWorkPos().y);

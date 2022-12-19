@@ -9,13 +9,13 @@ import org.joml.Vector3f;
 
 public class TestFieldsWindow {
 
-    public static float[] testFloats = { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f };
-    public static int[] testInts = { 0, 0, 0, 0 };
-    public static String[] testStrings = { "", "", "" };
-    public static boolean[] testBooleans = { false, false, false, false, false, false };
-    public static Vector2f[] testVectors2f = { new Vector2f(0.0f), new Vector2f(0.0f) };
-    public static Vector3f[] testVectors3f = { new Vector3f(0.0f), new Vector3f(0.0f) };
-    public static Color[] testColors = { Color.White, Color.White };
+    public static float[] getFloats = { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f };
+    public static int[] getInts = { 0, 0, 0, 0 };
+    public static String[] getStrings = { "", "", "" };
+    public static boolean[] getBooleans = { false, false, false, false, false, false };
+    public static Vector2f[] getVectors2f = { new Vector2f(0.0f), new Vector2f(0.0f) };
+    public static Vector3f[] getVectors3f = { new Vector3f(0.0f), new Vector3f(0.0f) };
+    public static Color[] getColors = { Color.White, Color.White };
 
     static Texture testTexture;
     static Texture testTexture2;
@@ -25,12 +25,12 @@ public class TestFieldsWindow {
         ImGui.begin(" Test Fields ");
 
         if (ImGui.collapsingHeader("Boolean Types")) {
-            testBooleans[0] = EditorImGui.field_Boolean("True boolean(Switch)", testBooleans[0], EditorImGui.BooleanType.Switch);
-            testBooleans[1] = !EditorImGui.field_Boolean("False boolean(Switch)", !testBooleans[1], EditorImGui.BooleanType.Switch);
-            testBooleans[2] = EditorImGui.field_Boolean("True boolean(Checkbox)", testBooleans[2], EditorImGui.BooleanType.Checkbox);
-            testBooleans[3] = !EditorImGui.field_Boolean("False boolean(Checkbox)", !testBooleans[3], EditorImGui.BooleanType.Checkbox);
-            testBooleans[4] = EditorImGui.field_Boolean("True boolean(Bullet)", testBooleans[4], EditorImGui.BooleanType.Bullet);
-            testBooleans[5] = !EditorImGui.field_Boolean("False boolean(Bullet)", !testBooleans[5], EditorImGui.BooleanType.Bullet);
+            getBooleans[0] = EditorImGui.field_Boolean("True boolean(Switch)", getBooleans[0], EditorImGui.BooleanType.Switch);
+            getBooleans[1] = !EditorImGui.field_Boolean("False boolean(Switch)", !getBooleans[1], EditorImGui.BooleanType.Switch);
+            getBooleans[2] = EditorImGui.field_Boolean("True boolean(Checkbox)", getBooleans[2], EditorImGui.BooleanType.Checkbox);
+            getBooleans[3] = !EditorImGui.field_Boolean("False boolean(Checkbox)", !getBooleans[3], EditorImGui.BooleanType.Checkbox);
+            getBooleans[4] = EditorImGui.field_Boolean("True boolean(Bullet)", getBooleans[4], EditorImGui.BooleanType.Bullet);
+            getBooleans[5] = !EditorImGui.field_Boolean("False boolean(Bullet)", !getBooleans[5], EditorImGui.BooleanType.Bullet);
             ImGui.separator();
         }
 
@@ -44,27 +44,27 @@ public class TestFieldsWindow {
             ImGui.separator();
         }
 
-        for (int i = 0; i < testFloats.length; i++)
-            testFloats[i] = EditorImGui.field_Float("Test Float (" + i + ")", testFloats[i]);
+        for (int i = 0; i < getFloats.length; i++)
+            getFloats[i] = EditorImGui.field_Float("Test Float (" + i + ")", getFloats[i]);
 
-        for (int i = 0; i < testInts.length; i++)
-            testInts[i] = EditorImGui.field_Int_WithButtons("Test Int (" + i + ")", testInts[i]);
+        for (int i = 0; i < getInts.length; i++)
+            getInts[i] = EditorImGui.field_Int_WithButtons("Test Int (" + i + ")", getInts[i]);
 //                        EditorImGui.field_Int("Tets int", 0);
 
-        for (int i = 0; i < testStrings.length; i++)
-            testStrings[i] = EditorImGui.field_Text("Test String (" + i + ")", testStrings[i], "Test");
+        for (int i = 0; i < getStrings.length; i++)
+            getStrings[i] = EditorImGui.field_Text("Test String (" + i + ")", getStrings[i], "Test");
 
-        for (int i = 0; i < testBooleans.length; i++)
-            testBooleans[i] = EditorImGui.field_Boolean("Test Boolean (" + i + ")", testBooleans[i]);
+        for (int i = 0; i < getBooleans.length; i++)
+            getBooleans[i] = EditorImGui.field_Boolean("Test Boolean (" + i + ")", getBooleans[i]);
 
-        for (int i = 0; i < testVectors2f.length; i++)
-            testVectors2f[i] = EditorImGui.field_Vector2f("Test Vector2 (" + i + ")", testVectors2f[i]);
+        for (int i = 0; i < getVectors2f.length; i++)
+            getVectors2f[i] = EditorImGui.field_Vector2f("Test Vector2 (" + i + ")", getVectors2f[i]);
 
-        for (int i = 0; i < testVectors3f.length; i++)
-            testVectors3f[i] = EditorImGui.field_Vector3f("Test Vector3 (" + i + ")", testVectors3f[i]);
+        for (int i = 0; i < getVectors3f.length; i++)
+            getVectors3f[i] = EditorImGui.field_Vector3f("Test Vector3 (" + i + ")", getVectors3f[i]);
 
-        for (int i = 0; i < testColors.length; i++)
-            EditorImGui.field_Color_WithAlpha("Test Color (" + i + ")", testColors[i]);
+        for (int i = 0; i < getColors.length; i++)
+            EditorImGui.field_Color_WithAlpha("Test Color (" + i + ")", getColors[i]);
 
         ImGui.end();
     }

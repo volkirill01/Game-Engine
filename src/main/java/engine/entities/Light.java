@@ -17,7 +17,7 @@ public class Light extends Component {
 
     private Color color;
     private float intensity;
-    private final Vector3f defaultAttenuation = new Vector3f(1, 0, 0);
+    private transient final Vector3f defaultAttenuation = new Vector3f(1, 0, 0);
     private Vector3f attenuation = new Vector3f(defaultAttenuation);
     private float range = 1.0f;
 
@@ -66,6 +66,8 @@ public class Light extends Component {
     public void imgui() {
         this.lightType = (LightType) EditorImGui.field_Enum("Light Type", this.lightType);
         ImGui.spacing();
+        ImGui.spacing();
+        EditorImGui.filed_Color("Color", this.color);
         this.intensity = EditorImGui.field_Float("Intensity", this.intensity, 0.02f, 0.0f);
 
         if (this.lightType != LightType.Directional) {

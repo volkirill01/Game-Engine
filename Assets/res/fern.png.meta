@@ -1,0 +1,8 @@
+filterMode = Linear
+numberOfColumns = 2
+repeatHorizontally = true
+sliceMode = Multiple
+useMipmaps = false
+numberOfRows = 2
+repeatVertically = true
+useAnisotropicFiltering = true

@@ -3,13 +3,21 @@ package engine.imGui;
 import engine.TestFieldsWindow;
 import engine.entities.GameObject;
 import engine.renderEngine.Window;
+import engine.toolbox.SystemClipboard;
 import imgui.ImGui;
 import imgui.ImVec2;
+import imgui.ImVec4;
 import imgui.flag.ImGuiCol;
+import imgui.flag.ImGuiPopupFlags;
 import imgui.flag.ImGuiStyleVar;
 import imgui.flag.ImGuiTreeNodeFlags;
+import org.apache.commons.io.FileUtils;
 
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 public class SceneHierarchyWindow extends EditorImGuiWindow {
 
@@ -23,9 +31,11 @@ public class SceneHierarchyWindow extends EditorImGuiWindow {
 
         List<GameObject> gameObjects = Window.get().getScene().getGameObjects();
 
+        ImVec2 itemSpacing = ImGui.getStyle().getItemSpacing();
         ImGui.pushStyleVar(ImGuiStyleVar.ItemSpacing, 0, 0);
 
         globalGameObjectIndex = 0;
+        ImVec4 textDisabled = ImGui.getStyle().getColor(ImGuiCol.TextDisabled);
         for (GameObject gObject : gameObjects) {
             if (!gObject.doSerialization() || gObject.transform.parent != null)
                 continue;
@@ -34,8 +44,48 @@ public class SceneHierarchyWindow extends EditorImGuiWindow {
 
             gObject.transform.drawInSceneHierarchy(0);
             globalGameObjectIndex++;
+
+            ImGui.pushStyleVar(ImGuiStyleVar.ItemSpacing, itemSpacing.x, itemSpacing.y);
+            if (ImGui.beginPopupContextItem("SceneHierarchy_Item" + gObject)) { // TODO ADD CONTEXT AND ITEM POPUPS TO HIERARCHY
+                ImGui.pushStyleColor(ImGuiCol.Text, textDisabled.x, textDisabled.y, textDisabled.z, textDisabled.w);
+                if (ImGui.menuItem("Copy")) {
+                    System.out.println("Copy Game Object");
+//                    SystemClipboard.copy(file.getAbsolutePath());
+                }
+                if (ImGui.menuItem("Paste")) {
+                    System.out.println("Paste Game Object");
+                }
+                ImGui.separator();
+
+                if (ImGui.menuItem("Rename")) {
+                    System.out.println("Rename Game Object");
+                }
+                if (ImGui.menuItem("Duplicate")) {
+                    System.out.println("Duplicate Game Object");
+                }
+                ImGui.popStyleColor();
+                if (ImGui.menuItem("Delete"))
+                    gObject.destroy();
+
+                ImGui.endPopup();
+            }
+            ImGui.popStyleVar();
         }
         ImGui.popStyleVar();
+
+        if (ImGui.beginPopupContextWindow("SceneHierarchy_Context", ImGuiPopupFlags.NoOpenOverItems | ImGuiPopupFlags.MouseButtonRight)) {
+            ImGui.pushStyleColor(ImGuiCol.Text, textDisabled.x, textDisabled.y, textDisabled.z, textDisabled.w);
+            if (ImGui.menuItem("Paste")) {
+                System.out.println("Paste Game Object");
+            }
+            ImGui.popStyleColor();
+            ImGui.separator();
+
+            if (ImGui.menuItem("Create Empty"))
+                Window.get().getScene().addGameObjectToScene(Window.get().getScene().createGameObject("Empty"));
+
+            ImGui.endPopup();
+        }
 
         super.imgui();
         ImGui.end();

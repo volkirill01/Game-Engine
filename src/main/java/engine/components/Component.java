@@ -1,14 +1,16 @@
 package engine.components;
 
 import engine.entities.GameObject;
+import engine.entities.Light;
 import engine.imGui.EditorImGui;
+import engine.renderEngine.components.MeshRenderer;
+import engine.toolbox.customVariables.Color;
 import imgui.ImGui;
 import imgui.type.ImInt;
 import org.jbox2d.dynamics.contacts.Contact;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
-import org.reflections.Reflections;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -22,7 +24,14 @@ public abstract class Component {
 
     public transient GameObject gameObject;
 
+    public static List<Component> allComponents = new ArrayList<>(){{
+        add(new MeshRenderer(null));
+        add(new Light(Color.White, 1.0f));
+    }};
+
     public Component() { }
+
+    public static void addGlobalComponent(Component component) { allComponents.add(component); }
 
     public void start() { }
 
@@ -131,20 +140,20 @@ public abstract class Component {
 
     public static void init(int maxId) { ID_COUNTER = maxId; }
 
-    public static List<Component> getAllChild() {
-        Reflections reflections = new Reflections("engine");
-        Set<Class<? extends Component>> allClasses = reflections.getSubTypesOf(Component.class);
-        List<Component> components = new ArrayList<>();
+    public static List<Component> getAllComponents() {
+//        Reflections reflections = new Reflections("engine");
+//        Set<Class<? extends Component>> allClasses = reflections.getSubTypesOf(Component.class);
+//        List<Component> components = new ArrayList<>();
+//
+//        for (Class<? extends Component> c : allClasses) {
+//            try { components.add(c.newInstance()); }
+//            catch (InstantiationException | IllegalAccessException e) {
+////                System.out.println("Error " + c);
+//                continue;
+//            }
+//        }
 
-        for (Class<? extends Component> c : allClasses) {
-            try { components.add(c.newInstance()); }
-            catch (InstantiationException | IllegalAccessException e) {
-//                System.out.println("Error " + c);
-                continue;
-            }
-        }
-
-        return components;
+        return allComponents;
     }
 
     public boolean isActive() { return this.isActive; }

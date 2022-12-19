@@ -41,7 +41,7 @@ public class Window implements Observer {
     public boolean drawGrid = true;
     public boolean drawDebug = true;
 
-    public Scene currentScene;
+    private Scene currentScene;
 
     public Window() { addToEventSystem(); }
 

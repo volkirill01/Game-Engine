@@ -31,6 +31,14 @@ public class Asset_Image extends Asset {
 
         this.data.replace("sliceMode", EditorImGui.field_Enum("Slice Mode", Enum.valueOf(TextureSliceMode.class, this.data.get("sliceMode").toString())));
         this.data.replace("filterMode", EditorImGui.field_Enum("Filter Mode", Enum.valueOf(TextureFilterMode.class, this.data.get("filterMode").toString())));
+
+        if (Enum.valueOf(TextureSliceMode.class, this.data.get("sliceMode").toString()) == TextureSliceMode.Multiple) {
+            this.data.replace("numberOfRows", EditorImGui.field_Int_WithButtons("Number Of Rows", Integer.parseInt(this.data.get("numberOfRows").toString()), 1, 0));
+            this.data.replace("numberOfColumns", EditorImGui.field_Int_WithButtons("Number Of Columns", Integer.parseInt(this.data.get("numberOfColumns").toString()), 1, 0));
+        } else {
+            this.data.replace("numberOfRows", 1);
+            this.data.replace("numberOfColumns", 1);
+        }
         super.saveMeta();
     }
 }

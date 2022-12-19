@@ -7,6 +7,7 @@ import static org.lwjgl.opengl.GL30.*;
 import static org.lwjgl.opengl.GL30.GL_FRAMEBUFFER;
 
 public class PickingTexture {
+
     private int pickingTextureId;
     private int fboID;
     private int depthTexture;
@@ -81,4 +82,6 @@ public class PickingTexture {
 
         return pixels;
     }
+
+    public int getPickingTextureId() { return this.pickingTextureId; }
 }

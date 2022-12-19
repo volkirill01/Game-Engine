@@ -2,6 +2,7 @@ package engine.renderEngine.renderer;
 
 import engine.entities.GameObject;
 import engine.renderEngine.Loader;
+import engine.renderEngine.PickingShader;
 import engine.renderEngine.components.MeshRenderer;
 import engine.renderEngine.models.RawModel;
 import engine.renderEngine.models.TexturedModel;
@@ -35,6 +36,9 @@ public class EntityRenderer {
             prepareTexturedModel(model);
             List<GameObject> batch = entities.get(model);
             for (GameObject gameObject : batch) {
+                if (!gameObject.getComponent(MeshRenderer.class).isActive())
+                    continue;
+
                 prepareInstance(gameObject);
                 glDrawElements(GL_TRIANGLES, model.getRawModel().getVertexCount(), GL_UNSIGNED_INT, 0);
                 unbindTexturedModel();
@@ -50,8 +54,8 @@ public class EntityRenderer {
         glEnableVertexAttribArray(2);
 
         Material material = model.getMaterial();
-        shader.loadUniformFloat("numberOfRows", material.getNumberOfRows());
-        shader.loadUniformFloat("numberOfColumns", material.getNumberOfColumns());
+        shader.loadUniformFloat("numberOfRows", material.getTexture().getNumberOfRows());
+        shader.loadUniformFloat("numberOfColumns", material.getTexture().getNumberOfColumns());
 
         shader.loadUniformVector2("tiling", material.getTiling());
 

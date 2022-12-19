@@ -2,7 +2,6 @@ package engine.entities;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import engine.TestFieldsWindow;
 import engine.components.Component;
 import engine.components.ComponentDeserializer;
 import engine.components.Transform;
@@ -11,7 +10,6 @@ import engine.imGui.ConsoleMessage;
 import engine.imGui.EditorImGui;
 import engine.renderEngine.Loader;
 import engine.renderEngine.Window;
-import engine.renderEngine.components.MeshRenderer;
 import engine.renderEngine.components.ObjectRenderer;
 import engine.toolbox.customVariables.GameObjectTag;
 import imgui.ImGui;
@@ -38,7 +36,7 @@ public class GameObject {
 
     private boolean isDeath = false;
 
-    private List<Class> addComponentBlackList = new ArrayList<>(){{
+    private transient List<Class> addComponentBlackList = new ArrayList<>(){{
         add(Transform.class);
         add(ObjectRenderer.class);
     }};
@@ -173,8 +171,15 @@ public class GameObject {
 
             //<editor-fold desc="Is Active checkbox">
             ImGui.setColumnWidth(0, checkboxSize);
-            if (ImGui.checkbox("##isActive", components.get(i).isActive()))
-                components.get(i).setActive(!components.get(i).isActive());
+            if (components.get(i).getClass() != Transform.class) {
+                if (ImGui.checkbox("##isActive", components.get(i).isActive()))
+                    components.get(i).setActive(!components.get(i).isActive());
+            } else {
+                ImVec4 textDisabled = ImGui.getStyle().getColor(ImGuiCol.TextDisabled);
+                ImGui.pushStyleColor(ImGuiCol.CheckMark, textDisabled.x, textDisabled.y, textDisabled.z, textDisabled.w);
+                ImGui.checkbox("##isActive", true);
+                ImGui.popStyleColor();
+            }
             ImGui.nextColumn();
             //</editor-fold>
 
@@ -242,9 +247,7 @@ public class GameObject {
         ImVec2 popupPosition = new ImVec2(centerOfWindow - 105.0f, popupPosY);
 
         if (EditorImGui.BeginPopup("ComponentAdder", popupPosition, isOpen)) {
-            List<Component> componentList = Component.getAllChild();
-            componentList.add(new MeshRenderer(null));
-            for (Component c : componentList) {
+            for (Component c : Component.getAllComponents()) {
                 if (getComponent(c.getClass()) == null && !addComponentBlackList.contains(c.getClass()))
                     if (ImGui.menuItem(c.getClass().getSimpleName())) {
 //                        if (c.getClass()== UIRenderer.class) {

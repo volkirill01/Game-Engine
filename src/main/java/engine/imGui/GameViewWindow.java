@@ -4,6 +4,7 @@ import engine.entities.GameObject;
 import engine.eventSystem.EventSystem;
 import engine.eventSystem.Events.Event;
 import engine.eventSystem.Events.EventType;
+import engine.imGui.editorToolsWindows.FastMeshPlace;
 import engine.renderEngine.Window;
 import engine.scene.SceneManager;
 import engine.toolbox.MouseListener;
@@ -19,10 +20,22 @@ public class GameViewWindow extends EditorImGuiWindow {
     private boolean isPlaying = false;
 
     private Vector2f windowPos = new Vector2f();
+    private Vector2f topLeftCornerPosition = new Vector2f();
+    private Vector2f topRightCornerPosition = new Vector2f();
+
+    private FastMeshPlace fastMeshPlaceWindow;
+
+    private boolean captureMouse = false;
+
+    public GameViewWindow() {
+        this.fastMeshPlaceWindow = new FastMeshPlace();
+    }
 
     @Override
     public void imgui() {
         ImGui.begin(" \uEC5C Game Viewport ", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse | ImGuiWindowFlags.MenuBar);
+
+        topLeftCornerPosition = new Vector2f(ImGui.getCursorStartPosX() + ImGui.getWindowPosX(), ImGui.getCursorStartPosY() + ImGui.getWindowPosY());
 
         ImGui.setCursorPosX(ImGui.getCursorPosX() - 6.0f);
         ImGui.beginMenuBar();
@@ -102,6 +115,11 @@ public class GameViewWindow extends EditorImGuiWindow {
 //
 //            ImGui.endDragDropTarget();
 //        }
+
+        topRightCornerPosition = new Vector2f(ImGui.getCursorStartPosX() + ImGui.getWindowPosX() + ImGui.getWindowSizeX(), ImGui.getCursorStartPosY() + ImGui.getWindowPosY());
+
+        captureMouse = !toolsWindowsImgui();
+
         if (ImGui.beginDragDropTarget() && ImGui.getDragDropPayload("ASSETS_WINDOW_PAYLOAD") != null) {
             String[] payload = ImGui.getDragDropPayload("ASSETS_WINDOW_PAYLOAD");
 
@@ -119,11 +137,20 @@ public class GameViewWindow extends EditorImGuiWindow {
     }
 
     public boolean getWantCaptureMouse() {
-        if (GameObject.showAddTag || !ImGui.isWindowFocused(-1))
+        if (!captureMouse || GameObject.showAddTag)
             return false;
 
         return MouseListener.getX() >= leftX && MouseListener.getX() <= rightX &&
                 MouseListener.getY() >= bottomY && MouseListener.getY() <= topY;
+    }
+
+    private boolean toolsWindowsImgui() {
+        this.fastMeshPlaceWindow.imgui();
+
+        if (ImGui.isWindowHovered())
+            return false;
+
+        return true;
     }
 
     private ImVec2 getLargestSizeForViewport() {
@@ -155,9 +182,9 @@ public class GameViewWindow extends EditorImGuiWindow {
         return new Vector2f(viewportX + ImGui.getCursorPosX(), viewportY + ImGui.getCursorPosY());
     }
 
-    public Vector2f getTopLeftCorner() {
-        return new Vector2f(windowPos.x, windowPos.y);
-    }
+    public Vector2f getTopLeftCorner() { return this.topLeftCornerPosition; }
+
+    public Vector2f getTopRightCorner() { return this.topRightCornerPosition; }
 
     public boolean isPlaying() { return this.isPlaying; }
 

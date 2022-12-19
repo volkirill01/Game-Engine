@@ -73,4 +73,12 @@ public class Texture {
     public boolean isRepeatVertically() { return Boolean.parseBoolean(this.metaData.get("repeatVertically").toString()); }
 
     public void setRepeatVertically(boolean repeatVertically) { this.metaData.replace("repeatVertically", repeatVertically); }
+
+    public int getNumberOfRows() { return Integer.parseInt(this.metaData.get("numberOfRows").toString()); }
+
+    public void setNumberOfRows(int numberOfRows) { this.metaData.replace("numberOfRows", numberOfRows); }
+
+    public int getNumberOfColumns() { return Integer.parseInt(this.metaData.get("numberOfColumns").toString()); }
+
+    public void setNumberOfColumns(int numberOfColumns) { this.metaData.replace("numberOfColumns", numberOfColumns); }
 }

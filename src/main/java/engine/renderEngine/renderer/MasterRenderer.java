@@ -3,6 +3,7 @@ package engine.renderEngine.renderer;
 import engine.entities.Camera;
 import engine.entities.GameObject;
 import engine.entities.Light;
+import engine.renderEngine.PickingShader;
 import engine.renderEngine.Window;
 import engine.renderEngine.components.MeshRenderer;
 import engine.renderEngine.components.ObjectRenderer;
@@ -38,6 +39,8 @@ public class MasterRenderer {
 
     // Default
     private StaticShader shader = new StaticShader("engineFiles/shaders/entity/vertexShader.glsl", "engineFiles/shaders/entity/fragmentShader.glsl");
+
+    private PickingShader pickingShader = new PickingShader();
 
    // Cell shading
 //    private StaticShader shader = new StaticShader("engineFiles/shaders/entity/vertexShader.glsl", "engineFiles/shaders/entity/cellShader/cellFragmentShader.glsl"); // For cell shading

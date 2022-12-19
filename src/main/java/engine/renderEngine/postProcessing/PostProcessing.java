@@ -30,7 +30,15 @@ public class PostProcessing {
 	private static Color fogColor = new Color(128, 128, 128);
 	private static float fogSmoothness = 1.5f;
 
-	private static List<PostProcessLayer> allPostProcessLayers = new ArrayList<>();
+	private static List<PostProcessLayer> allPostProcessLayers = new ArrayList<>(){{
+		add(new PostProcessLayer(new PowerShader((int) Window.getWidth(), (int) Window.getHeight())));
+		add(new GaussianBlurLayer((int) Window.getWidth(), (int) Window.getHeight()));
+		add(new PostProcessLayer(new TonemappingShader((int) Window.getWidth(), (int) Window.getHeight())));
+		add(new PostProcessLayer(new WhiteBalanceShader((int) Window.getWidth(), (int) Window.getHeight())));
+		add(new PostProcessLayer(new VignetteShader((int) Window.getWidth(), (int) Window.getHeight())));
+		add(new PostProcessLayer(new BrightnessContrastSaturationShader((int) Window.getWidth(), (int) Window.getHeight())));
+		add(new BloomLayer((int) Window.getWidth(), (int) Window.getHeight()));
+	}};
 
 	public static boolean usePostProcessing;
 
@@ -42,13 +50,13 @@ public class PostProcessing {
 		startPostProcess = new PostProcessLayer(new StartPostProcessShader((int) Window.getWidth(), (int) Window.getHeight()));
 		startPostProcess.loadVariables();
 
-		allPostProcessLayers.add(new PostProcessLayer(new PowerShader((int) Window.getWidth(), (int) Window.getHeight())));
-		allPostProcessLayers.add(new GaussianBlurLayer((int) Window.getWidth(), (int) Window.getHeight()));
-		allPostProcessLayers.add(new PostProcessLayer(new TonemappingShader((int) Window.getWidth(), (int) Window.getHeight())));
-		allPostProcessLayers.add(new PostProcessLayer(new WhiteBalanceShader((int) Window.getWidth(), (int) Window.getHeight())));
-		allPostProcessLayers.add(new PostProcessLayer(new VignetteShader((int) Window.getWidth(), (int) Window.getHeight())));
-		allPostProcessLayers.add(new PostProcessLayer(new BrightnessContrastSaturationShader((int) Window.getWidth(), (int) Window.getHeight())));
-		allPostProcessLayers.add(new BloomLayer((int) Window.getWidth(), (int) Window.getHeight()));
+//		allPostProcessLayers.add(new PostProcessLayer(new PowerShader((int) Window.getWidth(), (int) Window.getHeight())));
+//		allPostProcessLayers.add(new GaussianBlurLayer((int) Window.getWidth(), (int) Window.getHeight()));
+//		allPostProcessLayers.add(new PostProcessLayer(new TonemappingShader((int) Window.getWidth(), (int) Window.getHeight())));
+//		allPostProcessLayers.add(new PostProcessLayer(new WhiteBalanceShader((int) Window.getWidth(), (int) Window.getHeight())));
+//		allPostProcessLayers.add(new PostProcessLayer(new VignetteShader((int) Window.getWidth(), (int) Window.getHeight())));
+//		allPostProcessLayers.add(new PostProcessLayer(new BrightnessContrastSaturationShader((int) Window.getWidth(), (int) Window.getHeight())));
+//		allPostProcessLayers.add(new BloomLayer((int) Window.getWidth(), (int) Window.getHeight()));
 	}
 	
 	public static void doPostProcessing(int colourTexture) {

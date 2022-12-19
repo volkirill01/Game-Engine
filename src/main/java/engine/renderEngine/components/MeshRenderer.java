@@ -26,12 +26,12 @@ public class MeshRenderer extends ObjectRenderer {
     }
 
     public Vector2f getTextureOffset() {
-        int column = textureIndex % model.getMaterial().getNumberOfRows();
-        int row = textureIndex / model.getMaterial().getNumberOfColumns();
+        int column = textureIndex % model.getMaterial().getTexture().getNumberOfRows();
+        int row = textureIndex / model.getMaterial().getTexture().getNumberOfColumns();
 
         return new Vector2f(
-                (float) column / (float) model.getMaterial().getNumberOfRows(),
-                (float) row / (float) model.getMaterial().getNumberOfColumns());
+                (float) column / (float) model.getMaterial().getTexture().getNumberOfRows(),
+                (float) row / (float) model.getMaterial().getTexture().getNumberOfColumns());
     }
 
     public TexturedModel getModel() { return this.model; }
@@ -46,8 +46,10 @@ public class MeshRenderer extends ObjectRenderer {
 
     @Override
     public void editorUpdate() {
-        this.model.getRawModel().update();
-        this.model.getMaterial().update();
+        if (model != null) {
+            this.model.getRawModel().update();
+            this.model.getMaterial().update();
+        }
     }
 
     @Override

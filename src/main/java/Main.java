@@ -18,7 +18,6 @@ import engine.renderEngine.postProcessing.Fbo;
 import engine.renderEngine.postProcessing.PostProcessing;
 import engine.renderEngine.renderer.MasterRenderer;
 import engine.renderEngine.renderer.RenderCullSide;
-import engine.renderEngine.shaders.StaticShader;
 import engine.renderEngine.textures.Material;
 import engine.renderEngine.textures.TerrainTexture;
 import engine.renderEngine.textures.TerrainTexturePack;
@@ -148,7 +147,7 @@ public class Main { // TODO FIX SAVE AND LOAD META FILES
         GameObject dragonGameObject = new GameObject("Dragon");
         dragonGameObject.addComponent(new MeshRenderer(dragonStaticModel));
         dragonGameObject.transform.set(new Vector3f(-106.0f, 18.0f, -21.0f), new Vector3f(0.0f), new Vector3f(1.0f));
-        Window.get().currentScene.addGameObjectToScene(dragonGameObject);
+        Window.get().getScene().addGameObjectToScene(dragonGameObject);
 
 
         RawModel dragonModel2 = OBJLoader.loadOBJ("Assets/dragon.obj");
@@ -163,7 +162,7 @@ public class Main { // TODO FIX SAVE AND LOAD META FILES
         GameObject dragonGameObject2 = new GameObject("Dragon2");
         dragonGameObject2.addComponent(new MeshRenderer(dragonStaticModel2));
         dragonGameObject2.transform.set(new Vector3f(-91.0f, 18.0f, -21.0f), new Vector3f(0.0f), new Vector3f(1.0f));
-        Window.get().currentScene.addGameObjectToScene(dragonGameObject2);
+        Window.get().getScene().addGameObjectToScene(dragonGameObject2);
 
 
         RawModel grassModel = OBJLoader.loadOBJ("Assets/grass/grass.obj");
@@ -178,7 +177,7 @@ public class Main { // TODO FIX SAVE AND LOAD META FILES
         GameObject grassGameObject = new GameObject("Grass");
         grassGameObject.addComponent(new MeshRenderer(grassStaticModel));
         grassGameObject.transform.set(new Vector3f(-100, 22, -57), new Vector3f(0.0f), new Vector3f(0.01f));
-        Window.get().currentScene.addGameObjectToScene(grassGameObject);
+        Window.get().getScene().addGameObjectToScene(grassGameObject);
 
 
         RawModel fernModel = OBJLoader.loadOBJ("Assets/res/fern.obj");
@@ -186,8 +185,8 @@ public class Main { // TODO FIX SAVE AND LOAD META FILES
                 new Material(Loader.get().loadTexture("Assets/res/fern.png")));
         Material fernTexture = fernStaticModel.getMaterial();
 
-        fernTexture.setNumberOfColumns(2);
-        fernTexture.setNumberOfRows(2);
+        fernTexture.getTexture().setNumberOfColumns(2);
+        fernTexture.getTexture().setNumberOfRows(2);
 
         fernTexture.setAlphaClip(0.06f);
         fernTexture.setUseFakeLighting(true);
@@ -196,13 +195,13 @@ public class Main { // TODO FIX SAVE AND LOAD META FILES
         GameObject fernGameObject = new GameObject("Fern");
         fernGameObject.addComponent(new MeshRenderer(fernStaticModel));
         fernGameObject.transform.set(new Vector3f(-93, 19, -50), new Vector3f(0.0f), new Vector3f(0.5f));
-        Window.get().currentScene.addGameObjectToScene(fernGameObject);
+        Window.get().getScene().addGameObjectToScene(fernGameObject);
 
 
         GameObject fern2GameObject = new GameObject("Fern2");
         fern2GameObject.addComponent(new MeshRenderer(fernStaticModel.copy(), 3));
         fern2GameObject.transform.set(new Vector3f(-93, 19, -42), new Vector3f(0.0f), new Vector3f(0.5f));
-        Window.get().currentScene.addGameObjectToScene(fern2GameObject);
+        Window.get().getScene().addGameObjectToScene(fern2GameObject);
 
 
         RawModel barrelModel = OBJLoader.loadOBJ("Assets/res/barrel/barrel.obj");
@@ -218,7 +217,7 @@ public class Main { // TODO FIX SAVE AND LOAD META FILES
         GameObject barrelGameObject = new GameObject("Barrel");
         barrelGameObject.addComponent(new MeshRenderer(barrelStaticModel));
         barrelGameObject.transform.set(new Vector3f(-110, 27, -70), new Vector3f(0.0f), new Vector3f(0.5f));
-        Window.get().currentScene.addGameObjectToScene(barrelGameObject);
+        Window.get().getScene().addGameObjectToScene(barrelGameObject);
 
 
         RawModel testSphereModel = OBJLoader.loadOBJ("Assets/pbr-sphere-test/pbr-sphere-test.obj");
@@ -240,7 +239,7 @@ public class Main { // TODO FIX SAVE AND LOAD META FILES
         GameObject testSphereGameObject = new GameObject("Test Sphere");
         testSphereGameObject.addComponent(new MeshRenderer(testSphereStaticModel));
         testSphereGameObject.transform.set(new Vector3f(-110, 28, -48), new Vector3f(0.0f), new Vector3f(3.0f));
-        Window.get().currentScene.addGameObjectToScene(testSphereGameObject);
+        Window.get().getScene().addGameObjectToScene(testSphereGameObject);
 
 
         RawModel lanternModel = OBJLoader.loadOBJ("Assets/res/lantern/lantern.obj");
@@ -255,7 +254,7 @@ public class Main { // TODO FIX SAVE AND LOAD META FILES
         GameObject lanternGameObject = new GameObject("Lantern");
         lanternGameObject.addComponent(new MeshRenderer(lanternStaticModel));
         lanternGameObject.transform.set(new Vector3f(-90, 25, -70), new Vector3f(0.0f), new Vector3f(0.5f));
-        Window.get().currentScene.addGameObjectToScene(lanternGameObject);
+        Window.get().getScene().addGameObjectToScene(lanternGameObject);
 
 
         RawModel model = Loader.get().loadToVAO(vertices, textureCoords, new float[0], indices, "_Generated(Cube)");
@@ -266,9 +265,8 @@ public class Main { // TODO FIX SAVE AND LOAD META FILES
         hardCode_cubeGameObject.transform.set(new Vector3f(-79.0f, 18.8f, -22.1f), new Vector3f(0.0f), new Vector3f(5.0f));
         MeshRenderer goMeshRenderer = new MeshRenderer(staticModel);
         goMeshRenderer.getModel().getMaterial().setCullSided(RenderCullSide.Both);
-        goMeshRenderer.getModel().getMaterial().setTiling(new Vector2f(1.0f, 1.0f));
         hardCode_cubeGameObject.addComponent(goMeshRenderer);
-        Window.get().currentScene.addGameObjectToScene(hardCode_cubeGameObject);
+        Window.get().getScene().addGameObjectToScene(hardCode_cubeGameObject);
 //        // Entities
 
         // normalMapEntity
@@ -323,16 +321,16 @@ public class Main { // TODO FIX SAVE AND LOAD META FILES
         sun.transform.set(new Vector3f(0.0f, 0.0f, 0.0f), new Vector3f(-18.0f, 10.0f, 20.0f), new Vector3f(1.0f));
         Light sunLightComponent = new Light(Color.White, 1.5f);
         sun.addComponent(sunLightComponent);
-        Window.get().currentScene.addGameObjectToScene(sun);
+        Window.get().getScene().addGameObjectToScene(sun);
 
         GameObject blob = new GameObject("Blob");
         blob.transform.set(new Vector3f(-90.0f, 30.0f, -70.0f), new Vector3f(0, 0, 0), new Vector3f(1.0f));
         Light blobLightComponent = new Light(Color.Yellow, 2.0f, new Vector3f(1.0f, 0.01f, 0.002f)); // 5.0f, 10.0f, 0.0f
         blob.addComponent(blobLightComponent);
-        Window.get().currentScene.addGameObjectToScene(blob);
+        Window.get().getScene().addGameObjectToScene(blob);
         // Light
 
-        Window.get().currentScene.addGameObjectToScene(player);
+        Window.get().getScene().addGameObjectToScene(player);
         MousePicker picker = new MousePicker(camera, renderer.getProjectionMatrix(), terrains.get(0));
 
         // Particles
@@ -356,8 +354,6 @@ public class Main { // TODO FIX SAVE AND LOAD META FILES
 //        GuiTexture cameraOutputGui = new GuiTexture(0, new Vector2f(0.45f, -0.25f), 0, new Vector2f(0.3f, 0.3f));
 //        guis.add(cameraOutputGui); // TODO this is camera output image
 
-        StaticShader pickingShader = new StaticShader("engineFiles/shaders/util/pickingVertexShader.glsl", "engineFiles/shaders/util/pickingFragmentShader.glsl");
-
         while (!Window.isClosed()) {
             // Poll events
             glfwPollEvents();
@@ -378,27 +374,25 @@ public class Main { // TODO FIX SAVE AND LOAD META FILES
 
             // Render pass 1. Render to picking texture
 //            glDisable(GL_BLEND);
-            Window.get().pickingTexture.enableWriting();
-
-            glViewport(0, 0, (int) Window.getWidth(), (int) Window.getHeight());
-            glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-            pickingShader.start();
-            Window.get().currentScene.render();
-            pickingShader.stop();
-
-            Window.get().pickingTexture.disableWriting();
+//            Window.get().pickingTexture.enableWriting();
+//
+//            glViewport(0, 0, (int) Window.getWidth(), (int) Window.getHeight());
+//            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+//
+//            renderer.renderScene(Window.get().getScene().getGameObjects(), normalMapEntities, terrains, camera);
+////            Window.get().getScene().render();
+//
+//            Window.get().pickingTexture.disableWriting();
 //            glEnable(GL_BLEND);
 
             ParticleMaster.update(camera);
 
-            renderer.renderShadowMap(Window.get().currentScene.getGameObjects(), sunLightComponent);
+            renderer.renderShadowMap(Window.get().getScene().getGameObjects(), sunLightComponent);
 
             if (Window.get().runtimePlaying)
-                Window.get().currentScene.update();
+                Window.get().getScene().update();
             else
-                Window.get().currentScene.editorUpdate();
+                Window.get().getScene().editorUpdate();
 
             Vector3f terrainPoint = picker.getCurrentTerrainPoint();
             if (KeyListener.keyBeginPress(GLFW_KEY_E))
@@ -412,13 +406,13 @@ public class Main { // TODO FIX SAVE AND LOAD META FILES
             hardCode_cubeGameObject.transform.increaseRotation(new Vector3f(1, 1, 0));
             barrelGameObject.transform.increaseRotation(new Vector3f(1, 1, 0));
 
-            gui2.getTexture().setTextureID(TestFieldsWindow.testInts[0]);
+            gui2.getTexture().setTextureID(TestFieldsWindow.getInts[0]);
 
 //            shadowMapGui.setRotation(shadowMapGui.getRotation() + 1);
 
             multisampleSceneFbo.bindFrameBuffer(); // all inside this affected by postProcessing
 
-            renderer.renderScene(Window.get().currentScene.getGameObjects(), normalMapEntities, terrains, camera);
+            renderer.renderScene(Window.get().getScene().getGameObjects(), normalMapEntities, terrains, camera);
             ParticleMaster.renderParticles(camera);
 
 //            cameraOutputGui.setTexture(PostProcessing.getFinalImage());
@@ -430,6 +424,7 @@ public class Main { // TODO FIX SAVE AND LOAD META FILES
             multisampleSceneFbo.unbindFrameBuffer(); // all inside this affected by postProcessing
 
             multisampleSceneFbo.resolveToFbo(GL_COLOR_ATTACHMENT0, outputFbo);
+//            Window.setScreenImage(Window.get().getImGuiLayer().getInspectorWindow().getPickingTexture().getPickingTextureId());
             if (false)
                 Window.setScreenImage(outputFbo.getColourTexture()); // Not PostProcessing at all
             else {
@@ -437,7 +432,7 @@ public class Main { // TODO FIX SAVE AND LOAD META FILES
                 Window.setScreenImage(PostProcessing.getFinalImage());
             }
 
-            Window.get().getImGuiLayer().update(Window.getDelta(), Window.get().currentScene);
+            Window.get().getImGuiLayer().update(Window.getDelta(), Window.get().getScene());
 
             Window.updateDisplay();
 

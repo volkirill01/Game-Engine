@@ -4,3 +4,5 @@ repeatHorizontally = true
 repeatVertically = true
 useMipmaps = false
 useAnisotropicFiltering = true
+numberOfRows = 1
+numberOfColumns = 1

@@ -1,13 +1,10 @@
 package engine.components;
 
-import engine.TestFieldsWindow;
 import engine.entities.GameObject;
 import engine.imGui.EditorImGui;
 import engine.imGui.SceneHierarchyWindow;
 import engine.renderEngine.Window;
-import engine.renderEngine.textures.Texture;
 import imgui.ImGui;
-import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 import java.util.ArrayList;

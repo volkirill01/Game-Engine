@@ -32,9 +32,6 @@ public class Material {
 
     private boolean useFakeLighting = false;
 
-    private int numberOfRows = 1;
-    private int numberOfColumns = 1;
-
     public Material(Texture texture) { this.texture = texture; }
 
     public void update() {
@@ -98,14 +95,6 @@ public class Material {
     public boolean isUseAlbedoEmission() { return this.useAlbedoEmission; }
 
     public void setUseAlbedoEmission(boolean useAlbedoEmission) { this.useAlbedoEmission = useAlbedoEmission; }
-
-    public int getNumberOfRows() { return this.numberOfRows; }
-
-    public void setNumberOfRows(int numberOfRows) { this.numberOfRows = numberOfRows; }
-
-    public int getNumberOfColumns() { return this.numberOfColumns; }
-
-    public void setNumberOfColumns(int numberOfColumns) { this.numberOfColumns = numberOfColumns; }
 
     public Texture getTexture() { return this.texture; }
 
@@ -172,12 +161,6 @@ public class Material {
             this.renderCullSide = (RenderCullSide) EditorImGui.field_Enum("Render Cull Side", this.renderCullSide);
 
             this.useFakeLighting = EditorImGui.field_Boolean("Use Fake Lighting", this.useFakeLighting);
-
-            this.texture.setSliceMode((TextureSliceMode) EditorImGui.field_Enum("Slice Mode", this.texture.getSliceMode()));
-            if (this.texture.getSliceMode() == TextureSliceMode.Multiple) {
-                this.numberOfRows = EditorImGui.field_Int_WithButtons("Number Of Rows", this.numberOfRows, 1, 0);
-                this.numberOfColumns = EditorImGui.field_Int_WithButtons("Number Of Columns", this.numberOfColumns, 1, 0);
-            }
         }
     }
 }

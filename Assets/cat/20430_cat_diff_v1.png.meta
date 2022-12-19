@@ -4,3 +4,5 @@ sliceMode = Single
 useMipmaps = false
 repeatVertically = true
 useAnisotropicFiltering = true
+numberOfRows = 1
+numberOfColumns = 1

@@ -122,7 +122,7 @@ public class EditorImGui {
     public static void header(String header) {
         ImGui.pushID("Header-" + header);
         ImGui.columns(2, "", false);
-        ImGui.setColumnWidth(0, -1.5f);
+        ImGui.setColumnWidth(0, 3.0f);
         ImGui.nextColumn();
 
         ImGui.text(header);
@@ -500,7 +500,6 @@ public class EditorImGui {
     public static String field_Text_NoLabel(String label, String text, String placeHolder) {
         ImGui.pushID("TextInput_NoLabel-" + label);
 
-        ImGui.setCursorPosX(ImGui.getCursorPosX() - 6f);
         float start = ImGui.getCursorPosX();
         ImGui.setNextItemWidth(ImGui.getContentRegionAvailX());
         ImGui.pushStyleVar(ImGuiStyleVar.FramePadding, 10.0f, ImGui.getStyle().getFramePaddingY());
@@ -665,6 +664,7 @@ public class EditorImGui {
         ImGui.pushStyleColor(ImGuiCol.HeaderActive, activeColor.x, activeColor.y, activeColor.z, activeColor.w);
         ImGui.pushStyleColor(ImGuiCol.Border, 0.0f, 0.0f, 0.0f, 0.0f);
 
+        ImGui.setCursorPosX(ImGui.getCursorPosX() + 4.0f);
         boolean result = ImGui.collapsingHeader(label);
         ImGui.popStyleColor(4);
 
