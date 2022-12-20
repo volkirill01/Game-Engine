@@ -32,4 +32,13 @@ public class KeyListener {
     public static boolean isKeyPressed(int keyCode) { return get().keyPressed[keyCode]; }
 
     public static boolean keyBeginPress(int keyCode) { return get().keyBeginPress[keyCode]; }
+
+    public static boolean isAnyKeyPressed() {
+        for (int i = 0; i < get().keyPressed.length; i++) {
+            if (get().keyBeginPress[i])
+                return true;
+        }
+
+        return false;
+    }
 }

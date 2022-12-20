@@ -1,6 +1,7 @@
 package engine.renderEngine.shaders;
 
 import engine.entities.Light;
+import engine.renderEngine.renderer.RenderCullSide;
 import engine.toolbox.customVariables.Color;
 import org.joml.Vector3f;
 
@@ -17,7 +18,9 @@ public class StaticShader extends ShaderProgram {
     public ShaderVariable[] lightAttenuationVariables;
     public ShaderVariable[] lightRangeVariables;
 
-    public StaticShader(String VERTEX_FILE, String FRAGMENT_FILE) { super(VERTEX_FILE, FRAGMENT_FILE); }
+    public StaticShader(String VERTEX_FILE, String FRAGMENT_FILE) {
+        super(VERTEX_FILE, FRAGMENT_FILE);
+    }
 
     @Override
     protected void bindAttributes() {
@@ -61,22 +64,32 @@ public class StaticShader extends ShaderProgram {
         }
     }
 
-    public void loadLights(List<Light> lists) {
+    public void loadLights(List<Light> lights) {
         for (int i = 0; i < MAX_LIGHTS_COUNT; i++) {
-            if (i < lists.size()) {
-                super.loadUniformVector3(lightPositionVariables[i].variableName, lists.get(i).gameObject.transform.position);
-                super.loadUniformVector3(lightRotationVariables[i].variableName, lists.get(i).gameObject.transform.rotation);
-                super.loadUniformColor(lightColorVariables[i].variableName, lists.get(i).getColor());
-                super.loadUniformFloat(lightIntensityVariables[i].variableName, lists.get(i).getIntensity());
-                super.loadUniformVector3(lightAttenuationVariables[i].variableName, lists.get(i).getAttenuation());
-                super.loadUniformFloat(lightRangeVariables[i].variableName, lists.get(i).getRange());
-            } else {
-                super.loadUniformVector3(lightPositionVariables[i].variableName, new Vector3f(0.0f));
-                super.loadUniformVector3(lightRotationVariables[i].variableName, new Vector3f(0.0f));
-                super.loadUniformColor(lightColorVariables[i].variableName, Color.Black);
-                super.loadUniformFloat(lightIntensityVariables[i].variableName, 0.0f);
-                super.loadUniformVector3(lightAttenuationVariables[i].variableName, new Vector3f(1.0f, 0.0f, 0.0f));
-                super.loadUniformFloat(lightRangeVariables[i].variableName, 0.0f);
+            super.loadVector(lightPositionVariables[i].location, new Vector3f(0.0f));
+            super.loadVector(lightRotationVariables[i].location, new Vector3f(0.0f));
+            super.loadColor(lightColorVariables[i].location, Color.Black);
+            super.loadFloat(lightIntensityVariables[i].location, 0.0f);
+            super.loadVector(lightAttenuationVariables[i].location, new Vector3f(1.0f, 0.0f, 0.0f));
+
+            try {
+                if (i < lights.size() && lights.get(i).isActive()) {
+                    super.loadVector(lightPositionVariables[i].location, lights.get(i).gameObject.transform.position);
+                    super.loadVector(lightRotationVariables[i].location, lights.get(i).gameObject.transform.rotation);
+                    super.loadColor(lightColorVariables[i].location, lights.get(i).getColor());
+                    super.loadFloat(lightIntensityVariables[i].location, lights.get(i).getIntensity());
+                    super.loadVector(lightAttenuationVariables[i].location, lights.get(i).getAttenuation());
+//                    super.loadUniformFloat(lightRangeVariables[i].location, lights.get(i).getRange());
+                } else {
+                    super.loadVector(lightPositionVariables[i].location, new Vector3f(0.0f));
+                    super.loadVector(lightRotationVariables[i].location, new Vector3f(0.0f));
+                    super.loadColor(lightColorVariables[i].location, Color.Black);
+                    super.loadFloat(lightIntensityVariables[i].location, 0.0f);
+                    super.loadVector(lightAttenuationVariables[i].location, new Vector3f(1.0f, 0.0f, 0.0f));
+//                    super.loadUniformFloat(lightRangeVariables[i].location, 0.0f);
+                }
+            } catch (NullPointerException e) {
+//                throw new RuntimeException(e);
             }
         }
     }

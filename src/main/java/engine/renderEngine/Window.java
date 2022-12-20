@@ -13,6 +13,10 @@ import org.joml.Vector4f;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 
+import javax.swing.*;
+
+import java.awt.*;
+
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL30.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
@@ -154,8 +158,27 @@ public class Window implements Observer {
 
     public ImGuiLayer getImGuiLayer() { return imGuiLayer; }
 
+    private static boolean closed = false;
+
     public static boolean isClosed() {
-        return  glfwWindowShouldClose(get().glfwWindow);
+        glfwSetWindowCloseCallback(get().glfwWindow, Window.get()::close);
+        return closed;
+    }
+
+    private void close(long l) {
+        JPanel panel = new JPanel();
+        panel.add(new JLabel("Save Scene before exit?"));
+
+        int res = JOptionPane.showConfirmDialog(null, panel, "Save Scene",
+                JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+        if (res == JOptionPane.YES_OPTION) {
+            get().getScene().save();
+            closed = true;
+        } else if (res == JOptionPane.NO_OPTION)
+            closed = true;
+        else if (res == JOptionPane.CANCEL_OPTION)
+            closed = false;
     }
 
     public static void createDisplay() {

@@ -1,6 +1,5 @@
 package engine.imGui;
 
-import engine.TestFieldsWindow;
 import engine.assets.Asset;
 import engine.renderEngine.Loader;
 import engine.renderEngine.OBJLoader;
@@ -31,6 +30,12 @@ public class EditorImGui {
         Checkbox,
         Switch,
         Bullet
+    }
+
+    public enum FloatType {
+        Drag,
+        DragSlider,
+        Slider
     }
 
     // Single line height
@@ -281,13 +286,15 @@ public class EditorImGui {
         return values;
     }
 
-    public static float field_Float(String label, float value) { return field_Float(label, value, 0.1f, -999_999_999, 999_999_999); }
+    public static float field_Float(String label, float value) { return field_Float(label, value, 0.1f, -999_999_999, 999_999_999, FloatType.Drag); }
 
-    public static float field_Float(String label, float value, float speed) { return field_Float(label, value, speed, -999_999_999, 999_999_999); }
+    public static float field_Float(String label, float value, float speed) { return field_Float(label, value, speed, -999_999_999, 999_999_999, FloatType.Drag); }
 
-    public static float field_Float(String label, float value, float speed, float min) { return field_Float(label, value, speed, min, 999_999_999); }
+    public static float field_Float(String label, float value, float speed, float min) { return field_Float(label, value, speed, min, 999_999_999, FloatType.Drag); }
 
-    public static float field_Float(String label, float value, float speed, float min, float max) {
+    public static float field_Float(String label, float value, float speed, float min, float max) { return field_Float(label, value, speed, min, max, FloatType.Drag); }
+
+    public static float field_Float(String label, float value, float speed, float min, float max, FloatType type) {
         ImGui.pushID(label);
 
         ImGui.columns(2, "", false);
@@ -295,92 +302,57 @@ public class EditorImGui {
         ImGui.setCursorPosY(ImGui.getCursorPosY() + textVerticalOffset);
         ImGui.text("\t" + label);
         ImGui.nextColumn();
-
-        float[] valArr = {value};
-        ImGui.setNextItemWidth(ImGui.getContentRegionAvailX());
-        ImGui.dragFloat("##dragFloat" + label, valArr, speed, min, max);
-
-        ImGui.columns(1);
-        ImGui.popID();
-
-        return Maths.clamp(valArr[0], min, max);
-    }
-
-    public static float slider_Float(String label, float value) { return slider_Float(label, value, 0.05f, 0, 1); }
-
-    public static float slider_Float(String label, float value, float speed) { return slider_Float(label, value, speed, 0, 1); }
-
-    public static float slider_Float(String label, float value, float speed, float min) { return slider_Float(label, value, speed, min, 1); }
-
-    public static float slider_Float(String label, float value, float speed, float min, float max) {
-        ImGui.pushID(label);
-
-        ImGui.columns(2, "", false);
-        ImGui.setColumnWidth(0, leftPadding);
-        ImGui.setCursorPosY(ImGui.getCursorPosY() + textVerticalOffset);
-        ImGui.text("\t" + label);
-        ImGui.nextColumn();
-
-        float sliderHeight = 3.5f;
-        float sliderHandleSize = 11.4f;
-
-        float dragFloatWidth = 50.0f;
-
-        float startX = ImGui.getCursorPosX();
-        float startY = ImGui.getCursorPosY();
-        float endX = ImGui.getWindowContentRegionMaxX() - sliderHandleSize - 8.0f - dragFloatWidth;
-
-        float pos = endX - startX - (Maths.normalize(1 - value, min, max) * (endX - startX)) + (sliderHandleSize / 2.0f) - 2.5f;
-
-        //<editor-fold desc="Colors">
-        ImVec4 tmpColor = ImGui.getStyle().getColor(ImGuiCol.Button);
-        Color buttonColor = new Color(tmpColor.x, tmpColor.y, tmpColor.z, tmpColor.w);
-        tmpColor = ImGui.getStyle().getColor(ImGuiCol.ButtonHovered);
-        Color buttonHoverColor = new Color(tmpColor.x, tmpColor.y, tmpColor.z, tmpColor.w);
-        tmpColor = ImGui.getStyle().getColor(ImGuiCol.ButtonActive);
-        Color buttonActiveColor = new Color(tmpColor.x, tmpColor.y, tmpColor.z, tmpColor.w);
-
-        tmpColor = ImGui.getStyle().getColor(ImGuiCol.FrameBgActive);
-        Color fillColor = new Color(tmpColor.x, tmpColor.y, tmpColor.z, tmpColor.w);
-
-        tmpColor = ImGui.getStyle().getColor(ImGuiCol.TitleBg);
-        Color backgroundColor = new Color(tmpColor.x, tmpColor.y, tmpColor.z, tmpColor.w);
-
-        tmpColor = ImGui.getStyle().getColor(ImGuiCol.Border);
-        Color borderColor = new Color(tmpColor.x, tmpColor.y, tmpColor.z, tmpColor.w - 0.02f);
-        //</editor-fold>
-
-        ImVec2 rightFieldPos = new ImVec2(startX + ImGui.getContentRegionAvailX() - dragFloatWidth, startY);
-
-        float lineHeight = ImGui.getTextLineHeight() + ImGui.getStyle().getFramePaddingY();
-        float finalYPos = startY + (lineHeight / 4.0f) + (sliderHeight / 2.0f);
-
-        drawRectangle(new Vector2f(ImGui.getCursorPosX() + 2.0f, finalYPos - 2.0f), new Vector2f(ImGui.getContentRegionAvailX() + 4.0f - dragFloatWidth - 8.0f, sliderHeight + 4.0f), borderColor);
-        drawRectangle(new Vector2f(ImGui.getCursorPosX() + 5.0f, finalYPos), new Vector2f(ImGui.getContentRegionAvailX() - dragFloatWidth - 9.0f, sliderHeight), backgroundColor);
-        drawRectangle(new Vector2f(ImGui.getCursorPosX() + 4.0f, finalYPos), new Vector2f(pos - 2.0f, sliderHeight), fillColor);
 
         float[] valArr = { value };
 
-        //<editor-fold desc="Handle">
-        ImGui.setCursorPos(startX + pos - 0.7f, startY + 5.0f);
-        ImGui.setNextItemWidth(sliderHandleSize + 6.1f);
-        ImGui.pushStyleVar(ImGuiStyleVar.FramePadding, 0.0f, -0.4f);
-        ImGui.pushStyleVar(ImGuiStyleVar.FrameRounding, 99.0f);
-        ImGui.pushStyleColor(ImGuiCol.Text, 0.0f, 0.0f, 0.0f, 0.0f);
+        if (type == FloatType.Drag) {
+            ImGui.setNextItemWidth(ImGui.getContentRegionAvailX());
+            ImGui.dragFloat("##dragFloat" + label, valArr, speed, min, max);
+        } else if (type == FloatType.DragSlider) {
+            ImGui.setNextItemWidth(ImGui.getContentRegionAvailX());
+            ImGui.sliderFloat("##dragFloat" + label, valArr, min, max);
+        } else if (type == FloatType.Slider) {
+            float lineHeight = ImGui.getTextLineHeight() + ImGui.getStyle().getFramePaddingY() * 2.0f;
+            float sliderHeight = 2.5f;
+            float dragFloatWidth = 50.0f;
+            float startX = ImGui.getCursorPosX();
+            float startY = ImGui.getCursorPosY();
 
-        ImGui.pushStyleColor(ImGuiCol.FrameBg, buttonColor.r, buttonColor.g, buttonColor.b, buttonColor.a);
-        ImGui.pushStyleColor(ImGuiCol.FrameBgActive, buttonActiveColor.r, buttonActiveColor.g, buttonActiveColor.b, buttonActiveColor.a);
-        ImGui.pushStyleColor(ImGuiCol.FrameBgHovered, buttonHoverColor.r, buttonHoverColor.g, buttonHoverColor.b, buttonHoverColor.a);
+            ImGui.pushStyleVar(ImGuiStyleVar.FramePadding, ImGui.getContentRegionAvailX() / 2.0f - dragFloatWidth / 2.0f - 1.5f, -8.2f + sliderHeight);
+            ImGui.pushStyleVar(ImGuiStyleVar.FrameRounding, 99.0f);
+            ImVec4 backgroundColor = ImGui.getStyle().getColor(ImGuiCol.FrameBg);
+            ImVec4 backgroundHoveredColor = ImGui.getStyle().getColor(ImGuiCol.FrameBgHovered);
+            ImGui.pushStyleColor(ImGuiCol.Button, backgroundColor.x, backgroundColor.y, backgroundColor.z, backgroundColor.w);
+            ImGui.pushStyleColor(ImGuiCol.ButtonHovered, backgroundHoveredColor.x, backgroundHoveredColor.y, backgroundHoveredColor.z, backgroundHoveredColor.w);
+            ImGui.pushStyleColor(ImGuiCol.ButtonActive, backgroundHoveredColor.x, backgroundHoveredColor.y, backgroundHoveredColor.z, backgroundHoveredColor.w);
+            ImGui.pushStyleColor(ImGuiCol.Border, 0.0f, 0.0f, 0.0f, 0.0f);
+            ImGui.setCursorPosY(startY + lineHeight / 2.0f - sliderHeight);
+            ImGui.button("##Background");
+            ImGui.setItemAllowOverlap();
+            ImGui.popStyleColor(4);
+            ImGui.popStyleVar(2);
 
-        ImGui.dragFloat("##sliderHandle" + label, valArr, 0.293f * (speed / 1.5f), min, max);
+            ImGui.pushStyleVar(ImGuiStyleVar.GrabMinSize, 18.0f);
+            ImGui.pushStyleVar(ImGuiStyleVar.FramePadding, ImGui.getStyle().getFramePaddingX(), 2.0f);
+            ImGui.pushStyleVar(ImGuiStyleVar.GrabRounding, 99.0f);
+            ImGui.pushStyleColor(ImGuiCol.Text, 0.0f, 0.0f, 0.0f, 0.0f);
+            ImGui.pushStyleColor(ImGuiCol.FrameBg, 0.0f, 0.0f, 0.0f, 0.0f);
+            ImGui.pushStyleColor(ImGuiCol.FrameBgHovered, 0.0f, 0.0f, 0.0f, 0.0f);
+            ImGui.pushStyleColor(ImGuiCol.FrameBgActive, 0.0f, 0.0f, 0.0f, 0.0f);
+            ImGui.pushStyleColor(ImGuiCol.Border, 0.0f, 0.0f, 0.0f, 0.0f);
+            ImGui.setNextItemWidth(ImGui.getContentRegionAvailX() - dragFloatWidth + 1.0f);
+            ImGui.setCursorPos(startX - 2.0f, startY + lineHeight / 2.0f - 9.5f);
+            ImGui.sliderFloat("##SliderHandle", valArr, min, max);
+            ImGui.popStyleColor(5);
+            ImGui.popStyleVar(3);
 
-        ImGui.popStyleColor(4);
-        ImGui.popStyleVar(2);
-        //</editor-fold>
+            ImVec2 rightFieldPos = new ImVec2(startX + ImGui.getContentRegionAvailX() - dragFloatWidth, startY);
+            ImGui.setCursorPos(rightFieldPos.x, rightFieldPos.y);
+            ImGui.setNextItemWidth(dragFloatWidth);
+            ImGui.dragFloat("##sliderDragFloat" + label, valArr, speed, min, max);
 
-        ImGui.setCursorPos(rightFieldPos.x, rightFieldPos.y);
-        ImGui.setNextItemWidth(dragFloatWidth);
-        ImGui.dragFloat("##sliderDragFloat" + label, valArr, speed, min, max);
+            ImGui.setCursorPosY(startY + lineHeight + 3.0f);
+        }
 
         ImGui.columns(1);
         ImGui.popID();

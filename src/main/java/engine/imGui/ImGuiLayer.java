@@ -1,6 +1,8 @@
 package engine.imGui;
 
 import engine.TestFieldsWindow;
+import engine.graphEditor.ExampleImGuiNodeEditor;
+import engine.graphEditor.Graph;
 import engine.renderEngine.PickingTexture;
 import engine.renderEngine.Window;
 import engine.renderEngine.postProcessing.PostProcessingGui;
@@ -44,6 +46,9 @@ public class ImGuiLayer {
     private PostProcessingGui postProcessingWindow;
 //    private ScriptGraph scriptGraphWindow;
 
+    private ExampleImGuiNodeEditor test;
+    private Graph graph;
+
     public float fontSize = 0.89f;
 
     public static ImFont defaultText;
@@ -61,6 +66,9 @@ public class ImGuiLayer {
         this.assetsStructureWindow.mainDir = new File(this.assetsWindow.assetsDirectory);
         this.postProcessingWindow = new PostProcessingGui();
 //        this.scriptGraphWindow = new ScriptGraph();
+
+        this.test = new ExampleImGuiNodeEditor();
+        this.graph = new Graph();
     }
 
     // Initialize Dear ImGui.
@@ -321,6 +329,8 @@ public class ImGuiLayer {
             assetsStructureWindow.imgui();
             postProcessingWindow.imgui();
             inspectorWindow.imgui();
+
+            ExampleImGuiNodeEditor.show(new ImBoolean(true), graph);
 
         } else {
             ImGuiViewport viewport = ImGui.getMainViewport();

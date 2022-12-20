@@ -34,6 +34,13 @@ public class TestFieldsWindow {
             ImGui.separator();
         }
 
+        if (ImGui.collapsingHeader("Float Types")) {
+            getFloats[0] = EditorImGui.field_Float("Float (Drag)", getFloats[0], 0.01f, 0.0f, 1.0f, EditorImGui.FloatType.Drag);
+            getFloats[1] = EditorImGui.field_Float("Float (DragSlider)", getFloats[1], 0.01f, 0.0f, 1.0f, EditorImGui.FloatType.DragSlider);
+            getFloats[2] = EditorImGui.field_Float("Float (Slider)", getFloats[2], 0.01f, 0.0f, 1.0f, EditorImGui.FloatType.Slider);
+            ImGui.separator();
+        }
+
         if (ImGui.collapsingHeader("Texture Fields")) {
             EditorImGui.header("Texture Used Intensity, range(-1.0, 1.0)");
             testTexture = (Texture) EditorImGui.field_Texture("Texture1", testTexture, new Vector2f(1.0f), new Vector2f(0.0f), true, 1, -1.0f, 1.0f).get(0);

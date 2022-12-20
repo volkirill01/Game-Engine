@@ -92,7 +92,12 @@ public class GameObject {
         c.gameObject = this;
     }
 
-    public boolean hasComponent(Class component) { return this.components.contains(component); }
+    public boolean hasComponent(Class component) {
+        for (Component c : this.components)
+            if (c.getClass() == component)
+                return true;
+        return false;
+    }
 
     public boolean hasTag(GameObjectTag tag) { return this.tags.contains(tag); }
 

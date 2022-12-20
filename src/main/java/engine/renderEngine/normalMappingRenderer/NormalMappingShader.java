@@ -98,14 +98,18 @@ public class NormalMappingShader extends ShaderProgram {
 	
 	protected void loadLights(List<Light> lights, Matrix4f viewMatrix){
 		for(int i=0;i<MAX_LIGHTS;i++){
-			if(i<lights.size()){
-				super.loadVector(location_lightPositionEyeSpace[i], getEyeSpacePosition(lights.get(i), viewMatrix));
-				super.loadColor(location_lightColour[i], lights.get(i).getColor());
-				super.loadVector(location_attenuation[i], lights.get(i).getAttenuation());
-			}else{
-				super.loadVector(location_lightPositionEyeSpace[i], new Vector3f(0, 0, 0));
-				super.loadVector(location_lightColour[i], new Vector3f(0, 0, 0));
-				super.loadVector(location_attenuation[i], new Vector3f(1, 0, 0));
+			try {
+				if(i<lights.size()){
+					super.loadVector(location_lightPositionEyeSpace[i], getEyeSpacePosition(lights.get(i), viewMatrix));
+					super.loadColor(location_lightColour[i], lights.get(i).getColor());
+					super.loadVector(location_attenuation[i], lights.get(i).getAttenuation());
+				}else{
+					super.loadVector(location_lightPositionEyeSpace[i], new Vector3f(0, 0, 0));
+					super.loadVector(location_lightColour[i], new Vector3f(0, 0, 0));
+					super.loadVector(location_attenuation[i], new Vector3f(1, 0, 0));
+				}
+			} catch (NullPointerException e) {
+//                throw new RuntimeException(e);
 			}
 		}
 	}

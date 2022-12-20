@@ -1,12 +1,8 @@
 package engine.imGui;
 
-import engine.TestFieldsWindow;
 import engine.assets.Asset;
 import engine.entities.GameObject;
 import engine.renderEngine.PickingTexture;
-import engine.renderEngine.Window;
-import imgui.ImVec2;
-import imgui.flag.ImGuiStyleVar;
 import imgui.flag.ImGuiWindowFlags;
 import org.joml.Vector4f;
 import imgui.ImGui;

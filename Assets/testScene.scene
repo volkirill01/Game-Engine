@@ -8,13 +8,13 @@
         "type": "engine.components.Transform",
         "properties": {
           "position": {
-            "x": -100.0,
-            "y": 38.6,
-            "z": -95.6
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
           },
           "rotation": {
-            "x": -9.0,
-            "y": 25.1,
+            "x": 0.0,
+            "y": 0.0,
             "z": 0.0
           },
           "scale": {
@@ -32,7 +32,7 @@
         "properties": {
           "model": {
             "rawModel": {
-              "vaoID": 6,
+              "vaoID": 1,
               "vertexCount": 36,
               "filepath": "engineFiles/defaultMeshes/defaultCube.obj",
               "metaFilepath": "engineFiles/defaultMeshes/defaultCube.obj",
@@ -42,7 +42,7 @@
             },
             "material": {
               "texture": {
-                "textureID": 41,
+                "textureID": 4,
                 "filepath": "engineFiles/images/utils/whitePixel.png",
                 "metaFilepath": "engineFiles/images/utils/whitePixel.png",
                 "metaData": {
@@ -81,6 +81,232 @@
           },
           "textureIndex": 1,
           "uid": 12,
+          "isActive": true
+        }
+      }
+    ],
+    "doSerialization": true,
+    "isDeath": false
+  },
+  {
+    "uid": 1,
+    "name": "Dragon",
+    "tags": [],
+    "components": [
+      {
+        "type": "engine.components.Transform",
+        "properties": {
+          "position": {
+            "x": 0.0,
+            "y": 0.5,
+            "z": 0.0
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          },
+          "childs": [],
+          "uid": 22,
+          "isActive": true
+        }
+      },
+      {
+        "type": "engine.renderEngine.components.MeshRenderer",
+        "properties": {
+          "model": {
+            "rawModel": {
+              "vaoID": 2,
+              "vertexCount": 300000,
+              "filepath": "Assets\\dragon.obj",
+              "metaFilepath": "Assets\\dragon.obj",
+              "metaData": {
+                "modelSize": "0.1"
+              }
+            },
+            "material": {
+              "texture": {
+                "textureID": 4,
+                "filepath": "engineFiles/images/utils/whitePixel.png",
+                "metaFilepath": "engineFiles/images/utils/whitePixel.png",
+                "metaData": {
+                  "filterMode": "Bilinear",
+                  "numberOfColumns": "1",
+                  "repeatHorizontally": "true",
+                  "sliceMode": "Single",
+                  "useMipmaps": "false",
+                  "numberOfRows": "1",
+                  "repeatVertically": "true",
+                  "useAnisotropicFiltering": "true"
+                },
+                "width": 1,
+                "height": 1
+              },
+              "metallicIntensity": 0.0,
+              "specularIntensity": 0.0,
+              "shineDumper": 10.0,
+              "reflectivity": 0.0,
+              "emissionIntensity": 0.0,
+              "useAlbedoEmission": false,
+              "tiling": {
+                "x": 1.0,
+                "y": 1.0
+              },
+              "color": {
+                "r": 255.0,
+                "g": 255.0,
+                "b": 255.0,
+                "a": 255.0
+              },
+              "alphaClip": 0.0,
+              "renderCullSide": "Front",
+              "useFakeLighting": false
+            }
+          },
+          "textureIndex": 1,
+          "uid": 23,
+          "isActive": true
+        }
+      }
+    ],
+    "doSerialization": true,
+    "isDeath": false
+  },
+  {
+    "uid": 2,
+    "name": "Sun",
+    "tags": [],
+    "components": [
+      {
+        "type": "engine.components.Transform",
+        "properties": {
+          "position": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "rotation": {
+            "x": 9.3,
+            "y": 13.8,
+            "z": -11.4
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          },
+          "childs": [],
+          "uid": 25,
+          "isActive": true
+        }
+      },
+      {
+        "type": "engine.entities.Light",
+        "properties": {
+          "lightType": "Directional",
+          "color": {
+            "r": 142.02531,
+            "g": 255.0,
+            "b": 250.25821,
+            "a": 255.0
+          },
+          "intensity": 1.0,
+          "range": 1.0,
+          "uid": 33,
+          "isActive": true
+        }
+      }
+    ],
+    "doSerialization": true,
+    "isDeath": false
+  },
+  {
+    "uid": 3,
+    "name": "Sphere",
+    "tags": [],
+    "components": [
+      {
+        "type": "engine.components.Transform",
+        "properties": {
+          "position": {
+            "x": 1.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "scale": {
+            "x": 0.775,
+            "y": 2.0,
+            "z": 1.0
+          },
+          "childs": [],
+          "uid": 28,
+          "isActive": true
+        }
+      },
+      {
+        "type": "engine.renderEngine.components.MeshRenderer",
+        "properties": {
+          "model": {
+            "rawModel": {
+              "vaoID": 3,
+              "vertexCount": 2880,
+              "filepath": "engineFiles/defaultMeshes/defaultSphere.obj",
+              "metaFilepath": "engineFiles/defaultMeshes/defaultSphere.obj",
+              "metaData": {
+                "modelSize": "0.5"
+              }
+            },
+            "material": {
+              "texture": {
+                "textureID": 5,
+                "filepath": "Assets\\metalTexture.png",
+                "metaFilepath": "Assets\\metalTexture.png",
+                "metaData": {
+                  "filterMode": "Bilinear",
+                  "numberOfColumns": "1",
+                  "repeatHorizontally": "true",
+                  "sliceMode": "Single",
+                  "useMipmaps": "false",
+                  "numberOfRows": "1",
+                  "repeatVertically": "true",
+                  "useAnisotropicFiltering": "true"
+                },
+                "width": 256,
+                "height": 256
+              },
+              "metallicIntensity": 0.0,
+              "specularIntensity": 0.0,
+              "shineDumper": 10.0,
+              "reflectivity": 0.0,
+              "emissionIntensity": 0.0,
+              "useAlbedoEmission": false,
+              "tiling": {
+                "x": 1.0,
+                "y": 1.0
+              },
+              "color": {
+                "r": 255.0,
+                "g": 255.0,
+                "b": 255.0,
+                "a": 255.0
+              },
+              "alphaClip": 0.0,
+              "renderCullSide": "Front",
+              "useFakeLighting": false
+            }
+          },
+          "textureIndex": 1,
+          "uid": 29,
           "isActive": true
         }
       }

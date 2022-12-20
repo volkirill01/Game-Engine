@@ -1,6 +1,5 @@
 package engine.imGui.editorToolsWindows;
 
-import engine.TestFieldsWindow;
 import engine.entities.GameObject;
 import engine.renderEngine.Loader;
 import engine.renderEngine.Window;
@@ -15,7 +14,7 @@ public class FastMeshPlace {
 
     public void imgui() {
         Vector2f windowPos = Window.get().getImGuiLayer().getGameViewWindow().getTopRightCorner();
-        Vector2f windowSize = new Vector2f(194.0f + TestFieldsWindow.getFloats[1], 97.0f + TestFieldsWindow.getFloats[0]);
+        Vector2f windowSize = new Vector2f(194.0f, 97.0f);
 
         ImGui.setNextWindowPos(windowPos.x - windowSize.x - 8.5f, windowPos.y - 6.5f);
         ImGui.setNextWindowSize(windowSize.x, windowSize.y);

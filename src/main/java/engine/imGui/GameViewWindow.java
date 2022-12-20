@@ -145,10 +145,10 @@ public class GameViewWindow extends EditorImGuiWindow {
     }
 
     private boolean toolsWindowsImgui() {
-        this.fastMeshPlaceWindow.imgui();
-
-        if (ImGui.isWindowHovered())
-            return false;
+//        this.fastMeshPlaceWindow.imgui(); // TODO FIX SHOW THIS WINDOW BUG
+//
+//        if (ImGui.isWindowHovered())
+//            return false;
 
         return true;
     }

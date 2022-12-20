@@ -69,7 +69,7 @@ public class MasterRenderer {
         shadowMapRenderer = new ShadowMapMasterRenderer(camera);
     }
 
-    private void render(List<Light> lights, Camera camera) {
+    private void render(Camera camera) {
         prepare();
 
         Color fogColor = PostProcessing.getFogColor().toPercentColor();
@@ -181,30 +181,34 @@ public class MasterRenderer {
             processTerrain(terrain);
 
         for (GameObject gameObject : entities) {
-            if (gameObject.getComponent(Light.class) != null && gameObject.getComponent(Light.class).isActive())
+
+            if (gameObject.hasComponent(Light.class))
                 lights.add(gameObject.getComponent(Light.class));
 
-            if (gameObject.getComponent(ObjectRenderer.class) == null)
-                continue;
-            processEntity(gameObject);
+            if (gameObject.getComponent(ObjectRenderer.class) != null)
+                processEntity(gameObject);
         }
 
         for (GameObject normalMapGameObject : normalMapEntities)
             processNormalMapEntity(normalMapGameObject);
 
-        render(lights, camera);
+        render(camera);
     }
 
-    public void renderShadowMap(List<GameObject> gameObjectList, Light sun) {
-        for (GameObject gameObject : gameObjectList) {
-            if (gameObject.getComponent(ObjectRenderer.class) == null)
-                continue;
-            processEntity(gameObject);
-        }
-
-        shadowMapRenderer.render(entities, sun);
-        entities.clear();
-    }
+//    public void renderShadowMap(List<GameObject> gameObjectList) {
+//        for (GameObject gameObject : gameObjectList) {
+//            if (sun == null)
+//                if (gameObject.hasComponent(Light.class))
+//                    sun = gameObject.getComponent(Light.class);
+//
+//            if (gameObject.getComponent(ObjectRenderer.class) == null)
+//                continue;
+//            processEntity(gameObject);
+//        }
+//
+//        shadowMapRenderer.render(entities, sun);
+//        entities.clear();
+//    }
 
     public int getShadowMapTexture() { return shadowMapRenderer.getShadowMap(); }
 

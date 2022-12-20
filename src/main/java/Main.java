@@ -1,32 +1,20 @@
-import engine.TestFieldsWindow;
 import engine.entities.Camera;
 import engine.entities.GameObject;
 import engine.entities.Light;
-import engine.entities.Player;
 import engine.renderEngine.Window;
 import engine.renderEngine.Loader;
-import engine.renderEngine.OBJLoader;
-import engine.renderEngine.components.MeshRenderer;
 import engine.renderEngine.font.fontMeshCreator.FontType;
 import engine.renderEngine.font.fontRendering.TextMaster;
 import engine.renderEngine.guis.GuiRenderer;
 import engine.renderEngine.guis.GuiTexture;
-import engine.renderEngine.models.RawModel;
-import engine.renderEngine.models.TexturedModel;
 import engine.renderEngine.particles.*;
 import engine.renderEngine.postProcessing.Fbo;
 import engine.renderEngine.postProcessing.PostProcessing;
 import engine.renderEngine.renderer.MasterRenderer;
-import engine.renderEngine.renderer.RenderCullSide;
-import engine.renderEngine.textures.Material;
-import engine.renderEngine.textures.TerrainTexture;
-import engine.renderEngine.textures.TerrainTexturePack;
 import engine.terrain.Terrain;
 import engine.toolbox.KeyListener;
 import engine.toolbox.MouseListener;
-import engine.toolbox.MousePicker;
 import engine.toolbox.customVariables.Color;
-import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 import java.io.File;
@@ -43,14 +31,14 @@ public class Main {
         Window.createDisplay();
         TextMaster.init();
 
-        RawModel playerModel = OBJLoader.loadOBJ("Assets/Super_Mario/Super_Mario.obj");
-        TexturedModel playerStaticModel = new TexturedModel(playerModel,
-                new Material(Loader.get().loadTexture("Assets/Super_Mario/tex/mariobodyfix_alb.png")));
+//        RawModel playerModel = OBJLoader.loadOBJ("Assets/Super_Mario/Super_Mario.obj");
+//        TexturedModel playerStaticModel = new TexturedModel(playerModel,
+//                new Material(Loader.get().loadTexture("Assets/Super_Mario/tex/mariobodyfix_alb.png")));
+//
+//        Player player = new Player(playerStaticModel,
+//                new Vector3f(-100, 20, -50), new Vector3f(0), new Vector3f(0.6f));
 
-        Player player = new Player(playerStaticModel,
-                new Vector3f(-100, 20, -50), new Vector3f(0), new Vector3f(0.6f));
-
-        Camera camera = new Camera(player);
+        Camera camera = new Camera(); // player
         Window.get().getScene().setCamera(camera);
 
         MasterRenderer renderer = new MasterRenderer(camera);
@@ -317,10 +305,10 @@ public class Main {
 //        // GUIS
 //
 //        // Light
-        GameObject sun = Window.get().getScene().createGameObject("Sun");
-        sun.transform.set(new Vector3f(0.0f, 0.0f, 0.0f), new Vector3f(-18.0f, 10.0f, 20.0f), new Vector3f(1.0f));
-        Light sunLightComponent = new Light(Color.White, 1.5f);
-        sun.addComponent(sunLightComponent);
+//        GameObject sun = Window.get().getScene().createGameObject("Sun");
+//        sun.transform.set(new Vector3f(0.0f, 0.0f, 0.0f), new Vector3f(-18.0f, 10.0f, 20.0f), new Vector3f(1.0f));
+//        Light sunLightComponent = new Light(Color.White, 1.5f);
+//        sun.addComponent(sunLightComponent);
 //        Window.get().getScene().addGameObjectToScene(sun);
 //
 //        GameObject blob = new GameObject("Blob");
@@ -390,7 +378,7 @@ public class Main {
 
             ParticleMaster.update(camera);
 
-            renderer.renderShadowMap(Window.get().getScene().getGameObjects(), sunLightComponent);
+//            renderer.renderShadowMap(Window.get().getScene().getGameObjects());
 
             if (Window.get().runtimePlaying)
                 Window.get().getScene().update();
@@ -452,5 +440,7 @@ public class Main {
         renderer.cleanUp();
         Loader.get().cleanUp();
         Window.closeDisplay();
+
+        System.exit(0);
     }
 }

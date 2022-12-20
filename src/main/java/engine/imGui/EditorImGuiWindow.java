@@ -1,15 +1,8 @@
 package engine.imGui;
 
-import engine.TestFieldsWindow;
 import engine.renderEngine.Window;
-import engine.toolbox.customVariables.Color;
-import imgui.ImGui;
-import imgui.ImVec2;
-import imgui.flag.ImGuiMouseButton;
-import org.apache.commons.lang3.SerializationUtils;
 
 import java.io.Serializable;
-import java.util.Random;
 
 public class EditorImGuiWindow implements Serializable {
 

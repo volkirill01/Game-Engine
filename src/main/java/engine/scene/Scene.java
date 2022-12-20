@@ -88,7 +88,7 @@ public class Scene {
 
     public <T extends Component> GameObject getGameObjectWith(Class<T> calzz) {
         for (GameObject go: gameObjects)
-            if (go.getComponent(calzz) != null)
+            if (go.hasComponent(calzz))
                 return go;
 
         return null;

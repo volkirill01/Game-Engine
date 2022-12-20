@@ -25,7 +25,8 @@ public class PostProcessing {
 	private static RawModel quad;
 
 	private static Color ambientLightColor = new Color(255, 255, 255);
-	private static float ambientLightIntensity = 0.2f;
+	private static float ambientLightIntensity = 0.05f;
+
 	private static boolean useFog = false;
 	private static float fogDensity = 0.001f;
 	private static Color fogColor = new Color(128, 128, 128);
@@ -50,14 +51,6 @@ public class PostProcessing {
 		quad = Loader.get().loadToVAO(POSITIONS, 2);
 		startPostProcess = new PostProcessLayer(new StartPostProcessShader((int) Window.getWidth(), (int) Window.getHeight()));
 		startPostProcess.loadVariables();
-
-//		allPostProcessLayers.add(new PostProcessLayer(new PowerShader((int) Window.getWidth(), (int) Window.getHeight())));
-//		allPostProcessLayers.add(new GaussianBlurLayer((int) Window.getWidth(), (int) Window.getHeight()));
-//		allPostProcessLayers.add(new PostProcessLayer(new TonemappingShader((int) Window.getWidth(), (int) Window.getHeight())));
-//		allPostProcessLayers.add(new PostProcessLayer(new WhiteBalanceShader((int) Window.getWidth(), (int) Window.getHeight())));
-//		allPostProcessLayers.add(new PostProcessLayer(new VignetteShader((int) Window.getWidth(), (int) Window.getHeight())));
-//		allPostProcessLayers.add(new PostProcessLayer(new BrightnessContrastSaturationShader((int) Window.getWidth(), (int) Window.getHeight())));
-//		allPostProcessLayers.add(new BloomLayer((int) Window.getWidth(), (int) Window.getHeight()));
 	}
 	
 	public static void doPostProcessing(int colourTexture) {
