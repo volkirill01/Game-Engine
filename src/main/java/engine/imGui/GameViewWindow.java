@@ -1,11 +1,18 @@
 package engine.imGui;
 
+import engine.assets.Asset;
 import engine.entities.GameObject;
 import engine.eventSystem.EventSystem;
 import engine.eventSystem.Events.Event;
 import engine.eventSystem.Events.EventType;
 import engine.imGui.editorToolsWindows.FastMeshPlace;
+import engine.renderEngine.Loader;
+import engine.renderEngine.OBJLoader;
 import engine.renderEngine.Window;
+import engine.renderEngine.components.MeshRenderer;
+import engine.renderEngine.models.RawModel;
+import engine.renderEngine.models.TexturedModel;
+import engine.renderEngine.textures.Material;
 import engine.scene.SceneManager;
 import engine.toolbox.MouseListener;
 import imgui.ImGui;
@@ -100,21 +107,32 @@ public class GameViewWindow extends EditorImGuiWindow {
         int textureId = Window.getScreenImage();
 
         ImGui.image(textureId, windowSize.x, windowSize.y, 0, 1, 1, 0);
-//        if (ImGui.beginDragDropTarget() && ImGui.getDragDropPayload("ASSETS_WINDOW_PAYLOAD") != null) {
-//            String[] payload = ImGui.getDragDropPayload("ASSETS_WINDOW_PAYLOAD");
-//
-//            Sprite sprite = new Sprite();
-//            sprite.setTexture(AssetPool.getTexture(payload[1]));
-//
-//            GameObject object = Prefabs.generateSpriteObject(payload[0], sprite, 0.25f, 0.25f);
-//            // Attach this to the mouse cursor
-//            Window.getLevelEditorStuff().getComponent(MouseControls.class).pickupObject(object);
-//
-//            if (ImGui.acceptDragDropPayload("ASSETS_WINDOW_PAYLOAD") != null)
-//                MouseControls.placeS();
-//
-//            ImGui.endDragDropTarget();
-//        }
+
+        if (ImGui.beginDragDropTarget() && ImGui.getDragDropPayload("ASSETS_WINDOW_PAYLOAD") != null) {
+            String[] payload = ImGui.getDragDropPayload("ASSETS_WINDOW_PAYLOAD");
+
+            if (ImGui.acceptDragDropPayload("ASSETS_WINDOW_PAYLOAD") != null) {
+                switch (Enum.valueOf(Asset.AssetType.class, payload[0])) {
+                    case Model -> {
+
+                        RawModel model = OBJLoader.loadOBJ(payload[1]);
+                        Material material = new Material(Loader.get().loadTexture("engineFiles/images/utils/whitePixel.png"));
+
+                        String goName = payload[1].replace("\\", "/").split("/")[payload[1].replace("\\", "/").split("/").length - 1];
+                        GameObject go = Window.get().getScene().createGameObject(goName);
+                        go.addComponent(new MeshRenderer(new TexturedModel(model, material)));
+                        Window.get().getScene().addGameObjectToScene(go);
+                        Window.get().getImGuiLayer().getInspectorWindow().setActiveAsset(null);
+                        Window.get().getImGuiLayer().getInspectorWindow().setActiveGameObject(go);
+                    }
+//                    case Image -> {
+//                        field = Loader.get().loadTexture(payload[1]);
+//                    }
+                }
+                System.out.println("GameViewWindow-" + payload[1]);
+            }
+            ImGui.endDragDropTarget();
+        }
 
         topRightCornerPosition = new Vector2f(ImGui.getCursorStartPosX() + ImGui.getWindowPosX() + ImGui.getWindowSizeX(), ImGui.getCursorStartPosY() + ImGui.getWindowPosY());
 
@@ -145,15 +163,15 @@ public class GameViewWindow extends EditorImGuiWindow {
     }
 
     private boolean toolsWindowsImgui() {
-        if (!ImGui.isWindowHovered())
-            return false;
-
-//        this.fastMeshPlaceWindow.imgui(); // TODO FIX SHOW THIS WINDOW BUG
-//
-//        if (ImGui.isWindowHovered())
+//        if (!ImGui.isWindowHovered())
 //            return false;
 
-        return true;
+        this.fastMeshPlaceWindow.imgui(); // TODO FIX SHOW THIS WINDOW BUG
+
+        if (ImGui.isWindowHovered())
+            return true;
+
+        return false;
     }
 
     private ImVec2 getLargestSizeForViewport() {

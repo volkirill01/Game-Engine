@@ -79,8 +79,7 @@ public class Camera {
 //            actualMoveSpeed = moveSpeed;
 
         if (KeyListener.isKeyPressed(GLFW_KEY_LEFT_CONTROL) ||
-            KeyListener.isKeyPressed(GLFW_KEY_RIGHT_CONTROL) ||
-            KeyListener.isKeyPressed(GLFW_KEY_LEFT_SHIFT))
+            KeyListener.isKeyPressed(GLFW_KEY_RIGHT_CONTROL))
             return;
 
         if (KeyListener.isKeyPressed(GLFW_KEY_W))

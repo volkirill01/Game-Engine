@@ -2,12 +2,19 @@ package engine.renderEngine.textures;
 
 import engine.assets.Asset;
 import engine.imGui.EditorImGui;
+import engine.renderEngine.Loader;
 import engine.renderEngine.renderer.RenderCullSide;
 import engine.toolbox.customVariables.Color;
 import imgui.ImGui;
 import org.joml.Vector2f;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Material {
+
+    private String filepath;
+    private Map<String, Object> data = new HashMap<>();
 
     private Texture texture;
 
@@ -32,10 +39,17 @@ public class Material {
 
     private boolean useFakeLighting = false;
 
+    public String getFilepath() { return this.filepath; }
+
+    public Map<String, Object> getData() { return this.data; }
+
     public Material(Texture texture) { this.texture = texture; }
+
+    public Material(Map<String, Object> data) { this.data = data; }
 
     public void update() {
         this.texture.update();
+        Loader.get().saveMaterial(this); // TODO SAVE IN INSPECTOR
     }
 
     public void setMetallicMap(Texture metallicMap) {

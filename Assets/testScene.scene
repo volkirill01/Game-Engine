@@ -1,94 +1,5 @@
 [
   {
-    "uid": 0,
-    "name": "Cube",
-    "tags": [],
-    "components": [
-      {
-        "type": "engine.components.Transform",
-        "properties": {
-          "position": {
-            "x": 0.0,
-            "y": 0.0,
-            "z": 0.0
-          },
-          "rotation": {
-            "x": 0.0,
-            "y": 0.0,
-            "z": 0.0
-          },
-          "scale": {
-            "x": 1.0,
-            "y": 1.0,
-            "z": 1.0
-          },
-          "childs": [],
-          "uid": 11,
-          "isActive": true
-        }
-      },
-      {
-        "type": "engine.renderEngine.components.MeshRenderer",
-        "properties": {
-          "model": {
-            "rawModel": {
-              "vaoID": 1,
-              "vertexCount": 36,
-              "filepath": "engineFiles/defaultMeshes/defaultCube.obj",
-              "metaFilepath": "engineFiles/defaultMeshes/defaultCube.obj",
-              "metaData": {
-                "modelSize": "0.5"
-              }
-            },
-            "material": {
-              "texture": {
-                "textureID": 4,
-                "filepath": "engineFiles/images/utils/whitePixel.png",
-                "metaFilepath": "engineFiles/images/utils/whitePixel.png",
-                "metaData": {
-                  "filterMode": "Bilinear",
-                  "numberOfColumns": "1",
-                  "repeatHorizontally": "true",
-                  "sliceMode": "Single",
-                  "useMipmaps": "false",
-                  "numberOfRows": "1",
-                  "repeatVertically": "true",
-                  "useAnisotropicFiltering": "true"
-                },
-                "width": 1,
-                "height": 1
-              },
-              "metallicIntensity": 0.0,
-              "specularIntensity": 0.0,
-              "shineDumper": 10.0,
-              "reflectivity": 0.0,
-              "emissionIntensity": 0.0,
-              "useAlbedoEmission": false,
-              "tiling": {
-                "x": 1.0,
-                "y": 1.0
-              },
-              "color": {
-                "r": 255.0,
-                "g": 255.0,
-                "b": 255.0,
-                "a": 255.0
-              },
-              "alphaClip": 0.0,
-              "renderCullSide": "Front",
-              "useFakeLighting": false
-            }
-          },
-          "textureIndex": 1,
-          "uid": 12,
-          "isActive": true
-        }
-      }
-    ],
-    "doSerialization": true,
-    "isDeath": false
-  },
-  {
     "uid": 1,
     "name": "Dragon",
     "tags": [],
@@ -103,11 +14,11 @@
           },
           "rotation": {
             "x": 0.0,
-            "y": 0.0,
+            "y": 200.0,
             "z": 0.0
           },
           "scale": {
-            "x": 1.0,
+            "x": -1.0,
             "y": 1.0,
             "z": 1.0
           },
@@ -149,8 +60,8 @@
               },
               "metallicIntensity": 0.0,
               "specularIntensity": 0.0,
-              "shineDumper": 10.0,
-              "reflectivity": 0.0,
+              "shineDumper": 8.34,
+              "reflectivity": 1.36,
               "emissionIntensity": 0.0,
               "useAlbedoEmission": false,
               "tiling": {
@@ -158,13 +69,13 @@
                 "y": 1.0
               },
               "color": {
-                "r": 255.0,
-                "g": 255.0,
-                "b": 255.0,
+                "r": 20.342394,
+                "g": 159.86342,
+                "b": 59.19632,
                 "a": 255.0
               },
               "alphaClip": 0.0,
-              "renderCullSide": "Front",
+              "renderCullSide": "Back",
               "useFakeLighting": false
             }
           },
@@ -234,14 +145,14 @@
         "type": "engine.components.Transform",
         "properties": {
           "position": {
-            "x": 1.0,
+            "x": 1.2,
             "y": 0.0,
             "z": 0.0
           },
           "rotation": {
-            "x": 0.0,
-            "y": 0.0,
-            "z": 0.0
+            "x": 70.1,
+            "y": 2.2,
+            "z": -14.4
           },
           "scale": {
             "x": 0.775,
@@ -307,6 +218,362 @@
           },
           "textureIndex": 1,
           "uid": 29,
+          "isActive": true
+        }
+      }
+    ],
+    "doSerialization": true,
+    "isDeath": false
+  },
+  {
+    "uid": 4,
+    "name": "Bunny",
+    "tags": [],
+    "components": [
+      {
+        "type": "engine.components.Transform",
+        "properties": {
+          "position": {
+            "x": -1.1,
+            "y": -0.5,
+            "z": 0.0
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 200.0,
+            "z": 0.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          },
+          "childs": [],
+          "uid": 37,
+          "isActive": true
+        }
+      },
+      {
+        "type": "engine.renderEngine.components.MeshRenderer",
+        "properties": {
+          "model": {
+            "rawModel": {
+              "vaoID": 4,
+              "vertexCount": 208998,
+              "filepath": "Assets\\res\\bunny.obj",
+              "metaFilepath": "Assets\\res\\bunny.obj",
+              "metaData": {
+                "modelSize": "0.1"
+              }
+            },
+            "material": {
+              "texture": {
+                "textureID": 4,
+                "filepath": "engineFiles/images/utils/whitePixel.png",
+                "metaFilepath": "engineFiles/images/utils/whitePixel.png",
+                "metaData": {
+                  "filterMode": "Bilinear",
+                  "numberOfColumns": "1",
+                  "repeatHorizontally": "true",
+                  "sliceMode": "Single",
+                  "useMipmaps": "false",
+                  "numberOfRows": "1",
+                  "repeatVertically": "true",
+                  "useAnisotropicFiltering": "true"
+                },
+                "width": 1,
+                "height": 1
+              },
+              "metallicIntensity": 0.0,
+              "specularIntensity": 0.0,
+              "shineDumper": 10.0,
+              "reflectivity": 0.0,
+              "emissionIntensity": 0.0,
+              "useAlbedoEmission": false,
+              "tiling": {
+                "x": 1.0,
+                "y": 1.0
+              },
+              "color": {
+                "r": 78.54276,
+                "g": 67.03635,
+                "b": 215.92606,
+                "a": 255.0
+              },
+              "alphaClip": 0.0,
+              "renderCullSide": "Front",
+              "useFakeLighting": false
+            }
+          },
+          "textureIndex": 1,
+          "uid": 38,
+          "isActive": true
+        }
+      }
+    ],
+    "doSerialization": true,
+    "isDeath": false
+  },
+  {
+    "uid": 6,
+    "name": "Grass",
+    "tags": [],
+    "components": [
+      {
+        "type": "engine.components.Transform",
+        "properties": {
+          "position": {
+            "x": -0.9,
+            "y": -0.49,
+            "z": -0.4
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          },
+          "childs": [],
+          "uid": 49,
+          "isActive": true
+        }
+      },
+      {
+        "type": "engine.renderEngine.components.MeshRenderer",
+        "properties": {
+          "model": {
+            "rawModel": {
+              "vaoID": 6,
+              "vertexCount": 1992,
+              "filepath": "Assets\\grass\\grass.obj",
+              "metaFilepath": "Assets\\grass\\grass.obj",
+              "metaData": {
+                "modelSize": "0.001"
+              }
+            },
+            "material": {
+              "texture": {
+                "textureID": 41,
+                "filepath": "Assets\\grass\\grass.png",
+                "metaFilepath": "Assets\\grass\\grass.png",
+                "metaData": {
+                  "filterMode": "Bilinear",
+                  "numberOfColumns": "1",
+                  "repeatHorizontally": "true",
+                  "sliceMode": "Single",
+                  "useMipmaps": "false",
+                  "numberOfRows": "1",
+                  "repeatVertically": "true",
+                  "useAnisotropicFiltering": "true"
+                },
+                "width": 3000,
+                "height": 3000
+              },
+              "metallicIntensity": 0.0,
+              "specularIntensity": 0.0,
+              "shineDumper": 10.0,
+              "reflectivity": 0.0,
+              "emissionIntensity": 0.0,
+              "useAlbedoEmission": false,
+              "tiling": {
+                "x": 1.0,
+                "y": 1.0
+              },
+              "color": {
+                "r": 255.0,
+                "g": 255.0,
+                "b": 255.0,
+                "a": 255.0
+              },
+              "alphaClip": 0.08,
+              "renderCullSide": "Both",
+              "useFakeLighting": true
+            }
+          },
+          "textureIndex": 1,
+          "uid": 50,
+          "isActive": true
+        }
+      }
+    ],
+    "doSerialization": true,
+    "isDeath": false
+  },
+  {
+    "uid": 8,
+    "name": "Pedestal",
+    "tags": [],
+    "components": [
+      {
+        "type": "engine.components.Transform",
+        "properties": {
+          "position": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          },
+          "childs": [],
+          "uid": 52,
+          "isActive": true
+        }
+      },
+      {
+        "type": "engine.renderEngine.components.MeshRenderer",
+        "properties": {
+          "model": {
+            "rawModel": {
+              "vaoID": 11,
+              "vertexCount": 36,
+              "filepath": "engineFiles/defaultMeshes/defaultCube.obj",
+              "metaFilepath": "engineFiles/defaultMeshes/defaultCube.obj",
+              "metaData": {
+                "modelSize": "0.5"
+              }
+            },
+            "material": {
+              "texture": {
+                "textureID": 4,
+                "filepath": "engineFiles/images/utils/whitePixel.png",
+                "metaFilepath": "engineFiles/images/utils/whitePixel.png",
+                "metaData": {
+                  "filterMode": "Bilinear",
+                  "numberOfColumns": "1",
+                  "repeatHorizontally": "true",
+                  "sliceMode": "Single",
+                  "useMipmaps": "false",
+                  "numberOfRows": "1",
+                  "repeatVertically": "true",
+                  "useAnisotropicFiltering": "true"
+                },
+                "width": 1,
+                "height": 1
+              },
+              "metallicIntensity": 0.0,
+              "specularIntensity": 0.0,
+              "shineDumper": 10.0,
+              "reflectivity": 0.0,
+              "emissionIntensity": 0.0,
+              "useAlbedoEmission": false,
+              "tiling": {
+                "x": 1.0,
+                "y": 1.0
+              },
+              "color": {
+                "r": 75.7695,
+                "g": 70.339355,
+                "b": 64.916435,
+                "a": 255.0
+              },
+              "alphaClip": 0.0,
+              "renderCullSide": "Front",
+              "useFakeLighting": false
+            }
+          },
+          "textureIndex": 1,
+          "uid": 53,
+          "isActive": true
+        }
+      }
+    ],
+    "doSerialization": true,
+    "isDeath": false
+  },
+  {
+    "uid": 9,
+    "name": "TestFloor",
+    "tags": [],
+    "components": [
+      {
+        "type": "engine.components.Transform",
+        "properties": {
+          "position": {
+            "x": 0.0,
+            "y": -0.5,
+            "z": 0.0
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "scale": {
+            "x": 6.0,
+            "y": 0.03,
+            "z": 6.0
+          },
+          "childs": [],
+          "uid": 54,
+          "isActive": true
+        }
+      },
+      {
+        "type": "engine.renderEngine.components.MeshRenderer",
+        "properties": {
+          "model": {
+            "rawModel": {
+              "vaoID": 12,
+              "vertexCount": 36,
+              "filepath": "engineFiles/defaultMeshes/defaultCube.obj",
+              "metaFilepath": "engineFiles/defaultMeshes/defaultCube.obj",
+              "metaData": {
+                "modelSize": "0.5"
+              }
+            },
+            "material": {
+              "texture": {
+                "textureID": 4,
+                "filepath": "engineFiles/images/utils/whitePixel.png",
+                "metaFilepath": "engineFiles/images/utils/whitePixel.png",
+                "metaData": {
+                  "filterMode": "Bilinear",
+                  "numberOfColumns": "1",
+                  "repeatHorizontally": "true",
+                  "sliceMode": "Single",
+                  "useMipmaps": "false",
+                  "numberOfRows": "1",
+                  "repeatVertically": "true",
+                  "useAnisotropicFiltering": "true"
+                },
+                "width": 1,
+                "height": 1
+              },
+              "metallicIntensity": 0.0,
+              "specularIntensity": 0.0,
+              "shineDumper": 10.0,
+              "reflectivity": 0.0,
+              "emissionIntensity": 0.0,
+              "useAlbedoEmission": false,
+              "tiling": {
+                "x": 1.0,
+                "y": 1.0
+              },
+              "color": {
+                "r": 86.79685,
+                "g": 102.10194,
+                "b": 89.22363,
+                "a": 255.0
+              },
+              "alphaClip": 0.0,
+              "renderCullSide": "Front",
+              "useFakeLighting": false
+            }
+          },
+          "textureIndex": 1,
+          "uid": 55,
           "isActive": true
         }
       }

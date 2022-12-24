@@ -7,15 +7,15 @@ import engine.renderEngine.textures.Material;
 
 public class DefaultMeshes {
 
-    private static Material defaultMaterial = new Material(Loader.get().loadTexture("engineFiles/images/utils/whitePixel.png"));
+//    private static Material defaultMaterial = new Material(Loader.get().loadTexture("engineFiles/images/utils/whitePixel.png"));
 
-    public static Material getDefaultMaterial() { return defaultMaterial; }
+    public static Material getDefaultMaterial() { return new Material(Loader.get().loadTexture("engineFiles/images/utils/whitePixel.png")); }
 
     public static TexturedModel DefaultCube() {
-        return new TexturedModel(OBJLoader.loadOBJ("engineFiles/defaultMeshes/defaultCube.obj"), defaultMaterial);
+        return new TexturedModel(OBJLoader.loadOBJ("engineFiles/defaultMeshes/defaultCube.obj"), new Material(Loader.get().loadTexture("engineFiles/images/utils/whitePixel.png")));
     }
 
     public static TexturedModel DefaultSphere() {
-        return new TexturedModel(OBJLoader.loadOBJ("engineFiles/defaultMeshes/defaultSphere.obj"), defaultMaterial);
+        return new TexturedModel(OBJLoader.loadOBJ("engineFiles/defaultMeshes/defaultSphere.obj"), new Material(Loader.get().loadTexture("engineFiles/images/utils/whitePixel.png")));
     }
 }

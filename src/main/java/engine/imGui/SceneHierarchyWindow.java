@@ -80,8 +80,12 @@ public class SceneHierarchyWindow extends EditorImGuiWindow {
             ImGui.popStyleColor();
             ImGui.separator();
 
-            if (ImGui.menuItem("Create Empty"))
-                Window.get().getScene().addGameObjectToScene(Window.get().getScene().createGameObject("Empty"));
+            if (ImGui.menuItem("Create Empty")) {
+                GameObject empty = Window.get().getScene().createGameObject("Empty");
+                Window.get().getScene().addGameObjectToScene(empty);
+                Window.get().getImGuiLayer().getInspectorWindow().setActiveAsset(null);
+                Window.get().getImGuiLayer().getInspectorWindow().setActiveGameObject(empty);
+            }
 
             ImGui.endPopup();
         }

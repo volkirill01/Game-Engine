@@ -3,6 +3,7 @@ package engine.renderEngine;
 import engine.assets.Asset;
 import engine.assets.assetsTypes.*;
 import engine.renderEngine.models.RawModel;
+import engine.renderEngine.textures.Material;
 import engine.renderEngine.textures.TextureFilterMode;
 import engine.renderEngine.textures.Texture;
 import engine.renderEngine.textures.TextureData;
@@ -34,6 +35,7 @@ public class Loader {
     private List<Integer> vbos = new ArrayList<>();
     private List<Integer> textures = new ArrayList<>();
     private Map<String, Texture> texturesFiles = new HashMap<>();
+    private Map<String, Material> materials = new HashMap<>();
 
     private Map<String, Asset> assets = new HashMap<>();
 
@@ -42,6 +44,32 @@ public class Loader {
             instance = new Loader();
 
         return instance;
+    }
+
+    public Material loadMaterial(String filepath) {
+        if (materials.containsKey(filepath))
+            return materials.get(filepath);
+
+        Map<String, Object> data = loadMeta(filepath, "engineFiles/defaultAssets/defaultMaterial.material");
+
+//        Texture albedo = get().loadTexture(data.get("albedo").toString());
+        Material material = new Material(data);
+
+        materials.put(filepath, material);
+        return material;
+    }
+
+    public void saveMaterial(Material material) {
+        StringBuilder fileMeta = new StringBuilder();
+
+        for (String line : material.getData().keySet())
+            fileMeta.append(line).append(" = ").append(material.getData().get(line)).append("\n");
+
+        try {
+            FileUtils.writeStringToFile(new File(material.getFilepath()), fileMeta.toString(), "UTF-8");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     //<editor-fold desc="Assets Files">

@@ -14,8 +14,6 @@ import engine.renderEngine.renderer.MasterRenderer;
 import engine.terrain.Terrain;
 import engine.toolbox.KeyListener;
 import engine.toolbox.MouseListener;
-import engine.toolbox.customVariables.Color;
-import org.joml.Vector3f;
 
 import java.io.File;
 import java.util.ArrayList;
