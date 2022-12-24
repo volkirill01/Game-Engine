@@ -22,12 +22,12 @@ public class Texture {
         this.height = height;
 
         this.metaFilepath = this.filepath;
-        this.metaData = Loader.get().loadMeta(this.metaFilepath, "engineFiles/defaultAssets/defaultImage.meta");
+        this.metaData = Loader.get().loadMeta(this.metaFilepath, "engineFiles/defaultAssets/defaultImage.meta", true);
     }
 
     public void update() {
         if (!this.filepath.equals("_Generated"))
-            this.metaData = Loader.get().loadMeta(this.metaFilepath, "engineFiles/defaultAssets/defaultImage.meta");
+            this.metaData = Loader.get().loadMeta(this.metaFilepath, "engineFiles/defaultAssets/defaultImage.meta", true);
     }
 
     public int getTextureID() { return this.textureID; }

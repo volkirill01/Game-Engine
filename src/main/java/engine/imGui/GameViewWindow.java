@@ -114,9 +114,8 @@ public class GameViewWindow extends EditorImGuiWindow {
             if (ImGui.acceptDragDropPayload("ASSETS_WINDOW_PAYLOAD") != null) {
                 switch (Enum.valueOf(Asset.AssetType.class, payload[0])) {
                     case Model -> {
-
                         RawModel model = OBJLoader.loadOBJ(payload[1]);
-                        Material material = new Material(Loader.get().loadTexture("engineFiles/images/utils/whitePixel.png"));
+                        Material material = Loader.get().loadMaterial("Assets/bunnyMaterial.material");
 
                         String goName = payload[1].replace("\\", "/").split("/")[payload[1].replace("\\", "/").split("/").length - 1];
                         GameObject go = Window.get().getScene().createGameObject(goName);
@@ -125,9 +124,6 @@ public class GameViewWindow extends EditorImGuiWindow {
                         Window.get().getImGuiLayer().getInspectorWindow().setActiveAsset(null);
                         Window.get().getImGuiLayer().getInspectorWindow().setActiveGameObject(go);
                     }
-//                    case Image -> {
-//                        field = Loader.get().loadTexture(payload[1]);
-//                    }
                 }
                 System.out.println("GameViewWindow-" + payload[1]);
             }

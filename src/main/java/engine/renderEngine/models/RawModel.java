@@ -25,12 +25,12 @@ public class RawModel {
         this.filepath = filepath;
 
         this.metaFilepath = this.filepath;
-        this.metaData = Loader.get().loadMeta(this.metaFilepath, "engineFiles/defaultAssets/defaultModel.meta");
+        this.metaData = Loader.get().loadMeta(this.metaFilepath, "engineFiles/defaultAssets/defaultModel.meta", true);
     }
 
     public void update() {
         if (!this.filepath.equals("_Generated"))
-            this.metaData = Loader.get().loadMeta(this.metaFilepath, "engineFiles/defaultAssets/defaultModel.meta");
+            this.metaData = Loader.get().loadMeta(this.metaFilepath, "engineFiles/defaultAssets/defaultModel.meta", true);
     }
 
     public int getVaoID() { return this.vaoID; }

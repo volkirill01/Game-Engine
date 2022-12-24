@@ -35,6 +35,7 @@ public abstract class Asset {
         Sound,
         Font,
         Shader,
+        Material,
         Other
     }
 

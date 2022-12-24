@@ -9,13 +9,15 @@ public class DefaultMeshes {
 
 //    private static Material defaultMaterial = new Material(Loader.get().loadTexture("engineFiles/images/utils/whitePixel.png"));
 
-    public static Material getDefaultMaterial() { return new Material(Loader.get().loadTexture("engineFiles/images/utils/whitePixel.png")); }
+//    public static Material getDefaultMaterial() { return new Material(Loader.get().loadTexture("engineFiles/images/utils/whitePixel.png")); }
+
+    public static String getDefaultMaterialPath() { return "engineFiles/defaultAssets/defaultMaterial.material"; }
 
     public static TexturedModel DefaultCube() {
-        return new TexturedModel(OBJLoader.loadOBJ("engineFiles/defaultMeshes/defaultCube.obj"), new Material(Loader.get().loadTexture("engineFiles/images/utils/whitePixel.png")));
+        return new TexturedModel(OBJLoader.loadOBJ("engineFiles/defaultMeshes/defaultCube.obj"), Loader.get().loadMaterial(getDefaultMaterialPath()));
     }
 
     public static TexturedModel DefaultSphere() {
-        return new TexturedModel(OBJLoader.loadOBJ("engineFiles/defaultMeshes/defaultSphere.obj"), new Material(Loader.get().loadTexture("engineFiles/images/utils/whitePixel.png")));
+        return new TexturedModel(OBJLoader.loadOBJ("engineFiles/defaultMeshes/defaultSphere.obj"), Loader.get().loadMaterial(getDefaultMaterialPath()));
     }
 }

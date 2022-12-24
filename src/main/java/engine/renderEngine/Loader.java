@@ -50,27 +50,53 @@ public class Loader {
         if (materials.containsKey(filepath))
             return materials.get(filepath);
 
-        Map<String, Object> data = loadMeta(filepath, "engineFiles/defaultAssets/defaultMaterial.material");
+        Map<String, Object> data = loadMeta(filepath, "engineFiles/defaultAssets/defaultMaterial.material", false);
 
 //        Texture albedo = get().loadTexture(data.get("albedo").toString());
-        Material material = new Material(data);
+        Material material = new Material(filepath, data);
 
         materials.put(filepath, material);
         return material;
     }
 
-    public void saveMaterial(Material material) {
+    public void saveMaterial(String filepath, Map<String, Object> data) {
         StringBuilder fileMeta = new StringBuilder();
 
-        for (String line : material.getData().keySet())
-            fileMeta.append(line).append(" = ").append(material.getData().get(line)).append("\n");
+        for (String line : data.keySet())
+            fileMeta.append(line).append(" = ").append(data.get(line)).append("\n");
 
         try {
-            FileUtils.writeStringToFile(new File(material.getFilepath()), fileMeta.toString(), "UTF-8");
+            FileUtils.writeStringToFile(new File(filepath), fileMeta.toString(), "UTF-8");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
+
+    public Asset_Material loadAsset_Material(String filepath) {
+        if (assets.containsKey(filepath))
+            return (Asset_Material) assets.get(filepath);
+
+        String[] tmp = filepath.replace("\\", "/").split("/");
+        String fileName = tmp[tmp.length - 1];
+
+        Asset_Material file = new Asset_Material(filepath, fileName,
+                loadMeta(filepath, "engineFiles/defaultAssets/defaultMaterial.material", false), get().loadTexture("engineFiles/images/icons/icon=file-code-solid-(256x256).png"));
+
+        assets.put(filepath, file);
+        return file;
+    }
+//    public void saveMaterial(Material material) {
+//        StringBuilder fileMeta = new StringBuilder();
+//
+//        for (String line : material.getData().keySet())
+//            fileMeta.append(line).append(" = ").append(material.getData().get(line)).append("\n");
+//
+//        try {
+//            FileUtils.writeStringToFile(new File(material.getFilepath()), fileMeta.toString(), "UTF-8");
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 
     //<editor-fold desc="Assets Files">
     public Asset_Scene loadAsset_Scene(String filepath) {
@@ -81,7 +107,7 @@ public class Loader {
         String fileName = tmp[tmp.length - 1];
 
         Asset_Scene file = new Asset_Scene(filepath, fileName,
-                loadMeta(filepath, "engineFiles/defaultAssets/defaultScene.meta"), false);
+                loadMeta(filepath, "engineFiles/defaultAssets/defaultScene.meta", true), false);
 
         assets.put(filepath, file);
         return file;
@@ -95,7 +121,7 @@ public class Loader {
         String fileName = tmp[tmp.length - 1];
 
         Asset_Image file = new Asset_Image(filepath, fileName,
-                loadMeta(filepath, "engineFiles/defaultAssets/defaultImage.meta"), fileIcon);
+                loadMeta(filepath, "engineFiles/defaultAssets/defaultImage.meta", true), fileIcon);
 
         assets.put(filepath, file);
         return file;
@@ -109,7 +135,7 @@ public class Loader {
         String fileName = tmp[tmp.length - 1];
 
         Asset_Sound file = new Asset_Sound(filepath, fileName,
-                loadMeta(filepath, "engineFiles/defaultAssets/defaultSound.meta"));
+                loadMeta(filepath, "engineFiles/defaultAssets/defaultSound.meta", true));
 
         assets.put(filepath, file);
         return file;
@@ -122,7 +148,7 @@ public class Loader {
         String fileName = tmp[tmp.length - 1];
 
         Asset_Shader file = new Asset_Shader(filepath, fileName,
-                loadMeta(filepath, "engineFiles/defaultAssets/defaultShader.meta"));
+                loadMeta(filepath, "engineFiles/defaultAssets/defaultShader.meta", true));
 
         assets.put(filepath, file);
         return file;
@@ -136,7 +162,7 @@ public class Loader {
         String fileName = tmp[tmp.length - 1];
 
         Asset_Model file = new Asset_Model(filepath, fileName,
-                loadMeta(filepath, "engineFiles/defaultAssets/defaultModel.meta"),
+                loadMeta(filepath, "engineFiles/defaultAssets/defaultModel.meta", true),
                 loadTexture("engineFiles/images/icons/icon=cube-solid-(256x256).png")); // TODO DISPLAY MODEL (NOT STATIC ICON)
 
         assets.put(filepath, file);
@@ -151,7 +177,7 @@ public class Loader {
         String fileName = tmp[tmp.length - 1];
 
         Asset_Other file = new Asset_Other(filepath, fileName,
-                loadMeta(filepath, "engineFiles/defaultAssets/defaultOther.meta"));
+                loadMeta(filepath, "engineFiles/defaultAssets/defaultOther.meta", true));
 
         assets.put(filepath, file);
         return file;
@@ -159,12 +185,12 @@ public class Loader {
     //</editor-fold>
 
     //<editor-fold desc="Meta Files">
-    public Map<String, Object> loadMeta(String filepath, String defaultData_filepath) {
+    public Map<String, Object> loadMeta(String filepath, String defaultData_filepath, boolean addMetaSuffix) {
         Map<String, Object> data = new HashMap<>();
-        List<String> lines = loadFileMeta_Lines(filepath);
+        List<String> lines = loadFileMeta_Lines(filepath, addMetaSuffix);
 
         if (lines == null)
-            return loadMeta(defaultData_filepath, "");
+            return loadMeta(defaultData_filepath, "", addMetaSuffix);
 
         for (String line : lines)
             data.put(line.split(" = ")[0], line.split(" = ")[1]);
@@ -172,8 +198,8 @@ public class Loader {
         return data;
     }
 
-    private List<String> loadFileMeta_Lines(String filepath) {
-        File modelMeta = new File(filepath.endsWith(".meta") ? filepath : filepath + ".meta");
+    private List<String> loadFileMeta_Lines(String filepath, boolean addMetaSuffix) {
+        File modelMeta = new File(addMetaSuffix ? (filepath.endsWith(".meta") ? filepath : filepath + ".meta") : filepath);
         List<String> lines = new ArrayList<>();
 
         try {

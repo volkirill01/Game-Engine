@@ -3,6 +3,7 @@ package engine.renderEngine.components;
 import engine.assets.Asset;
 import engine.imGui.EditorImGui;
 import engine.renderEngine.models.TexturedModel;
+import engine.renderEngine.textures.Material;
 import engine.renderEngine.textures.TextureSliceMode;
 import org.joml.Vector2f;
 
@@ -56,8 +57,10 @@ public class MeshRenderer extends ObjectRenderer {
 
         this.model = (TexturedModel) EditorImGui.field_Asset("Model", this.model, Asset.AssetType.Model);
 
-        if (this.model != null)
+        if (this.model != null) {
+            model.setMaterial((Material) EditorImGui.field_Asset("Material", model.getMaterial(), Asset.AssetType.Material));
             model.getMaterial().imgui();
+        }
     }
 
     @Override

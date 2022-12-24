@@ -70,6 +70,8 @@ public class AssetsWindow extends EditorImGuiWindow {
                     assets.add(Loader.get().loadAsset_Shader(filepath));
                 else if (filepath.endsWith(".obj"))
                     assets.add(Loader.get().loadAsset_Model(filepath));
+                else if (filepath.endsWith(".material"))
+                    assets.add(Loader.get().loadAsset_Material(filepath));
                 else if (filepath.endsWith(".meta"))
                     continue;
                 else // Other
@@ -250,7 +252,7 @@ public class AssetsWindow extends EditorImGuiWindow {
     public void createNewScene() {
         refrashingFiles = false;
         ImGui.setWindowFocus(windowName);
-        assets.add(new Asset_Scene(currentDirectory + currentNewSceneName, currentNewSceneName, Loader.get().loadMeta("engineFiles/defaultAssets/defaultScene.meta", "engineFiles/defaultAssets/defaultScene.meta"), true));
+        assets.add(new Asset_Scene(currentDirectory + currentNewSceneName, currentNewSceneName, Loader.get().loadMeta("engineFiles/defaultAssets/defaultScene.meta", "engineFiles/defaultAssets/defaultScene.meta", true), true));
     }
 
     private void popups(int i, ImVec4 borderColor) {
@@ -579,6 +581,14 @@ public class AssetsWindow extends EditorImGuiWindow {
 
 //                    if (ImGui.imageButton(id, spriteWidth, spriteHeight, 0, 1, 1, 0)) {
 ////                        System.out.println("Shader file clicked '" + assets.get(i).assetPath + "'");
+//                    }
+                    break;
+                case Material:
+                    if (ImGui.imageButton(id, spriteWidth, spriteHeight, 0, 1, 1, 0))
+                        Window.get().getImGuiLayer().getInspectorWindow().setActiveAsset(assets.get(i));
+
+//                    if (ImGui.imageButton(id, spriteWidth, spriteHeight, 0, 1, 1, 0)) {
+////                        System.out.println("Material file clicked '" + assets.get(i).assetPath + "'");
 //                    }
                     break;
                 case Other:

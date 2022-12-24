@@ -7,6 +7,7 @@ import engine.renderEngine.models.RawModel;
 import engine.renderEngine.models.TexturedModel;
 import engine.renderEngine.textures.Material;
 import engine.renderEngine.textures.Texture;
+import engine.toolbox.DefaultMeshes;
 import engine.toolbox.Maths;
 import engine.toolbox.customVariables.Color;
 import imgui.ImGui;
@@ -879,12 +880,15 @@ public class EditorImGui {
                         if (oldModel != null)
                             material = oldModel.getMaterial();
                         else
-                            material = new Material(Loader.get().loadTexture("engineFiles/images/utils/whitePixel.png"));
+                            material = Loader.get().loadMaterial(DefaultMeshes.getDefaultMaterialPath());
 
                         field = new TexturedModel(model, material);
                     }
                     case Image -> {
                         field = Loader.get().loadTexture(payload[1]);
+                    }
+                    case Material -> {
+                        field = Loader.get().loadMaterial(payload[1]);
                     }
                 }
                 System.out.println("Asset Field-" + payload[1]);
@@ -906,6 +910,11 @@ public class EditorImGui {
                     Texture texture = (Texture) field;
                     assetName = texture.getFilepath();
                     assetIcon = Loader.get().loadTexture("engineFiles/images/icons/icon=image-solid(32x32).png").getTextureID();
+                }
+                case Material -> {
+                    Material material = (Material) field;
+                    assetName = material.getFilepath();
+                    assetIcon = Loader.get().loadTexture("engineFiles/images/icons/icon=material-solid-(32x32).png").getTextureID();
                 }
             }
         }
