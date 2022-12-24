@@ -2,6 +2,7 @@ package engine.entities;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import engine.TestFieldsWindow;
 import engine.components.Component;
 import engine.components.ComponentDeserializer;
 import engine.components.Transform;
@@ -299,13 +300,17 @@ public class GameObject {
 
     private void drawTags() {
         ImGui.beginMenuBar();
-        ImGui.text("Tags \uF005");
-        ImGui.setCursorPosY(ImGui.getCursorPosY() + 2f);
+        ImGui.text("Tags");
+        ImGui.sameLine();
+        ImGui.setCursorPosY(ImGui.getCursorPosY() + 1.0f);
+        ImGui.text("\uF005");
+        ImGui.setCursorPosY(ImGui.getCursorPosY() + 1.0f);
         for (int i = 0; i < tags.size(); i++) {
-            if (tags.get(i).tag.startsWith("-E"))
+            if (tags.get(i).tag.startsWith("##"))
                 continue;
 
-            ImGui.pushStyleVar(ImGuiStyleVar.FramePadding, 0, -4.0f);
+            ImGui.pushStyleVar(ImGuiStyleVar.FramePadding, 0, -4.0f + 2.5f);
+            ImGui.pushStyleVar(ImGuiStyleVar.FrameRounding, 6.0f);
 
             ImVec2 tmp = new ImVec2();
             ImGui.calcTextSize(tmp, tags.get(i).tag);
@@ -321,7 +326,7 @@ public class GameObject {
             ImGui.pushStyleColor(ImGuiCol.FrameBg, bgColor.x, bgColor.y, bgColor.z, bgColor.w);
             ImGui.pushStyleColor(ImGuiCol.Text, color.x, color.y, color.z, color.w);
 
-            ImGui.beginChildFrame(1919 + i, tmp.x + 35.0f, 26.0f);
+            ImGui.beginChildFrame(1919 + i, tmp.x + 35.0f, 26.0f, ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse);
 
             ImGui.setCursorPosY(ImGui.getCursorPosY() + 2.8f);
             ImGui.pushStyleColor(ImGuiCol.FrameBg, 0, 0, 0, 0);
@@ -332,29 +337,30 @@ public class GameObject {
             ImGui.popStyleColor();
 
             ImGui.sameLine();
-            ImGui.setCursorPos(ImGui.getCursorPosX() - 5.0f, ImGui.getCursorPosY() + 6.1f);
+            ImGui.setCursorPos(ImGui.getCursorPosX() - 5.0f + 2.1f, ImGui.getCursorPosY() + 6.1f - 1.4f);
             if (tags.get(i).tag.equals(""))
-                ImGui.setCursorPos(ImGui.getCursorPosX() + 10.0f, ImGui.getCursorPosY());
+                ImGui.setCursorPos(ImGui.getCursorPosX() + 10.0f - 5.5f, ImGui.getCursorPosY());
 
-            ImGui.pushStyleVar(ImGuiStyleVar.FramePadding, 7.4f, -2.4f);
-            ImGui.pushStyleVar(ImGuiStyleVar.FrameRounding, 50.0f);
+            ImGui.pushStyleVar(ImGuiStyleVar.FramePadding, 7.4f - 0.3f, -2.4f + 0.6f);
+            ImGui.pushStyleVar(ImGuiStyleVar.FrameRounding, 99.0f);
             if (ImGui.button("##deleteTag" + i)) {
                 tags.remove(tags.get(i));
                 i--;
             }
             ImGui.sameLine();
             ImGui.pushStyleColor(ImGuiCol.Text, bgColor.x, bgColor.y, bgColor.z, bgColor.w);
-            ImGui.setCursorPos(ImGui.getCursorPosX() - 19.4f, ImGui.getCursorPosY() - 5.92f);
+            ImGui.setCursorPos(ImGui.getCursorPosX() - 19.4f + 2.8f, ImGui.getCursorPosY() - 5.92f + 1.0f);
             ImGui.text("\uEEE4");
             ImGui.popStyleVar(2);
 
             ImGui.endChildFrame();
             ImGui.popStyleColor(7);
-            ImGui.popStyleVar();
+            ImGui.popStyleVar(2);
         }
 
         ImGui.pushStyleVar(ImGuiStyleVar.FramePadding, ImGui.getStyle().getFramePaddingX(), ImGui.getStyle().getFramePaddingY() - 2.0f);
 
+        ImGui.setCursorPosY(ImGui.getCursorPosY() + 1.0f);
         if (ImGui.button("\uEFC2"))
             showAddTag = true;
 
@@ -373,8 +379,9 @@ public class GameObject {
     private transient String newTagName = newTagNameRef;
     private void showCreateTagPopup() {
         ImGui.setNextWindowSize(438.0f, 550.0f);
-        ImGui.setNextWindowPos(( Window.getWidth() / 2.0f) - (ImGui.getWindowSizeX() / 2.0f),
-                (Window.getHeight() / 2.0f) - (ImGui.getWindowSizeY() / 4.0f));
+        ImGui.setNextWindowPos(Window.get().windowSize.x / 2.0f - ImGui.getWindowSizeX() / 2.0f + Window.get().windowPosition.x,
+                        Window.get().windowSize.y / 2.0f - ImGui.getWindowSizeY() / 3.0f + Window.get().windowPosition.y);
+
         if (showAddTag && ImGui.beginPopupModal("\t\t\t\t\t\t\t\t\t\t \uF005 Add new Tag", ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove)) {
             ImVec2 tmp = new ImVec2();
             ImGui.calcTextSize(tmp, "Choose tag color");
@@ -390,15 +397,16 @@ public class GameObject {
 
             tmp = new ImVec2();
             ImGui.calcTextSize(tmp, "Enter new tag");
-            ImGui.setCursorPosX((ImGui.getContentRegionAvailX() / 2.0f) - (tmp.x / 2.0f));
+            ImGui.setCursorPos((ImGui.getContentRegionAvailX() / 2.0f) - (tmp.x / 2.0f), ImGui.getCursorPosY() + 5.0f);
             ImGui.text("Enter new tag");
 
             ImGui.setNextItemWidth(ImGui.getContentRegionAvailX());
             ImGui.pushStyleVar(ImGuiStyleVar.FramePadding, 10.0f, ImGui.getStyle().getFramePaddingY());
+            ImGui.setCursorPosY(ImGui.getCursorPosY() + 5.0f);
             newTagName = drawTagInput("newTagInput", newTagName);
             ImGui.popStyleVar();
 
-            ImGui.setCursorPosX(ImGui.getContentRegionAvailX() / 6.0f);
+            ImGui.setCursorPos(ImGui.getContentRegionAvailX() / 6.0f, ImGui.getCursorPosY() + 10.0f);
             ImGui.pushStyleVar(ImGuiStyleVar.FramePadding, ImGui.getContentRegionAvailX() / 6.0f, ImGui.getStyle().getFramePaddingY());
             if (ImGui.button("Close")) {
                 newTagName = newTagNameRef;

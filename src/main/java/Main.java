@@ -346,8 +346,9 @@ public class Main {
             // Poll events
             glfwPollEvents();
 
-            if (KeyListener.isKeyPressed(GLFW_KEY_DELETE))
-                Window.get().getImGuiLayer().getInspectorWindow().getActiveGameObject().destroy();
+            if (Window.get().getImGuiLayer().getInspectorWindow().getActiveGameObject() != null)
+                if (KeyListener.isKeyPressed(GLFW_KEY_DELETE))
+                    Window.get().getImGuiLayer().getInspectorWindow().getActiveGameObject().destroy();
 
             // Put update logic before rendering
 //            player.move(terrains.get(0));
@@ -425,7 +426,7 @@ public class Main {
 
             Window.get().getImGuiLayer().update(Window.getDelta(), Window.get().getScene());
 
-            Window.updateDisplay();
+            Window.get().updateDisplay();
 
             MouseListener.endFrame();
             KeyListener.endFrame();

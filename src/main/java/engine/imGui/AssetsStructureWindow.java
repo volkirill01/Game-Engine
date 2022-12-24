@@ -106,6 +106,7 @@ public class AssetsStructureWindow extends EditorImGuiWindow {
 //                System.out.println(_fileName);
 
                 Window.get().getImGuiLayer().getAssetsWindow().copy(file, new File(_fileName));
+                Window.get().getImGuiLayer().showModalPopup("Paste", ConsoleMessage.MessageType.Simple);
             }
 
             ImGui.endPopup();
@@ -204,6 +205,7 @@ public class AssetsStructureWindow extends EditorImGuiWindow {
             if (ImGui.menuItem("Copy")) {
                 File file = new File(filepath);
                 SystemClipboard.copy(file.getAbsolutePath());
+                Window.get().getImGuiLayer().showModalPopup("Copy", ConsoleMessage.MessageType.Simple);
             }
 
             if (ImGui.menuItem("Paste")) {

@@ -7,6 +7,7 @@ import engine.renderEngine.PickingShader;
 import engine.renderEngine.Window;
 import engine.renderEngine.components.MeshRenderer;
 import engine.renderEngine.components.ObjectRenderer;
+import engine.renderEngine.debug.DebugRenderer;
 import engine.renderEngine.models.TexturedModel;
 import engine.renderEngine.normalMappingRenderer.NormalMappingRenderer;
 import engine.renderEngine.postProcessing.PostProcessing;
@@ -60,6 +61,11 @@ public class MasterRenderer {
 
     private List<Light> lights = new ArrayList<>();
 
+
+    // Debug
+    private DebugRenderer debugRenderer;
+    // Debug
+
     public MasterRenderer(Camera camera) {
         createProjectionMatrix();
         skyboxRenderer = new SkyboxRenderer(projectionMatrix);
@@ -67,6 +73,7 @@ public class MasterRenderer {
         terrainRenderer = new TerrainRenderer(terrainShader, projectionMatrix);
         normalMappingRenderer = new NormalMappingRenderer(projectionMatrix);
         shadowMapRenderer = new ShadowMapMasterRenderer(camera);
+        debugRenderer = new DebugRenderer(projectionMatrix);
     }
 
     private void render(Camera camera) {
@@ -132,6 +139,9 @@ public class MasterRenderer {
         normalMapEntities.clear();
 
         skyboxRenderer.render(camera);
+
+        if (Window.get().drawDebug)
+            debugRenderer.render();
     }
 
     private void processEntity(GameObject gameObject) {

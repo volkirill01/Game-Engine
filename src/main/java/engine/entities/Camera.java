@@ -70,17 +70,18 @@ public class Camera {
 
         checkInput();
         movePos(direction);
-
-        position.x = position.x;
-        position.y = position.y;
-        position.z = position.z;
     }
 
     private void checkInput() {
-        if (KeyListener.isKeyPressed(GLFW_KEY_LEFT_CONTROL))
-            actualMoveSpeed = sprintSpeed;
-        else
-            actualMoveSpeed = moveSpeed;
+//        if (KeyListener.isKeyPressed(GLFW_KEY_LEFT_CONTROL))
+//            actualMoveSpeed = sprintSpeed;
+//        else
+//            actualMoveSpeed = moveSpeed;
+
+        if (KeyListener.isKeyPressed(GLFW_KEY_LEFT_CONTROL) ||
+            KeyListener.isKeyPressed(GLFW_KEY_RIGHT_CONTROL) ||
+            KeyListener.isKeyPressed(GLFW_KEY_LEFT_SHIFT))
+            return;
 
         if (KeyListener.isKeyPressed(GLFW_KEY_W))
             direction.z += actualMoveSpeed * Window.getDelta();

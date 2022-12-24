@@ -221,8 +221,10 @@ public class Console extends EditorImGuiWindow implements Observer{
         else
             messages.add(new ConsoleMessage(type, text, color));
 
-        if (Window.get().getImGuiLayer().getGameViewWindow().isPlaying() && type == ConsoleMessage.MessageType.Error && pauseOnError)
+        if (Window.get().getImGuiLayer().getGameViewWindow().isPlaying() && type == ConsoleMessage.MessageType.Error && pauseOnError) {
+            Window.get().getImGuiLayer().showModalPopup("Pause On Error", ConsoleMessage.MessageType.Error);
             EventSystem.notify(null, new Event(EventType.GameEngineStopPlay));
+        }
     }
 
     public static Map<ConsoleMessage.MessageType, Integer> getMessagesCount() {

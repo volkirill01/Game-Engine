@@ -18,6 +18,7 @@ import imgui.gl3.ImGuiImplGl3;
 import imgui.glfw.ImGuiImplGlfw;
 import imgui.type.ImBoolean;
 import org.apache.commons.lang3.SerializationUtils;
+import org.joml.Vector2f;
 
 import java.io.File;
 import java.util.Map;
@@ -53,6 +54,16 @@ public class ImGuiLayer {
 
     public static ImFont defaultText;
     public static ImFont boldText;
+
+    public static ImFont modalPopupFont;
+    public float modalPopupFontSize = 1.7f;
+    private float showModalPopupTime = 10;
+    private float showModalPopupSpeed = 0.1f;
+
+    private String currentModalPopupText = "Pupop";
+    private ConsoleMessage.MessageType currentModalPopupType = ConsoleMessage.MessageType.Simple;
+    private float currentModalPopupShowTime = 0;
+
 
     public ImGuiLayer(long glfwWindow, PickingTexture pickingTexture) {
         this.glfwWindow = glfwWindow;
@@ -195,6 +206,7 @@ public class ImGuiLayer {
         fontAtlas.addFontFromFileTTF("engineFiles/fonts/icofont_all.ttf", 15.5f * fontSize, fontConfig, icons_ranges);
 
         boldText = fontAtlas.addFontFromFileTTF("engineFiles/fonts/segueui/seguisb.ttf", 20.0f * fontSize, defaultFontConfig);
+        modalPopupFont = fontAtlas.addFontFromFileTTF("engineFiles/fonts/segueui/segoeui.ttf", 20.0f * modalPopupFontSize * fontSize, defaultFontConfig);
 
         fontAtlas.build();
         fontConfig.destroy(); // After all fonts were added we don't need this config more
@@ -330,7 +342,7 @@ public class ImGuiLayer {
             postProcessingWindow.imgui();
             inspectorWindow.imgui();
 
-            ExampleImGuiNodeEditor.show(new ImBoolean(true), graph);
+//            test.imgui(graph); // TODO MAKE GRAPH EDITOR
 
         } else {
             ImGuiViewport viewport = ImGui.getMainViewport();
@@ -342,6 +354,10 @@ public class ImGuiLayer {
         }
 
         // TODO make window full screen on double click on tab bar
+
+        currentModalPopupShowTime -= showModalPopupSpeed;
+        if (currentModalPopupShowTime > 0)
+            drawModalPopup();
 
         endFrame();
     }
@@ -468,6 +484,40 @@ public class ImGuiLayer {
 //        footer();
 
         ImGui.end();
+    }
+
+    public void showModalPopup(String text, ConsoleMessage.MessageType type) {
+        currentModalPopupShowTime = showModalPopupTime;
+        currentModalPopupText = text;
+        currentModalPopupType = type;
+    }
+
+    private void drawModalPopup() {
+        ImVec2 tmp = new ImVec2();
+        ImGui.calcTextSize(tmp, currentModalPopupText);
+
+        ImVec2 popupSize = new ImVec2(tmp.x + ImGui.getStyle().getWindowPaddingX() * 2 + 114.0f, 49.0f);
+        ImVec2 popupPosition = new ImVec2
+                (Window.get().windowSize.x / 2.0f - popupSize.x / 2.0f + Window.get().windowPosition.x,
+                Window.get().windowSize.y / 2.0f - popupSize.y / 2.0f + Window.get().windowPosition.y);
+
+        ImGui.setNextWindowSize(popupSize.x, popupSize.y);
+        ImGui.setNextWindowPos(popupPosition.x, popupPosition.y);
+        ImGui.pushStyleVar(ImGuiStyleVar.WindowPadding, ImGui.getStyle().getWindowPaddingX(), ImGui.getStyle().getWindowPaddingY() - 1.0f);
+        ImGui.pushStyleVar(ImGuiStyleVar.WindowRounding, 10.0f);
+        ImVec4 color = ConsoleMessage.getMessageColor(currentModalPopupType);
+        ImGui.pushStyleColor(ImGuiCol.WindowBg, Math.abs(color.x / 255.0f / 2.5f), Math.abs(color.y / 255.0f / 2.5f), Math.abs(color.z / 255.0f / 2.5f), color.w / 255.0f);
+        ImGui.begin(currentModalPopupText, ImGuiWindowFlags.NoDocking | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoNav | ImGuiWindowFlags.NoNavFocus | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoScrollWithMouse | ImGuiWindowFlags.NoDecoration | ImGuiWindowFlags.NoFocusOnAppearing);
+
+        ImGui.pushFont(modalPopupFont);
+        ImGui.pushStyleColor(ImGuiCol.Text, color.x / 255 ,color.y / 255, color.z / 255, color.w / 255);
+        EditorImGui.horizontalCenteredText(currentModalPopupText);
+        ImGui.popStyleColor();
+
+        ImGui.popFont();
+        ImGui.end();
+        ImGui.popStyleColor();
+        ImGui.popStyleVar(2);
     }
 
     public InspectorWindow getInspectorWindow() { return this.inspectorWindow; }

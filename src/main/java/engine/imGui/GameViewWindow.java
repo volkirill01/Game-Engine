@@ -118,7 +118,7 @@ public class GameViewWindow extends EditorImGuiWindow {
 
         topRightCornerPosition = new Vector2f(ImGui.getCursorStartPosX() + ImGui.getWindowPosX() + ImGui.getWindowSizeX(), ImGui.getCursorStartPosY() + ImGui.getWindowPosY());
 
-        captureMouse = !toolsWindowsImgui();
+        captureMouse = toolsWindowsImgui();
 
         if (ImGui.beginDragDropTarget() && ImGui.getDragDropPayload("ASSETS_WINDOW_PAYLOAD") != null) {
             String[] payload = ImGui.getDragDropPayload("ASSETS_WINDOW_PAYLOAD");
@@ -145,6 +145,9 @@ public class GameViewWindow extends EditorImGuiWindow {
     }
 
     private boolean toolsWindowsImgui() {
+        if (!ImGui.isWindowHovered())
+            return false;
+
 //        this.fastMeshPlaceWindow.imgui(); // TODO FIX SHOW THIS WINDOW BUG
 //
 //        if (ImGui.isWindowHovered())

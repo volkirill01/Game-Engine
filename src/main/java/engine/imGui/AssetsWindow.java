@@ -237,6 +237,7 @@ public class AssetsWindow extends EditorImGuiWindow {
 //            System.out.println(fileName);
 
             copy(file, new File( fileName));
+            Window.get().getImGuiLayer().showModalPopup("Paste", ConsoleMessage.MessageType.Simple);
         }
     }
 
@@ -292,6 +293,7 @@ public class AssetsWindow extends EditorImGuiWindow {
             if (ImGui.menuItem("Copy")) {
                 File file = new File(assets.get(i).assetPath);
                 SystemClipboard.copy(file.getAbsolutePath());
+                Window.get().getImGuiLayer().showModalPopup("Copy", ConsoleMessage.MessageType.Simple);
             }
 
             pasteButton();

@@ -5,10 +5,12 @@ import engine.entities.GameObject;
 import engine.eventSystem.EventSystem;
 import engine.eventSystem.Events.Event;
 import engine.eventSystem.Observer;
+import engine.imGui.ConsoleMessage;
 import engine.imGui.ImGuiLayer;
 import engine.scene.*;
 import engine.toolbox.KeyListener;
 import engine.toolbox.MouseListener;
+import org.joml.Vector2f;
 import org.joml.Vector4f;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
@@ -35,6 +37,13 @@ public class Window implements Observer {
     private static float delta;
 
     private static int screenImage;
+
+    private int[] tmpWidth = new int[1];
+    private int[] tmpHeight = new int[1];
+    private int[] tmpWindowPosX = new int[1];
+    private int[] tmpWindowPosY = new int[1];
+    public Vector2f windowSize = new Vector2f();
+    public Vector2f windowPosition = new Vector2f();
 
     private static ImGuiLayer imGuiLayer;
     public PickingTexture pickingTexture;
@@ -186,7 +195,14 @@ public class Window implements Observer {
         lastFrameTime = getCurrentTime();
     }
 
-    public static void updateDisplay() {
+    public void updateDisplay() {
+        glfwGetWindowSize(get().glfwWindow, tmpWidth, tmpHeight);
+        glfwGetWindowPos(get().glfwWindow, tmpWindowPosX, tmpWindowPosY);
+        windowSize.x = tmpWidth[0];
+        windowSize.y = tmpHeight[0];
+        windowPosition.x = tmpWindowPosX[0];
+        windowPosition.y = tmpWindowPosY[0];
+
         glfwSwapBuffers(get().glfwWindow);
         long currentFrameTime = getCurrentTime();
 
@@ -218,17 +234,23 @@ public class Window implements Observer {
         switch (event.type) {
             case GameEngineStartPlay -> {
                 this.runtimePlaying = true;
-                Window.get().getImGuiLayer().getInspectorWindow().clearSelected();
+                get().getImGuiLayer().getInspectorWindow().clearSelected();
                 currentScene.save();
-                Window.get().changeScene(new LevelSceneInitializer(SceneManager.getCurrentScene()));
+                get().changeScene(new LevelSceneInitializer(SceneManager.getCurrentScene()));
             }
             case GameEngineStopPlay -> {
                 this.runtimePlaying = false;
-                Window.get().getImGuiLayer().getGameViewWindow().setNotPlaying();
-                Window.get().changeScene(new LevelEditorSceneInitializer(SceneManager.getCurrentScene()));
+                get().getImGuiLayer().getGameViewWindow().setNotPlaying();
+                get().changeScene(new LevelEditorSceneInitializer(SceneManager.getCurrentScene()));
             }
-            case LoadLevel -> Window.get().changeScene(new LevelEditorSceneInitializer(SceneManager.getCurrentScene()));
-            case SaveLevel -> currentScene.save();
+            case LoadLevel -> {
+                get().getImGuiLayer().showModalPopup("Open Scene", ConsoleMessage.MessageType.Info);
+                get().changeScene(new LevelEditorSceneInitializer(SceneManager.getCurrentScene()));
+            }
+            case SaveLevel -> {
+                get().getImGuiLayer().showModalPopup("Scene Saved", ConsoleMessage.MessageType.Info);
+                currentScene.save();
+            }
         }
     }
 }
