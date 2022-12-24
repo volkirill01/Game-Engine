@@ -5,6 +5,7 @@ import engine.imGui.EditorImGui;
 import engine.renderEngine.models.TexturedModel;
 import engine.renderEngine.textures.Material;
 import engine.renderEngine.textures.TextureSliceMode;
+import engine.toolbox.DefaultMeshes;
 import org.joml.Vector2f;
 
 public class MeshRenderer extends ObjectRenderer {
@@ -59,7 +60,10 @@ public class MeshRenderer extends ObjectRenderer {
 
         if (this.model != null) {
             model.setMaterial((Material) EditorImGui.field_Asset("Material", model.getMaterial(), Asset.AssetType.Material));
-            model.getMaterial().imgui();
+            if (!model.getMaterial().getFilepath().equals(DefaultMeshes.getDefaultMaterialPath())) {
+                if (EditorImGui.collapsingHeader("Material"))
+                    model.getMaterial().imgui();
+            }
         }
     }
 

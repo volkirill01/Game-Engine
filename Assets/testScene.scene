@@ -1,7 +1,7 @@
 [
   {
-    "uid": 1,
-    "name": "Sphere",
+    "uid": 8,
+    "name": "Cube",
     "tags": [],
     "components": [
       {
@@ -32,10 +32,10 @@
         "properties": {
           "model": {
             "rawModel": {
-              "vaoID": 5,
-              "vertexCount": 2880,
-              "filepath": "engineFiles/defaultMeshes/defaultSphere.obj",
-              "metaFilepath": "engineFiles/defaultMeshes/defaultSphere.obj",
+              "vaoID": 10,
+              "vertexCount": 36,
+              "filepath": "engineFiles/defaultMeshes/defaultCube.obj",
+              "metaFilepath": "engineFiles/defaultMeshes/defaultCube.obj",
               "metaData": {
                 "modelSize": "0.5"
               }
@@ -43,11 +43,23 @@
             "material": {
               "filepath": "Assets\\bunnyMaterial.material",
               "data": {
-                "tiling": "null",
-                "albedo": "Assets\\testPixelTexture.png"
+                "renderCullSide": "Front",
+                "metallicIntensity": 0.0,
+                "color": "255.0, 255.0, 255.0, 255.0",
+                "tiling": "1.0, 1.0",
+                "useFakeLighting": false,
+                "emissionIntensity": 0.0,
+                "specularIntensity": 0.0,
+                "shineDumper": 10.0,
+                "metallicMap": "engineFiles/images/utils/whitePixel.png",
+                "emissionMap": "engineFiles/images/utils/whitePixel.png",
+                "alphaClip": 1.0,
+                "specularMap": "engineFiles/images/utils/whitePixel.png",
+                "albedo": "Assets\\metalTexture.png",
+                "useAlbedoEmission": false
               },
               "texture": {
-                "textureID": 33,
+                "textureID": 4,
                 "filepath": "Assets\\metalTexture.png",
                 "metaFilepath": "Assets\\metalTexture.png",
                 "metaData": {
@@ -66,11 +78,748 @@
               "tiling": {
                 "x": 1.0,
                 "y": 1.0
-              }
+              },
+              "color": {
+                "r": 255.0,
+                "g": 255.0,
+                "b": 255.0,
+                "a": 255.0
+              },
+              "metallicMap": {
+                "textureID": 5,
+                "filepath": "engineFiles/images/utils/whitePixel.png",
+                "metaFilepath": "engineFiles/images/utils/whitePixel.png",
+                "metaData": {
+                  "filterMode": "Bilinear",
+                  "numberOfColumns": "1",
+                  "repeatHorizontally": "true",
+                  "sliceMode": "Single",
+                  "useMipmaps": "false",
+                  "numberOfRows": "1",
+                  "repeatVertically": "true",
+                  "useAnisotropicFiltering": "true"
+                },
+                "width": 1,
+                "height": 1
+              },
+              "metallicIntensity": 0.0,
+              "specularMap": {
+                "textureID": 5,
+                "filepath": "engineFiles/images/utils/whitePixel.png",
+                "metaFilepath": "engineFiles/images/utils/whitePixel.png",
+                "metaData": {
+                  "filterMode": "Bilinear",
+                  "numberOfColumns": "1",
+                  "repeatHorizontally": "true",
+                  "sliceMode": "Single",
+                  "useMipmaps": "false",
+                  "numberOfRows": "1",
+                  "repeatVertically": "true",
+                  "useAnisotropicFiltering": "true"
+                },
+                "width": 1,
+                "height": 1
+              },
+              "specularIntensity": 0.0,
+              "shineDumper": 10.0,
+              "emissionMap": {
+                "textureID": 5,
+                "filepath": "engineFiles/images/utils/whitePixel.png",
+                "metaFilepath": "engineFiles/images/utils/whitePixel.png",
+                "metaData": {
+                  "filterMode": "Bilinear",
+                  "numberOfColumns": "1",
+                  "repeatHorizontally": "true",
+                  "sliceMode": "Single",
+                  "useMipmaps": "false",
+                  "numberOfRows": "1",
+                  "repeatVertically": "true",
+                  "useAnisotropicFiltering": "true"
+                },
+                "width": 1,
+                "height": 1
+              },
+              "emissionIntensity": 0.0,
+              "useAlbedoEmission": false,
+              "alphaClip": 1.0,
+              "renderCullSide": "Front",
+              "useFakeLighting": false
             }
           },
           "textureIndex": 1,
           "uid": 2,
+          "isActive": true
+        }
+      }
+    ],
+    "doSerialization": true,
+    "isDeath": false
+  },
+  {
+    "uid": 9,
+    "name": "Sphere",
+    "tags": [],
+    "components": [
+      {
+        "type": "engine.components.Transform",
+        "properties": {
+          "position": {
+            "x": 2.0,
+            "y": 0.5,
+            "z": 0.0
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "scale": {
+            "x": 2.0,
+            "y": 2.0,
+            "z": 2.0
+          },
+          "childs": [],
+          "uid": 4,
+          "isActive": true
+        }
+      },
+      {
+        "type": "engine.renderEngine.components.MeshRenderer",
+        "properties": {
+          "model": {
+            "rawModel": {
+              "vaoID": 11,
+              "vertexCount": 2880,
+              "filepath": "engineFiles/defaultMeshes/defaultSphere.obj",
+              "metaFilepath": "engineFiles/defaultMeshes/defaultSphere.obj",
+              "metaData": {
+                "modelSize": "0.5"
+              }
+            },
+            "material": {
+              "filepath": "Assets\\bunnyMaterial.material",
+              "data": {
+                "renderCullSide": "Front",
+                "metallicIntensity": 0.0,
+                "color": "255.0, 255.0, 255.0, 255.0",
+                "tiling": "1.0, 1.0",
+                "useFakeLighting": false,
+                "emissionIntensity": 0.0,
+                "specularIntensity": 0.0,
+                "shineDumper": 10.0,
+                "metallicMap": "engineFiles/images/utils/whitePixel.png",
+                "emissionMap": "engineFiles/images/utils/whitePixel.png",
+                "alphaClip": 1.0,
+                "specularMap": "engineFiles/images/utils/whitePixel.png",
+                "albedo": "Assets\\metalTexture.png",
+                "useAlbedoEmission": false
+              },
+              "texture": {
+                "textureID": 4,
+                "filepath": "Assets\\metalTexture.png",
+                "metaFilepath": "Assets\\metalTexture.png",
+                "metaData": {
+                  "filterMode": "Bilinear",
+                  "numberOfColumns": "1",
+                  "repeatHorizontally": "true",
+                  "sliceMode": "Single",
+                  "useMipmaps": "false",
+                  "numberOfRows": "1",
+                  "repeatVertically": "true",
+                  "useAnisotropicFiltering": "true"
+                },
+                "width": 256,
+                "height": 256
+              },
+              "tiling": {
+                "x": 1.0,
+                "y": 1.0
+              },
+              "color": {
+                "r": 255.0,
+                "g": 255.0,
+                "b": 255.0,
+                "a": 255.0
+              },
+              "metallicMap": {
+                "textureID": 5,
+                "filepath": "engineFiles/images/utils/whitePixel.png",
+                "metaFilepath": "engineFiles/images/utils/whitePixel.png",
+                "metaData": {
+                  "filterMode": "Bilinear",
+                  "numberOfColumns": "1",
+                  "repeatHorizontally": "true",
+                  "sliceMode": "Single",
+                  "useMipmaps": "false",
+                  "numberOfRows": "1",
+                  "repeatVertically": "true",
+                  "useAnisotropicFiltering": "true"
+                },
+                "width": 1,
+                "height": 1
+              },
+              "metallicIntensity": 0.0,
+              "specularMap": {
+                "textureID": 5,
+                "filepath": "engineFiles/images/utils/whitePixel.png",
+                "metaFilepath": "engineFiles/images/utils/whitePixel.png",
+                "metaData": {
+                  "filterMode": "Bilinear",
+                  "numberOfColumns": "1",
+                  "repeatHorizontally": "true",
+                  "sliceMode": "Single",
+                  "useMipmaps": "false",
+                  "numberOfRows": "1",
+                  "repeatVertically": "true",
+                  "useAnisotropicFiltering": "true"
+                },
+                "width": 1,
+                "height": 1
+              },
+              "specularIntensity": 0.0,
+              "shineDumper": 10.0,
+              "emissionMap": {
+                "textureID": 5,
+                "filepath": "engineFiles/images/utils/whitePixel.png",
+                "metaFilepath": "engineFiles/images/utils/whitePixel.png",
+                "metaData": {
+                  "filterMode": "Bilinear",
+                  "numberOfColumns": "1",
+                  "repeatHorizontally": "true",
+                  "sliceMode": "Single",
+                  "useMipmaps": "false",
+                  "numberOfRows": "1",
+                  "repeatVertically": "true",
+                  "useAnisotropicFiltering": "true"
+                },
+                "width": 1,
+                "height": 1
+              },
+              "emissionIntensity": 0.0,
+              "useAlbedoEmission": false,
+              "alphaClip": 1.0,
+              "renderCullSide": "Front",
+              "useFakeLighting": false
+            }
+          },
+          "textureIndex": 1,
+          "uid": 5,
+          "isActive": true
+        }
+      }
+    ],
+    "doSerialization": true,
+    "isDeath": false
+  },
+  {
+    "uid": 10,
+    "name": "dragon.obj",
+    "tags": [],
+    "components": [
+      {
+        "type": "engine.components.Transform",
+        "properties": {
+          "position": {
+            "x": 0.0,
+            "y": 0.5,
+            "z": 0.0
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          },
+          "childs": [],
+          "uid": 10,
+          "isActive": true
+        }
+      },
+      {
+        "type": "engine.renderEngine.components.MeshRenderer",
+        "properties": {
+          "model": {
+            "rawModel": {
+              "vaoID": 12,
+              "vertexCount": 300000,
+              "filepath": "Assets\\dragon.obj",
+              "metaFilepath": "Assets\\dragon.obj",
+              "metaData": {
+                "modelSize": "0.1"
+              }
+            },
+            "material": {
+              "filepath": "Assets\\mramorMaterial.material",
+              "data": {
+                "renderCullSide": "Front",
+                "metallicIntensity": 0.0,
+                "color": "16.516258, 204.8834, 91.56187, 255.0",
+                "tiling": "1.0, 1.0",
+                "useFakeLighting": false,
+                "emissionIntensity": 0.0,
+                "specularIntensity": 0.814,
+                "shineDumper": 9.12,
+                "metallicMap": "engineFiles/images/utils/whitePixel.png",
+                "emissionMap": "engineFiles/images/utils/whitePixel.png",
+                "alphaClip": 1.0,
+                "specularMap": "engineFiles/images/utils/whitePixel.png",
+                "albedo": "Assets\\whitePixel.png",
+                "useAlbedoEmission": false
+              },
+              "texture": {
+                "textureID": 6,
+                "filepath": "Assets\\whitePixel.png",
+                "metaFilepath": "Assets\\whitePixel.png",
+                "metaData": {
+                  "filterMode": "Bilinear",
+                  "numberOfColumns": "1",
+                  "repeatHorizontally": "true",
+                  "sliceMode": "Single",
+                  "useMipmaps": "false",
+                  "numberOfRows": "1",
+                  "repeatVertically": "true",
+                  "useAnisotropicFiltering": "true"
+                },
+                "width": 1,
+                "height": 1
+              },
+              "tiling": {
+                "x": 1.0,
+                "y": 1.0
+              },
+              "color": {
+                "r": 16.516258,
+                "g": 204.8834,
+                "b": 91.56187,
+                "a": 255.0
+              },
+              "metallicMap": {
+                "textureID": 5,
+                "filepath": "engineFiles/images/utils/whitePixel.png",
+                "metaFilepath": "engineFiles/images/utils/whitePixel.png",
+                "metaData": {
+                  "filterMode": "Bilinear",
+                  "numberOfColumns": "1",
+                  "repeatHorizontally": "true",
+                  "sliceMode": "Single",
+                  "useMipmaps": "false",
+                  "numberOfRows": "1",
+                  "repeatVertically": "true",
+                  "useAnisotropicFiltering": "true"
+                },
+                "width": 1,
+                "height": 1
+              },
+              "metallicIntensity": 0.0,
+              "specularMap": {
+                "textureID": 5,
+                "filepath": "engineFiles/images/utils/whitePixel.png",
+                "metaFilepath": "engineFiles/images/utils/whitePixel.png",
+                "metaData": {
+                  "filterMode": "Bilinear",
+                  "numberOfColumns": "1",
+                  "repeatHorizontally": "true",
+                  "sliceMode": "Single",
+                  "useMipmaps": "false",
+                  "numberOfRows": "1",
+                  "repeatVertically": "true",
+                  "useAnisotropicFiltering": "true"
+                },
+                "width": 1,
+                "height": 1
+              },
+              "specularIntensity": 0.814,
+              "shineDumper": 9.12,
+              "emissionMap": {
+                "textureID": 5,
+                "filepath": "engineFiles/images/utils/whitePixel.png",
+                "metaFilepath": "engineFiles/images/utils/whitePixel.png",
+                "metaData": {
+                  "filterMode": "Bilinear",
+                  "numberOfColumns": "1",
+                  "repeatHorizontally": "true",
+                  "sliceMode": "Single",
+                  "useMipmaps": "false",
+                  "numberOfRows": "1",
+                  "repeatVertically": "true",
+                  "useAnisotropicFiltering": "true"
+                },
+                "width": 1,
+                "height": 1
+              },
+              "emissionIntensity": 0.0,
+              "useAlbedoEmission": false,
+              "alphaClip": 1.0,
+              "renderCullSide": "Front",
+              "useFakeLighting": false
+            }
+          },
+          "textureIndex": 1,
+          "uid": 11,
+          "isActive": true
+        }
+      }
+    ],
+    "doSerialization": true,
+    "isDeath": false
+  },
+  {
+    "uid": 11,
+    "name": "grass.obj",
+    "tags": [],
+    "components": [
+      {
+        "type": "engine.components.Transform",
+        "properties": {
+          "position": {
+            "x": 0.7,
+            "y": -0.48,
+            "z": -1.0
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          },
+          "childs": [],
+          "uid": 13,
+          "isActive": true
+        }
+      },
+      {
+        "type": "engine.renderEngine.components.MeshRenderer",
+        "properties": {
+          "model": {
+            "rawModel": {
+              "vaoID": 13,
+              "vertexCount": 1992,
+              "filepath": "Assets\\grass\\grass.obj",
+              "metaFilepath": "Assets\\grass\\grass.obj",
+              "metaData": {
+                "modelSize": "0.001"
+              }
+            },
+            "material": {
+              "filepath": "Assets\\grass\\grass.material",
+              "data": {
+                "renderCullSide": "Both",
+                "metallicIntensity": 0.0,
+                "color": "255.0, 255.0, 255.0, 255.0",
+                "tiling": "1.0, 1.0",
+                "useFakeLighting": true,
+                "emissionIntensity": 0.0,
+                "specularIntensity": 0.0,
+                "shineDumper": 10.0,
+                "metallicMap": "engineFiles/images/utils/whitePixel.png",
+                "emissionMap": "engineFiles/images/utils/whitePixel.png",
+                "alphaClip": 0.7,
+                "specularMap": "engineFiles/images/utils/whitePixel.png",
+                "albedo": "Assets\\grass\\grass.png",
+                "useAlbedoEmission": false
+              },
+              "texture": {
+                "textureID": 7,
+                "filepath": "Assets\\grass\\grass.png",
+                "metaFilepath": "Assets\\grass\\grass.png",
+                "metaData": {
+                  "filterMode": "Bilinear",
+                  "numberOfColumns": "1",
+                  "repeatHorizontally": "true",
+                  "sliceMode": "Single",
+                  "useMipmaps": "false",
+                  "numberOfRows": "1",
+                  "repeatVertically": "true",
+                  "useAnisotropicFiltering": "true"
+                },
+                "width": 3000,
+                "height": 3000
+              },
+              "tiling": {
+                "x": 1.0,
+                "y": 1.0
+              },
+              "color": {
+                "r": 255.0,
+                "g": 255.0,
+                "b": 255.0,
+                "a": 255.0
+              },
+              "metallicMap": {
+                "textureID": 5,
+                "filepath": "engineFiles/images/utils/whitePixel.png",
+                "metaFilepath": "engineFiles/images/utils/whitePixel.png",
+                "metaData": {
+                  "filterMode": "Bilinear",
+                  "numberOfColumns": "1",
+                  "repeatHorizontally": "true",
+                  "sliceMode": "Single",
+                  "useMipmaps": "false",
+                  "numberOfRows": "1",
+                  "repeatVertically": "true",
+                  "useAnisotropicFiltering": "true"
+                },
+                "width": 1,
+                "height": 1
+              },
+              "metallicIntensity": 0.0,
+              "specularMap": {
+                "textureID": 5,
+                "filepath": "engineFiles/images/utils/whitePixel.png",
+                "metaFilepath": "engineFiles/images/utils/whitePixel.png",
+                "metaData": {
+                  "filterMode": "Bilinear",
+                  "numberOfColumns": "1",
+                  "repeatHorizontally": "true",
+                  "sliceMode": "Single",
+                  "useMipmaps": "false",
+                  "numberOfRows": "1",
+                  "repeatVertically": "true",
+                  "useAnisotropicFiltering": "true"
+                },
+                "width": 1,
+                "height": 1
+              },
+              "specularIntensity": 0.0,
+              "shineDumper": 10.0,
+              "emissionMap": {
+                "textureID": 5,
+                "filepath": "engineFiles/images/utils/whitePixel.png",
+                "metaFilepath": "engineFiles/images/utils/whitePixel.png",
+                "metaData": {
+                  "filterMode": "Bilinear",
+                  "numberOfColumns": "1",
+                  "repeatHorizontally": "true",
+                  "sliceMode": "Single",
+                  "useMipmaps": "false",
+                  "numberOfRows": "1",
+                  "repeatVertically": "true",
+                  "useAnisotropicFiltering": "true"
+                },
+                "width": 1,
+                "height": 1
+              },
+              "emissionIntensity": 0.0,
+              "useAlbedoEmission": false,
+              "alphaClip": 0.7,
+              "renderCullSide": "Both",
+              "useFakeLighting": true
+            }
+          },
+          "textureIndex": 1,
+          "uid": 14,
+          "isActive": true
+        }
+      }
+    ],
+    "doSerialization": true,
+    "isDeath": false
+  },
+  {
+    "uid": 12,
+    "name": "Floor",
+    "tags": [],
+    "components": [
+      {
+        "type": "engine.components.Transform",
+        "properties": {
+          "position": {
+            "x": 0.0,
+            "y": -0.5,
+            "z": 0.0
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "scale": {
+            "x": 6.0,
+            "y": 0.03,
+            "z": 6.0
+          },
+          "childs": [],
+          "uid": 15,
+          "isActive": true
+        }
+      },
+      {
+        "type": "engine.renderEngine.components.MeshRenderer",
+        "properties": {
+          "model": {
+            "rawModel": {
+              "vaoID": 14,
+              "vertexCount": 36,
+              "filepath": "engineFiles/defaultMeshes/defaultCube.obj",
+              "metaFilepath": "engineFiles/defaultMeshes/defaultCube.obj",
+              "metaData": {
+                "modelSize": "0.5"
+              }
+            },
+            "material": {
+              "filepath": "engineFiles/defaultAssets/defaultMaterial.material",
+              "data": {
+                "renderCullSide": "Front",
+                "metallicIntensity": 0.0,
+                "color": "255.0, 255.0, 255.0, 255.0",
+                "tiling": "1.0, 1.0",
+                "useFakeLighting": false,
+                "emissionIntensity": 0.0,
+                "specularIntensity": 0.0,
+                "shineDumper": 10.0,
+                "metallicMap": "engineFiles/images/utils/whitePixel.png",
+                "emissionMap": "engineFiles/images/utils/whitePixel.png",
+                "alphaClip": 1.0,
+                "specularMap": "engineFiles/images/utils/whitePixel.png",
+                "albedo": "engineFiles/images/utils/whitePixel.png",
+                "useAlbedoEmission": false
+              },
+              "texture": {
+                "textureID": 5,
+                "filepath": "engineFiles/images/utils/whitePixel.png",
+                "metaFilepath": "engineFiles/images/utils/whitePixel.png",
+                "metaData": {
+                  "filterMode": "Bilinear",
+                  "numberOfColumns": "1",
+                  "repeatHorizontally": "true",
+                  "sliceMode": "Single",
+                  "useMipmaps": "false",
+                  "numberOfRows": "1",
+                  "repeatVertically": "true",
+                  "useAnisotropicFiltering": "true"
+                },
+                "width": 1,
+                "height": 1
+              },
+              "tiling": {
+                "x": 1.0,
+                "y": 1.0
+              },
+              "color": {
+                "r": 255.0,
+                "g": 255.0,
+                "b": 255.0,
+                "a": 255.0
+              },
+              "metallicMap": {
+                "textureID": 5,
+                "filepath": "engineFiles/images/utils/whitePixel.png",
+                "metaFilepath": "engineFiles/images/utils/whitePixel.png",
+                "metaData": {
+                  "filterMode": "Bilinear",
+                  "numberOfColumns": "1",
+                  "repeatHorizontally": "true",
+                  "sliceMode": "Single",
+                  "useMipmaps": "false",
+                  "numberOfRows": "1",
+                  "repeatVertically": "true",
+                  "useAnisotropicFiltering": "true"
+                },
+                "width": 1,
+                "height": 1
+              },
+              "metallicIntensity": 0.0,
+              "specularMap": {
+                "textureID": 5,
+                "filepath": "engineFiles/images/utils/whitePixel.png",
+                "metaFilepath": "engineFiles/images/utils/whitePixel.png",
+                "metaData": {
+                  "filterMode": "Bilinear",
+                  "numberOfColumns": "1",
+                  "repeatHorizontally": "true",
+                  "sliceMode": "Single",
+                  "useMipmaps": "false",
+                  "numberOfRows": "1",
+                  "repeatVertically": "true",
+                  "useAnisotropicFiltering": "true"
+                },
+                "width": 1,
+                "height": 1
+              },
+              "specularIntensity": 0.0,
+              "shineDumper": 10.0,
+              "emissionMap": {
+                "textureID": 5,
+                "filepath": "engineFiles/images/utils/whitePixel.png",
+                "metaFilepath": "engineFiles/images/utils/whitePixel.png",
+                "metaData": {
+                  "filterMode": "Bilinear",
+                  "numberOfColumns": "1",
+                  "repeatHorizontally": "true",
+                  "sliceMode": "Single",
+                  "useMipmaps": "false",
+                  "numberOfRows": "1",
+                  "repeatVertically": "true",
+                  "useAnisotropicFiltering": "true"
+                },
+                "width": 1,
+                "height": 1
+              },
+              "emissionIntensity": 0.0,
+              "useAlbedoEmission": false,
+              "alphaClip": 1.0,
+              "renderCullSide": "Front",
+              "useFakeLighting": false
+            }
+          },
+          "textureIndex": 1,
+          "uid": 16,
+          "isActive": true
+        }
+      }
+    ],
+    "doSerialization": true,
+    "isDeath": false
+  },
+  {
+    "uid": 13,
+    "name": "Sun",
+    "tags": [],
+    "components": [
+      {
+        "type": "engine.components.Transform",
+        "properties": {
+          "position": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "rotation": {
+            "x": 0.8,
+            "y": 5.7,
+            "z": -9.9
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          },
+          "childs": [],
+          "uid": 18,
+          "isActive": true
+        }
+      },
+      {
+        "type": "engine.entities.Light",
+        "properties": {
+          "lightType": "Directional",
+          "color": {
+            "r": 255.0,
+            "g": 255.0,
+            "b": 255.0,
+            "a": 255.0
+          },
+          "intensity": 1.0,
+          "range": 1.0,
+          "uid": 19,
           "isActive": true
         }
       }

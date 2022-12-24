@@ -14,6 +14,7 @@ import engine.renderEngine.models.RawModel;
 import engine.renderEngine.models.TexturedModel;
 import engine.renderEngine.textures.Material;
 import engine.scene.SceneManager;
+import engine.toolbox.DefaultMeshes;
 import engine.toolbox.MouseListener;
 import imgui.ImGui;
 import imgui.ImVec2;
@@ -115,7 +116,7 @@ public class GameViewWindow extends EditorImGuiWindow {
                 switch (Enum.valueOf(Asset.AssetType.class, payload[0])) {
                     case Model -> {
                         RawModel model = OBJLoader.loadOBJ(payload[1]);
-                        Material material = Loader.get().loadMaterial("Assets/bunnyMaterial.material");
+                        Material material = Loader.get().loadMaterial(DefaultMeshes.getDefaultMaterialPath());
 
                         String goName = payload[1].replace("\\", "/").split("/")[payload[1].replace("\\", "/").split("/").length - 1];
                         GameObject go = Window.get().getScene().createGameObject(goName);

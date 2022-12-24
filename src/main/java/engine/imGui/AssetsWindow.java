@@ -4,7 +4,9 @@ import engine.assets.Asset;
 import engine.assets.assetsTypes.*;
 import engine.renderEngine.Loader;
 import engine.renderEngine.Window;
+import engine.renderEngine.textures.Material;
 import engine.scene.SceneManager;
+import engine.toolbox.DefaultMeshes;
 import engine.toolbox.SystemClipboard;
 import imgui.ImGui;
 import imgui.ImVec4;
@@ -154,6 +156,9 @@ public class AssetsWindow extends EditorImGuiWindow {
     String newSceneName = "newScene";
     String currentNewSceneName = newSceneName;
 
+    String newMaterialName = "newMaterial";
+    String currentNewMaterialName = newMaterialName;
+
     private String[] inputText(String text) {
         ImGui.pushStyleVar(ImGuiStyleVar.FramePadding, 10.0f, ImGui.getStyle().getFramePaddingY());
         ImString outString = new ImString(text, 256);
@@ -182,11 +187,12 @@ public class AssetsWindow extends EditorImGuiWindow {
             theDir.mkdirs();
     }
 
-    private void mkFile(String fileName) {
+    private void mkFile(String fileName, String data) {
         File theDir = new File(currentDirectory + "/" + fileName);
         if (!theDir.exists())
             try {
-                theDir.createNewFile();
+                FileUtils.writeStringToFile(theDir, data, "UTF-8");
+//                theDir.createNewFile();
             } catch (IOException e) {
                 System.out.println("Error (AssetsWindow mkFile) '" + e + "'");
 //                throw new RuntimeException(e);
@@ -246,13 +252,19 @@ public class AssetsWindow extends EditorImGuiWindow {
     public void createNewFolder() {
         refrashingFiles = false;
         ImGui.setWindowFocus(windowName);
-        assets.add(new Asset_Folder(currentDirectory + currentNewFolderName, currentNewFolderName, loadFolderData(currentDirectory + currentNewFolderName), false, true));
+        assets.add(new Asset_Folder(currentDirectory + "/" + currentNewFolderName, currentNewFolderName, loadFolderData(currentDirectory + currentNewFolderName), false, true));
     }
 
     public void createNewScene() {
         refrashingFiles = false;
         ImGui.setWindowFocus(windowName);
-        assets.add(new Asset_Scene(currentDirectory + currentNewSceneName, currentNewSceneName, Loader.get().loadMeta("engineFiles/defaultAssets/defaultScene.meta", "engineFiles/defaultAssets/defaultScene.meta", true), true));
+        assets.add(new Asset_Scene(currentDirectory + "/" + currentNewSceneName, currentNewSceneName, Loader.get().loadMeta("engineFiles/defaultAssets/defaultScene.meta", "engineFiles/defaultAssets/defaultScene.meta", true), true));
+    }
+
+    public void createMaterial() {
+        refrashingFiles = false;
+        ImGui.setWindowFocus(windowName);
+        assets.add(new Asset_Material(currentDirectory + "/" + currentNewMaterialName, currentNewMaterialName, Loader.get().loadMeta(DefaultMeshes.getDefaultMaterialPath(), DefaultMeshes.getDefaultMaterialPath(), false), Loader.get().loadTexture("engineFiles/images/icons/icon=material-solid-(256x256).png"), true));
     }
 
     private void popups(int i, ImVec4 borderColor) {
@@ -272,6 +284,8 @@ public class AssetsWindow extends EditorImGuiWindow {
                 createNewFolder();
             if (ImGui.menuItem("Create New Scene"))
                 createNewScene();
+            if (ImGui.menuItem("Create Material"))
+                createMaterial();
 
             ImGui.separator();
             if (ImGui.menuItem("Open In Explorer")) {
@@ -613,7 +627,7 @@ public class AssetsWindow extends EditorImGuiWindow {
 
                     if (result[1] != null && result[1].equals("false")) {
                         assets.remove(i);
-                        mkFile(currentNewSceneName + ".scene");
+                        mkFile(currentNewSceneName + ".scene", Loader.get().getMetaString("engineFiles/defaultAssets/defaultScene.meta", "", true));
                         refrashingFiles = true;
 
                         ImGui.nextColumn();
@@ -634,6 +648,26 @@ public class AssetsWindow extends EditorImGuiWindow {
                     if (result[1] != null && result[1].equals("false")) {
                         assets.remove(i);
                         mkDir(currentNewFolderName);
+                        refrashingFiles = true;
+
+                        ImGui.nextColumn();
+                        ImGui.popID();
+                        ImGui.popStyleColor(4);
+                        ImGui.columns(1);
+                        ImGui.end();
+                        ImGui.popStyleVar();
+                        return;
+                    }
+                } else if (assets.get(i).assetType == Asset.AssetType.NewMaterial) {
+                    refrashingFiles = false;
+                    ImGui.imageButton(id, spriteWidth, spriteHeight, 0, 1, 1, 0);
+                    ImGui.setNextItemWidth(spriteWidth + (ImGui.getStyle().getFramePaddingX() * 2.0f));
+                    String[] result = inputText(currentNewMaterialName);
+                    currentNewMaterialName = result[0];
+
+                    if (result[1] != null && result[1].equals("false")) {
+                        assets.remove(i);
+                        mkFile(currentNewMaterialName + ".material", Loader.get().getMetaString("engineFiles/defaultAssets/defaultMaterial.material", "", false));
                         refrashingFiles = true;
 
                         ImGui.nextColumn();

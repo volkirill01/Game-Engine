@@ -36,6 +36,7 @@ public abstract class Asset {
         Font,
         Shader,
         Material,
+        NewMaterial,
         Other
     }
 

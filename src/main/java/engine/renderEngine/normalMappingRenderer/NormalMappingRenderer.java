@@ -60,7 +60,7 @@ public class NormalMappingRenderer {
 //		if (texture.isHasTransparency()) {
 //			MasterRenderer.disableCulling();
 //		}
-		shader.loadShineVariables(texture.getShineDumper(), texture.getReflectivity());
+//		shader.loadShineVariables(texture.getShineDumper(), texture.getReflectivity());
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getMaterial().getTexture().getTextureID());
 	}

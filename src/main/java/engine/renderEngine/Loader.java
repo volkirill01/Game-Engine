@@ -3,11 +3,15 @@ package engine.renderEngine;
 import engine.assets.Asset;
 import engine.assets.assetsTypes.*;
 import engine.renderEngine.models.RawModel;
+import engine.renderEngine.renderer.RenderCullSide;
 import engine.renderEngine.textures.Material;
 import engine.renderEngine.textures.TextureFilterMode;
 import engine.renderEngine.textures.Texture;
 import engine.renderEngine.textures.TextureData;
+import engine.toolbox.DefaultMeshes;
+import engine.toolbox.customVariables.Color;
 import org.apache.commons.io.FileUtils;
+import org.joml.Vector2f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.EXTTextureFilterAnisotropic;
 import org.lwjgl.opengl.GL33;
@@ -50,10 +54,30 @@ public class Loader {
         if (materials.containsKey(filepath))
             return materials.get(filepath);
 
-        Map<String, Object> data = loadMeta(filepath, "engineFiles/defaultAssets/defaultMaterial.material", false);
+        Map<String, Object> data = loadMeta(filepath, DefaultMeshes.getDefaultMaterialPath(), false);
 
-//        Texture albedo = get().loadTexture(data.get("albedo").toString());
         Material material = new Material(filepath, data);
+
+        material.setTexture(get().loadTexture(data.get("albedo").toString()));
+        String[] tmpTiling = data.get("tiling").toString().split(", ");
+        material.setTiling(new Vector2f(Float.parseFloat(tmpTiling[0]), Float.parseFloat(tmpTiling[1])));
+        String[] tmpColor = data.get("color").toString().split(", ");
+        material.setColor(new Color(Float.parseFloat(tmpColor[0]), Float.parseFloat(tmpColor[1]), Float.parseFloat(tmpColor[2]), Float.parseFloat(tmpColor[3])));
+
+        material.setMetallicMap(get().loadTexture(data.get("metallicMap").toString()));
+        material.setMetallicIntensity(Float.parseFloat(data.get("metallicIntensity").toString()));
+
+        material.setSpecularMap(get().loadTexture(data.get("specularMap").toString()));
+        material.setSpecularIntensity(Float.parseFloat(data.get("specularIntensity").toString()));
+        material.setShineDumper(Float.parseFloat(data.get("shineDumper").toString()));
+
+        material.setEmissionMap(get().loadTexture(data.get("emissionMap").toString()));
+        material.setEmissionIntensity(Float.parseFloat(data.get("emissionIntensity").toString()));
+        material.setUseAlbedoEmission(Boolean.parseBoolean(data.get("useAlbedoEmission").toString()));
+
+        material.setAlphaClip(Float.parseFloat(data.get("alphaClip").toString()));
+        material.setCullSided(Enum.valueOf(RenderCullSide.class, data.get("renderCullSide").toString()));
+        material.setUseFakeLighting(Boolean.parseBoolean(data.get("useFakeLighting").toString()));
 
         materials.put(filepath, material);
         return material;
@@ -72,6 +96,17 @@ public class Loader {
         }
     }
 
+    public String getMetaString(String filepath, String defaultFilepath, boolean addMetaSuffix) {
+        StringBuilder fileMeta = new StringBuilder();
+
+        Map<String, Object> data = get().loadMeta(filepath, defaultFilepath, addMetaSuffix);
+
+        for (String line : data.keySet())
+            fileMeta.append(line).append(" = ").append(data.get(line)).append("\n");
+
+        return fileMeta.toString();
+    }
+
     public Asset_Material loadAsset_Material(String filepath) {
         if (assets.containsKey(filepath))
             return (Asset_Material) assets.get(filepath);
@@ -80,23 +115,11 @@ public class Loader {
         String fileName = tmp[tmp.length - 1];
 
         Asset_Material file = new Asset_Material(filepath, fileName,
-                loadMeta(filepath, "engineFiles/defaultAssets/defaultMaterial.material", false), get().loadTexture("engineFiles/images/icons/icon=file-code-solid-(256x256).png"));
+                loadMeta(filepath, "engineFiles/defaultAssets/defaultMaterial.material", false), get().loadTexture("engineFiles/images/icons/icon=material-solid-(256x256).png"), false);
 
         assets.put(filepath, file);
         return file;
     }
-//    public void saveMaterial(Material material) {
-//        StringBuilder fileMeta = new StringBuilder();
-//
-//        for (String line : material.getData().keySet())
-//            fileMeta.append(line).append(" = ").append(material.getData().get(line)).append("\n");
-//
-//        try {
-//            FileUtils.writeStringToFile(new File(material.getFilepath()), fileMeta.toString(), "UTF-8");
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
 
     //<editor-fold desc="Assets Files">
     public Asset_Scene loadAsset_Scene(String filepath) {

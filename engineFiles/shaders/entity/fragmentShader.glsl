@@ -43,7 +43,6 @@ uniform vec3 ambientLightColor;
 uniform float ambientLightIntensity;
 
 uniform float shineDamper;
-uniform float reflectivity;
 
 uniform float alphaClip;
 
@@ -69,7 +68,7 @@ void main() {
         specularFactor = max(specularFactor, 0.0);
         float dampedFactor = pow(specularFactor, shineDamper);
         totalDiffuse = totalDiffuse + ((brightness * lightColor[i] * lightIntensity[i]) / attenuationFactor);
-        totalSpecular = totalSpecular + ((dampedFactor * reflectivity * lightColor[i] * lightIntensity[i]) / attenuationFactor);
+        totalSpecular = totalSpecular + ((dampedFactor * specularIntensity * lightColor[i] * lightIntensity[i]) / attenuationFactor);
     }
     totalDiffuse = max(totalDiffuse, ambientLightIntensity);
 
