@@ -1,6 +1,7 @@
 package engine.entities;
 
 import engine.renderEngine.Window;
+import engine.toolbox.InputManager;
 import engine.toolbox.KeyListener;
 import engine.toolbox.MouseListener;
 import org.joml.Vector3f;
@@ -51,13 +52,12 @@ public class Camera {
 //    }
 
     public void move() { // TODO MAKE EDITOR CAMERA
-        if (!Window.get().getImGuiLayer().getGameViewWindow().getWantCaptureMouse())
-            return;
-
-//        calculateZoom();
-        if (MouseListener.mouseButtonDown(GLFW_MOUSE_BUTTON_RIGHT)) {
-            calculatePitch();
-            calculateAngleAroundPlayer();
+        if (Window.get().getImGuiLayer().getGameViewWindow().getWantCaptureMouse()) {
+//            calculateZoom();
+            if (MouseListener.mouseButtonDown(InputManager.getShortcut("cameraRotate").firstKeyCode)) {
+                calculatePitch();
+                calculateAngleAroundPlayer();
+            }
         }
 
 //        float horizontalDistance = calculateHorizontalDistance();
@@ -85,19 +85,19 @@ public class Camera {
             KeyListener.isKeyPressed(GLFW_KEY_RIGHT_CONTROL))
             return;
 
-        if (KeyListener.isKeyPressed(GLFW_KEY_W))
+        if (KeyListener.isKeyPressed(InputManager.getShortcut("cameraMove(front)").firstKeyCode))
             direction.z += actualMoveSpeed * Window.getDelta();
-        else if (KeyListener.isKeyPressed(GLFW_KEY_S))
+        else if (KeyListener.isKeyPressed(InputManager.getShortcut("cameraMove(back)").firstKeyCode))
             direction.z -= actualMoveSpeed * Window.getDelta();
 
-        if (KeyListener.isKeyPressed(GLFW_KEY_A))
+        if (KeyListener.isKeyPressed(InputManager.getShortcut("cameraMove(left)").firstKeyCode))
             direction.x += actualMoveSpeed * Window.getDelta();
-        else if (KeyListener.isKeyPressed(GLFW_KEY_D))
+        else if (KeyListener.isKeyPressed(InputManager.getShortcut("cameraMove(right)").firstKeyCode))
             direction.x -= actualMoveSpeed * Window.getDelta();
 
-        if (KeyListener.isKeyPressed(GLFW_KEY_SPACE))
+        if (KeyListener.isKeyPressed(InputManager.getShortcut("cameraMove(up)").firstKeyCode))
             direction.y += actualMoveSpeed * Window.getDelta();
-        else if (KeyListener.isKeyPressed(GLFW_KEY_LEFT_SHIFT))
+        else if (KeyListener.isKeyPressed(InputManager.getShortcut("cameraMove(down)").firstKeyCode))
             direction.y -= actualMoveSpeed * Window.getDelta();
     }
 

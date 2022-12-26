@@ -1,6 +1,5 @@
 package engine.renderEngine.textures;
 
-import engine.assets.Asset;
 import engine.imGui.EditorImGui;
 import engine.renderEngine.Loader;
 import engine.renderEngine.renderer.RenderCullSide;
@@ -8,8 +7,6 @@ import engine.toolbox.customVariables.Color;
 import imgui.ImGui;
 import org.joml.Vector2f;
 
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 

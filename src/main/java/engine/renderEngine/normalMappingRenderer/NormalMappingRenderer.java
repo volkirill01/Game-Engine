@@ -9,10 +9,7 @@ import engine.renderEngine.models.TexturedModel;
 import engine.renderEngine.textures.Material;
 import engine.toolbox.Maths;
 import org.joml.Matrix4f;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL13;
-import org.lwjgl.opengl.GL20;
-import org.lwjgl.opengl.GL30;
+import static org.lwjgl.opengl.GL30.*;
 
 import java.util.List;
 import java.util.Map;
@@ -30,18 +27,18 @@ public class NormalMappingRenderer {
 	}
 
 	public void render(Map<TexturedModel, List<GameObject>> entities, List<Light> lights, Camera camera) {
-		shader.start();
-		prepare(lights, camera);
-		for (TexturedModel model : entities.keySet()) {
-			prepareTexturedModel(model);
-			List<GameObject> batch = entities.get(model);
-			for (GameObject gameObject : batch) {
-				prepareInstance(gameObject);
-				GL11.glDrawElements(GL11.GL_TRIANGLES, model.getRawModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
-			}
-			unbindTexturedModel();
-		}
-		shader.stop();
+//		shader.start();
+//		prepare(lights, camera);
+//		for (TexturedModel model : entities.keySet()) {
+//			prepareTexturedModel(model);
+//			List<GameObject> batch = entities.get(model);
+//			for (GameObject gameObject : batch) {
+//				prepareInstance(gameObject);
+//				glDrawElements(GL_TRIANGLES, model.getRawModel().getVertexCount(), GL_UNSIGNED_INT, 0);
+//			}
+//			unbindTexturedModel();
+//		}
+//		shader.stop();
 	}
 	
 	public void cleanUp(){
@@ -49,28 +46,28 @@ public class NormalMappingRenderer {
 	}
 
 	private void prepareTexturedModel(TexturedModel model) {
-		RawModel rawModel = model.getRawModel();
-		GL30.glBindVertexArray(rawModel.getVaoID());
-		GL20.glEnableVertexAttribArray(0);
-		GL20.glEnableVertexAttribArray(1);
-		GL20.glEnableVertexAttribArray(2);
-		Material texture = model.getMaterial();
-		shader.loadNumberOfRows(texture.getTexture().getNumberOfRows());
-		shader.loadNumberOfColumns(texture.getTexture().getNumberOfColumns());
-//		if (texture.isHasTransparency()) {
-//			MasterRenderer.disableCulling();
-//		}
-//		shader.loadShineVariables(texture.getShineDumper(), texture.getReflectivity());
-		GL13.glActiveTexture(GL13.GL_TEXTURE0);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getMaterial().getTexture().getTextureID());
+//		RawModel rawModel = model.getRawModel();
+//		glBindVertexArray(rawModel.getVaoID());
+//		glEnableVertexAttribArray(0);
+//		glEnableVertexAttribArray(1);
+//		glEnableVertexAttribArray(2);
+//		Material texture = model.getMaterial();
+//		shader.loadNumberOfRows(texture.getTexture().getNumberOfRows());
+//		shader.loadNumberOfColumns(texture.getTexture().getNumberOfColumns());
+////		if (texture.isHasTransparency()) {
+////			MasterRenderer.disableCulling();
+////		}
+////		shader.loadShineVariables(texture.getShineDumper(), texture.getReflectivity());
+//		glActiveTexture(GL_TEXTURE0);
+//		glBindTexture(GL_TEXTURE_2D, model.getMaterial().getTexture().getTextureID());
 	}
 
 	private void unbindTexturedModel() {
 //		MasterRenderer.enableCulling();
-		GL20.glDisableVertexAttribArray(0);
-		GL20.glDisableVertexAttribArray(1);
-		GL20.glDisableVertexAttribArray(2);
-		GL30.glBindVertexArray(0);
+		glDisableVertexAttribArray(0);
+		glDisableVertexAttribArray(1);
+		glDisableVertexAttribArray(2);
+		glBindVertexArray(0);
 	}
 
 	private void prepareInstance(GameObject gameObject) {

@@ -2,21 +2,40 @@ package engine.renderEngine.models;
 
 import engine.renderEngine.textures.Material;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class TexturedModel {
 
-    private RawModel rawModel;
-    private Material material;
+    private Mesh mesh;
+    private List<Material> materials;
 
-    public TexturedModel(RawModel model, Material material) {
-        this.rawModel = model;
-        this.material = material;
+    public TexturedModel(Mesh model, Material material) {
+        this.mesh = model;
+        this.materials = new ArrayList<>(){{ add(material); }};
     }
 
-    public RawModel getRawModel() { return rawModel; }
+    public TexturedModel(Mesh model, List<Material> materials) {
+        this.mesh = model;
+        this.materials = materials;
+    }
 
-    public void setMaterial(Material material) { this.material = material; }
+    public void update() {
+        this.mesh.update();
 
-    public Material getMaterial() { return material; }
+        for (Material mat : this.materials)
+            mat.update();
+    }
 
-    public TexturedModel copy() { return new TexturedModel(this.rawModel, this.material); }
+    public String getFilepath() { return mesh.getFilepath(); }
+
+    public Mesh getMesh() { return this.mesh; }
+
+    public void setMaterials(List<Material> materials) { this.materials = materials; }
+
+    public void setMaterial(Material material, int index) { this.materials.set(index, material); }
+
+    public List<Material> getMaterials() { return materials; }
+
+    public TexturedModel copy() { return new TexturedModel(this.mesh, this.materials); }
 }

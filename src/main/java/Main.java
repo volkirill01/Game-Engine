@@ -10,6 +10,7 @@ import engine.renderEngine.particles.*;
 import engine.renderEngine.postProcessing.Fbo;
 import engine.renderEngine.postProcessing.PostProcessing;
 import engine.renderEngine.renderer.MasterRenderer;
+import engine.renderEngine.shadows.ShadowMapMasterRenderer;
 import engine.terrain.Terrain;
 import engine.toolbox.KeyListener;
 import engine.toolbox.MouseListener;
@@ -331,7 +332,7 @@ public class Main {
 //        complexParticleSystem.setScaleError(0.8f);
 //        // Particles
 
-        Fbo multisampleSceneFbo = new Fbo((int) Window.getWidth(), (int) Window.getHeight(), false);
+        Fbo multisampleSceneFbo = new Fbo((int) Window.getWidth(), (int) Window.getHeight(), true, false);
         Fbo outputFbo = new Fbo((int) Window.getWidth(), (int) Window.getHeight(), Fbo.DEPTH_TEXTURE);
         Fbo uiFbo = new Fbo((int) Window.getWidth(), (int) Window.getHeight(), Fbo.NONE);
 
@@ -421,7 +422,6 @@ public class Main {
             uiFbo.unbindFrameBuffer();
 
             multisampleSceneFbo.resolveToFbo(GL_COLOR_ATTACHMENT0, outputFbo);
-//            Window.setScreenImage(Window.get().getImGuiLayer().getInspectorWindow().getPickingTexture().getPickingTextureId());
             if (false)
                 Window.setScreenImage(outputFbo.getColourTexture()); // Not PostProcessing at all
             else {
@@ -429,6 +429,9 @@ public class Main {
                 Window.setScreenImage(PostProcessing.getFinalImage());
             }
             Window.setUIImage(uiFbo.getColourTexture());
+
+//            Window.setScreenImage(Window.get().getImGuiLayer().getInspectorWindow().getPickingTexture().getPickingTextureId()); // Picking Texture Test
+//            Window.setScreenImage(renderer.getShadowMapTexture()); // Shadow Map Test
 
             Window.get().getImGuiLayer().update(Window.getDelta(), Window.get().getScene());
 

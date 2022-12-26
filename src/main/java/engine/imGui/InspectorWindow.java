@@ -19,6 +19,8 @@ public class InspectorWindow extends EditorImGuiWindow {
     private GameObject activeGameObject;
     private PickingTexture pickingTexture;
 
+    private boolean isLocked = false;
+
     public InspectorWindow(PickingTexture pickingTexture) {
         this.activeGameObject = null;
         this.activeGameObjects = new ArrayList<>();
@@ -30,11 +32,13 @@ public class InspectorWindow extends EditorImGuiWindow {
     public void imgui() {
         if (activeAsset != null) {
             ImGui.begin(" \uEF4E Inspector ");
-
             activeAsset.mainImgui();
+            this.isLocked = EditorImGui.field_Boolean("Is Locked", this.isLocked);
+
             activeAsset.imgui();
         } else if (activeGameObjects.size() == 1 && activeGameObjects.get(0) != null) {
             ImGui.begin(" \uEF4E Inspector ", ImGuiWindowFlags.MenuBar);
+            this.isLocked = EditorImGui.field_Boolean("Is Locked", this.isLocked);
 
             activeGameObject = activeGameObjects.get(0);
             activeGameObject.imgui();
@@ -49,33 +53,40 @@ public class InspectorWindow extends EditorImGuiWindow {
         ImGui.end();
     }
 
-    public void setActiveAsset(Asset asset) { this.activeAsset = asset; }
+    public void setActiveAsset(Asset asset) {
+        if (!isLocked)
+            this.activeAsset = asset;
+    }
 
     public Asset getActiveAsset() { return this.activeAsset; }
 
     public GameObject getActiveGameObject() { return activeGameObjects.size() == 1 ? this.activeGameObjects.get(0) : null; }
 
     public void clearSelected() {
-        if (activeGameObjectsOgColor.size() > 0) {
-            int i = 0;
-            for (GameObject go: activeGameObjects) {
+        if (!isLocked) {
+            if (activeGameObjectsOgColor.size() > 0) {
+                int i = 0;
+                for (GameObject go : activeGameObjects) {
 //                SpriteRenderer spr = go.getComponent(SpriteRenderer.class);
 //                if (spr != null)
 //                    spr.setColor(activeGameObjectsOgColor.get(i));
-                i++;
+                    i++;
+                }
             }
+            this.activeGameObjects.clear();
+            this.activeGameObjectsOgColor.clear();
         }
-        this.activeGameObjects.clear();
-        this.activeGameObjectsOgColor.clear();
     }
 
     public List<GameObject> getActiveGameObjects() { return this.activeGameObjects; }
 
     public void setActiveGameObject(GameObject go) {
-        if (go != null) {
-            clearSelected();
-            this.activeGameObjects.add(go);
-            this.activeAsset = null;
+        if (!isLocked) {
+            if (go != null) {
+                clearSelected();
+                this.activeGameObjects.add(go);
+                this.activeAsset = null;
+            }
         }
     }
 
@@ -91,4 +102,8 @@ public class InspectorWindow extends EditorImGuiWindow {
     }
 
     public PickingTexture getPickingTexture() { return this.pickingTexture; }
+
+    public boolean isLocked() { return this.isLocked; }
+
+    public void setLocked(boolean locked) { this.isLocked = locked; }
 }

@@ -33,27 +33,28 @@ public class EntityRenderer {
 
     public void render(Map<TexturedModel, List<GameObject>> entities) {
         for (TexturedModel model : entities.keySet()) {
-            prepareTexturedModel(model);
-            List<GameObject> batch = entities.get(model);
-            for (GameObject gameObject : batch) {
-                if (!gameObject.getComponent(MeshRenderer.class).isActive())
-                    continue;
+            for (int i = 0; i < model.getMesh().getModels().size(); i++) {
+                prepareTexturedModel(model.getMesh().getModels().get(i), model.getMaterials().get(i));
+                List<GameObject> batch = entities.get(model);
+                for (GameObject gameObject : batch) {
+                    if (!gameObject.getComponent(MeshRenderer.class).isActive())
+                        continue;
 
-                prepareInstance(gameObject);
-                glDrawElements(GL_TRIANGLES, model.getRawModel().getVertexCount(), GL_UNSIGNED_INT, 0);
-                unbindTexturedModel();
+                    prepareInstance(gameObject);
+                    glDrawElements(GL_TRIANGLES, model.getMesh().getModels().get(i).getVertexCount(), GL_UNSIGNED_INT, 0);
+
+                    unbindTexturedModel();
+                }
             }
         }
     }
 
-    private void prepareTexturedModel(TexturedModel model) {
-        RawModel rawModel = model.getRawModel();
-        glBindVertexArray(rawModel.getVaoID());
+    private void prepareTexturedModel(RawModel model, Material material) {
+        glBindVertexArray(model.getVaoID());
         glEnableVertexAttribArray(0);
         glEnableVertexAttribArray(1);
         glEnableVertexAttribArray(2);
 
-        Material material = model.getMaterial();
         shader.loadUniformFloat("numberOfRows", material.getTexture().getNumberOfRows());
         shader.loadUniformFloat("numberOfColumns", material.getTexture().getNumberOfColumns());
 
@@ -136,19 +137,10 @@ public class EntityRenderer {
 
         shader.loadUniformInt("textureSampler", 0);
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, model.getMaterial().getTexture().getTextureID());
-        Loader.get().updateTexture(model.getMaterial().getTexture());
-    }
+        glBindTexture(GL_TEXTURE_2D, material.getTexture().getTextureID());
+        Loader.get().updateTexture(material.getTexture());
 
-    private void unbindTexturedModel() {
-        glDisableVertexAttribArray(0);
-        glDisableVertexAttribArray(1);
-        glDisableVertexAttribArray(2);
-        glBindVertexArray(0);
-    }
-
-    private void prepareInstance(GameObject gameObject) {
-        switch (gameObject.getComponent(MeshRenderer.class).getModel().getMaterial().getCullSide()) {
+        switch (material.getCullSide()) {
             case Both -> glDisable(GL_CULL_FACE);
 
             case Front -> {
@@ -163,9 +155,18 @@ public class EntityRenderer {
 
             case None -> { return; }
         }
+    }
 
+    private void unbindTexturedModel() {
+        glDisableVertexAttribArray(0);
+        glDisableVertexAttribArray(1);
+        glDisableVertexAttribArray(2);
+        glBindVertexArray(0);
+    }
+
+    private void prepareInstance(GameObject gameObject) {
         Vector3f sizeMultiplayed = new Vector3f(gameObject.transform.scale);
-        sizeMultiplayed = sizeMultiplayed.mul(gameObject.getComponent(MeshRenderer.class).getModel().getRawModel().getSizeMultiplayer());
+        sizeMultiplayed = sizeMultiplayed.mul(gameObject.getComponent(MeshRenderer.class).getModel().getMesh().getSizeMultiplayer());
 
         Matrix4f transformationMatrix = Maths.createTransformationMatrix(
                 gameObject.transform.position, gameObject.transform.rotation, sizeMultiplayed);

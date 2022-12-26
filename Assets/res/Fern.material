@@ -1,4 +1,4 @@
-renderCullSide = Front
+renderCullSide = Both
 metallicIntensity = 0.0
 color = 255.0, 255.0, 255.0, 255.0
 tiling = 1.0, 1.0

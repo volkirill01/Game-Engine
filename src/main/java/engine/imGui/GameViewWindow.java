@@ -10,6 +10,7 @@ import engine.renderEngine.Loader;
 import engine.renderEngine.OBJLoader;
 import engine.renderEngine.Window;
 import engine.renderEngine.components.MeshRenderer;
+import engine.renderEngine.models.Mesh;
 import engine.renderEngine.models.RawModel;
 import engine.renderEngine.models.TexturedModel;
 import engine.renderEngine.textures.Material;
@@ -21,6 +22,9 @@ import imgui.ImVec2;
 import imgui.flag.ImGuiStyleVar;
 import imgui.flag.ImGuiWindowFlags;
 import org.joml.Vector2f;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class GameViewWindow extends EditorImGuiWindow {
 
@@ -121,12 +125,14 @@ public class GameViewWindow extends EditorImGuiWindow {
                     case Scene ->
                         SceneManager.loadScene(payload[1]);
                     case Model -> {
-                        RawModel model = OBJLoader.loadOBJ(payload[1]);
-                        Material material = Loader.get().loadMaterial(DefaultMeshes.getDefaultMaterialPath());
+                        Mesh model = OBJLoader.loadOBJ(payload[1]);
+                        List<Material> materials = new ArrayList<>();
+                        for (int i = 0; i < model.getModels().size(); i++)
+                            materials.add(Loader.get().loadMaterial(DefaultMeshes.getDefaultMaterialPath()));
 
                         String goName = payload[1].replace("\\", "/").split("/")[payload[1].replace("\\", "/").split("/").length - 1];
                         GameObject go = Window.get().getScene().createGameObject(goName);
-                        go.addComponent(new MeshRenderer(new TexturedModel(model, material)));
+                        go.addComponent(new MeshRenderer(new TexturedModel(model, materials)));
                         Window.get().getScene().addGameObjectToScene(go);
                         Window.get().getImGuiLayer().getInspectorWindow().setActiveAsset(null);
                         Window.get().getImGuiLayer().getInspectorWindow().setActiveGameObject(go);

@@ -127,7 +127,7 @@ public class Terrain {
                 indices[pointer++] = bottomRight;
             }
         }
-        return Loader.get().loadToVAO(vertices, textureCoords, normals, indices, "_Generated(Terrain)");
+        return Loader.get().loadToVAO(vertices, textureCoords, normals, indices, "Material");
     }
 
     private Vector3f calculateNormal(int x, int y, BufferedImage image) {

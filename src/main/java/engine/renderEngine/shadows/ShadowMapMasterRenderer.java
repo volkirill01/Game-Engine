@@ -3,7 +3,9 @@ package engine.renderEngine.shadows;
 import engine.entities.Camera;
 import engine.entities.GameObject;
 import engine.entities.Light;
+import engine.renderEngine.Window;
 import engine.renderEngine.models.TexturedModel;
+import engine.renderEngine.postProcessing.Fbo;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -26,7 +28,8 @@ public class ShadowMapMasterRenderer {
 
 	public static final int SHADOW_MAP_SIZE = 2048;
 
-	private ShadowFrameBuffer shadowFbo;
+//	private ShadowFrameBuffer shadowFbo;
+	private Fbo fbo;
 	private ShadowShader shader;
 	private ShadowBox shadowBox;
 	private Matrix4f projectionMatrix = new Matrix4f();
@@ -41,7 +44,7 @@ public class ShadowMapMasterRenderer {
 	 * to the shadow map. This includes the {@link ShadowBox} which calculates
 	 * the position and size of the "view cuboid", the simple renderer and
 	 * shader program that are used to render objects to the shadow map, and the
-	 * {@link ShadowFrameBuffer} to which the scene is rendered. The size of the
+	 * {@link Fbo} to which the scene is rendered. The size of the
 	 * shadow map is determined here.
 	 * 
 	 * @param camera
@@ -50,7 +53,8 @@ public class ShadowMapMasterRenderer {
 	public ShadowMapMasterRenderer(Camera camera) {
 		shader = new ShadowShader();
 		shadowBox = new ShadowBox(lightViewMatrix, camera);
-		shadowFbo = new ShadowFrameBuffer(SHADOW_MAP_SIZE, SHADOW_MAP_SIZE);
+//		shadowFbo = new ShadowFrameBuffer(SHADOW_MAP_SIZE, SHADOW_MAP_SIZE);
+		fbo = new Fbo(SHADOW_MAP_SIZE, SHADOW_MAP_SIZE, Fbo.DEPTH_TEXTURE);
 		entityRenderer = new ShadowMapEntityRenderer(shader, projectionViewMatrix);
 	}
 
@@ -72,7 +76,8 @@ public class ShadowMapMasterRenderer {
 	public void render(Map<TexturedModel, List<GameObject>> entities, Light sun) {
 		shadowBox.update();
 		Vector3f sunPosition = sun.gameObject.transform.position;
-		Vector3f lightDirection = new Vector3f(-sunPosition.x, -sunPosition.y, -sunPosition.z);
+		Vector3f lightDirection = sun.gameObject.transform.rotation;
+//		Vector3f lightDirection = new Vector3f(-sunPosition.x, -sunPosition.y, -sunPosition.z);
 		prepare(lightDirection, shadowBox);
 		entityRenderer.render(entities);
 		finish();
@@ -95,7 +100,8 @@ public class ShadowMapMasterRenderer {
 	 */
 	public void cleanUp() {
 		shader.cleanUp();
-		shadowFbo.cleanUp();
+//		shadowFbo.cleanUp();
+		fbo.cleanUp();
 	}
 
 	/**
@@ -104,7 +110,8 @@ public class ShadowMapMasterRenderer {
 	 *         each frame.
 	 */
 	public int getShadowMap() {
-		return shadowFbo.getShadowMap();
+//		return shadowFbo.getShadowMap();
+		return fbo.getDepthTexture();
 	}
 
 	/**
@@ -138,7 +145,8 @@ public class ShadowMapMasterRenderer {
 		updateOrthoProjectionMatrix(box.getWidth(), box.getHeight(), box.getLength());
 		updateLightViewMatrix(lightDirection, box.getCenter());
 		projectionViewMatrix = new Matrix4f(projectionMatrix.mul(lightViewMatrix));
-		shadowFbo.bindFrameBuffer();
+//		shadowFbo.bindFrameBuffer();
+		fbo.bindFrameBuffer();
 		glEnable(GL_DEPTH_TEST);
 		glClear(GL_DEPTH_BUFFER_BIT);
 		shader.start();
@@ -151,7 +159,8 @@ public class ShadowMapMasterRenderer {
 	 */
 	private void finish() {
 		shader.stop();
-		shadowFbo.unbindFrameBuffer();
+//		shadowFbo.unbindFrameBuffer();
+		fbo.unbindFrameBuffer();
 	}
 
 	/**

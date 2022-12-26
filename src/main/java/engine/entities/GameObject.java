@@ -16,6 +16,7 @@ import engine.renderEngine.components.ObjectRenderer;
 import engine.renderEngine.guis.UIRenderer;
 import engine.renderEngine.guis.UIImage;
 import engine.renderEngine.models.TexturedModel;
+import engine.renderEngine.textures.Material;
 import engine.toolbox.customVariables.GameObjectTag;
 import imgui.ImGui;
 import imgui.ImVec2;
@@ -100,7 +101,15 @@ public class GameObject {
             ((UIImage) c).setTexture(Loader.get().loadTexture(((UIImage) c).getTexture().getFilepath()));
         } if (c.getClass() == MeshRenderer.class) {
             MeshRenderer renderer = (MeshRenderer) c;
-            renderer.setModel(new TexturedModel(OBJLoader.loadOBJ(renderer.getModel().getRawModel().getFilepath()), Loader.get().loadMaterial(renderer.getModel().getMaterial().getFilepath())));
+            List<Material> materials = new ArrayList<>();
+
+            if (renderer.getModel() != null) {
+                for (int i = 0; i < renderer.getModel().getMaterials().size(); i++)
+                    materials.add(Loader.get().loadMaterial(renderer.getModel().getMaterials().get(i).getFilepath()));
+                renderer.setModel(new TexturedModel(OBJLoader.loadOBJ(renderer.getModel().getFilepath()), materials));
+            } else {
+                renderer.setModel(null);
+            }
         }
     }
 

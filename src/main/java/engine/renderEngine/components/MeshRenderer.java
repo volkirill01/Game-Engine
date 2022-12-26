@@ -8,6 +8,8 @@ import engine.renderEngine.textures.TextureSliceMode;
 import engine.toolbox.DefaultMeshes;
 import org.joml.Vector2f;
 
+import java.util.Collections;
+
 public class MeshRenderer extends ObjectRenderer {
 
     private TexturedModel model;
@@ -24,12 +26,13 @@ public class MeshRenderer extends ObjectRenderer {
     }
 
     public Vector2f getTextureOffset() {
-        int column = textureIndex % model.getMaterial().getTexture().getNumberOfRows();
-        int row = textureIndex / model.getMaterial().getTexture().getNumberOfColumns();
-
-        return new Vector2f(
-                (float) column / (float) model.getMaterial().getTexture().getNumberOfRows(),
-                (float) row / (float) model.getMaterial().getTexture().getNumberOfColumns());
+//        int column = textureIndex % model.getMaterial().getTexture().getNumberOfRows();
+//        int row = textureIndex / model.getMaterial().getTexture().getNumberOfColumns();
+//
+//        return new Vector2f(
+//                (float) column / (float) model.getMaterial().getTexture().getNumberOfRows(),
+//                (float) row / (float) model.getMaterial().getTexture().getNumberOfColumns());
+        return new Vector2f(0.0f);
     }
 
     public TexturedModel getModel() { return this.model; }
@@ -45,24 +48,27 @@ public class MeshRenderer extends ObjectRenderer {
     @Override
     public void editorUpdate() {
         if (model != null) {
-            this.model.getRawModel().update();
-            this.model.getMaterial().update();
+            this.model.update();
         }
     }
 
     @Override
     public void imgui() {
-        if (this.model != null)
-            if (this.model.getMaterial().getTexture().getSliceMode() == TextureSliceMode.Multiple)
-                this.textureIndex = EditorImGui.field_Int_WithButtons("Texture Index", this.textureIndex);
+//        if (this.model != null)
+//            if (this.model.getMaterial().getTexture().getSliceMode() == TextureSliceMode.Multiple)
+//                this.textureIndex = EditorImGui.field_Int_WithButtons("Texture Index", this.textureIndex);
 
         this.model = (TexturedModel) EditorImGui.field_Asset("Model", this.model, Asset.AssetType.Model);
 
         if (this.model != null) {
-            model.setMaterial((Material) EditorImGui.field_Asset("Material", model.getMaterial(), Asset.AssetType.Material));
-            if (!model.getMaterial().getFilepath().equals(DefaultMeshes.getDefaultMaterialPath())) {
-                if (EditorImGui.collapsingHeader("Material"))
-                    model.getMaterial().imgui();
+            EditorImGui.field_MaterialsList("Materials", model.getMaterials());
+
+            for (int i = 0; i < model.getMaterials().size(); i++) {
+                model.setMaterial((Material) EditorImGui.field_Asset(model.getMesh().getModels().get(i).getMaterialGroup(), model.getMaterials().get(i), Asset.AssetType.Material), i);
+                if (!model.getMaterials().get(i).getFilepath().equals(DefaultMeshes.getDefaultMaterialPath())) {
+                    if (EditorImGui.collapsingHeader(model.getMesh().getModels().get(i).getMaterialGroup()))
+                        model.getMaterials().get(i).imgui();
+                }
             }
         }
     }

@@ -37,17 +37,17 @@ public class ShadowMapEntityRenderer {
 	 *            - the entities to be rendered to the shadow map.
 	 */
 	protected void render(Map<TexturedModel, List<GameObject>> entities) {
-		for (TexturedModel model : entities.keySet()) {
-			RawModel rawModel = model.getRawModel();
-			bindModel(rawModel);
-			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_2D, model.getMaterial().getTexture().getTextureID());
-			glDisable(GL_CULL_FACE);
-			for (GameObject gameObject : entities.get(model)) {
-				prepareInstance(gameObject);
-				glDrawElements(GL_TRIANGLES, rawModel.getVertexCount(), GL_UNSIGNED_INT, 0);
-			}
-		}
+//		for (TexturedModel model : entities.keySet()) {
+//			RawModel rawModel = model.getRawModel();
+//			bindModel(rawModel);
+//			glActiveTexture(GL_TEXTURE0);
+//			glBindTexture(GL_TEXTURE_2D, model.getMaterial().getTexture().getTextureID());
+//			glDisable(GL_CULL_FACE);
+//			for (GameObject gameObject : entities.get(model)) {
+//				prepareInstance(gameObject);
+//				glDrawElements(GL_TRIANGLES, rawModel.getVertexCount(), GL_UNSIGNED_INT, 0);
+//			}
+//		}
 		glDisableVertexAttribArray(0);
 		glDisableVertexAttribArray(1);
 		glBindVertexArray(0);

@@ -20,7 +20,7 @@ public class Fbo {
 
 	private int frameBuffer;
 
-	private boolean multisample = false;
+	private boolean multiSample = false;
 	private int samplesCount = 5;
 
 	private boolean multiTarget = false;
@@ -50,18 +50,18 @@ public class Fbo {
 		initialiseFrameBuffer(depthBufferType);
 	}
 
-	public Fbo(int width, int height) {
+	public Fbo(int width, int height, boolean multiSample) {
 		this.width = width;
 		this.height = height;
-		this.multisample = true;
+		this.multiSample = multiSample;
 		initialiseFrameBuffer(DEPTH_RENDER_BUFFER);
 	}
 
-	public Fbo(int width, int height, boolean multiTarget) {
+	public Fbo(int width, int height, boolean multiSample, boolean multiTarget) {
 		this.width = width;
 		this.height = height;
-		this.multisample = true;
-		this.multiTarget = true;
+		this.multiSample = multiSample;
+		this.multiTarget = multiTarget;
 		initialiseFrameBuffer(DEPTH_RENDER_BUFFER);
 	}
 
@@ -147,7 +147,7 @@ public class Fbo {
 	 */
 	private void initialiseFrameBuffer(int type) {
 		createFrameBuffer();
-		if (!multisample)
+		if (!multiSample)
 			createTextureAttachment();
 		else {
 			colourBuffer = createMultisampleColorAttachment(GL_COLOR_ATTACHMENT0);
@@ -230,7 +230,7 @@ public class Fbo {
 	private void createDepthBufferAttachment() {
 		depthBuffer = glGenRenderbuffers();
 		glBindRenderbuffer(GL_RENDERBUFFER, depthBuffer);
-		if (!multisample)
+		if (!multiSample)
 			glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, width, height);
 		else
 			glRenderbufferStorageMultisample(GL_RENDERBUFFER, samplesCount, GL_DEPTH_COMPONENT24, width, height);

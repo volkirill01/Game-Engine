@@ -1,8 +1,10 @@
 package engine.imGui;
 
+import engine.TestFieldsWindow;
 import engine.assets.Asset;
 import engine.renderEngine.Loader;
 import engine.renderEngine.OBJLoader;
+import engine.renderEngine.models.Mesh;
 import engine.renderEngine.models.RawModel;
 import engine.renderEngine.models.TexturedModel;
 import engine.renderEngine.textures.Material;
@@ -627,6 +629,30 @@ public class EditorImGui {
         return value;
     }
 
+    public static List<Material> field_MaterialsList(String label, List<Material> list) {
+        ImGui.pushID("List-" + label);
+
+        ImGui.columns(2, "", false);
+        ImGui.setColumnWidth(0, leftPadding);
+
+        ImGui.setCursorPosY(ImGui.getCursorPosY() + textVerticalOffset);
+        ImGui.text("\t" + label);
+        ImGui.nextColumn();
+        ImGui.columns(1);
+
+        for (int i = 0; i < list.size(); i++) {
+            if (collapsingHeader("Element (" + i + ")")) {
+                field_Asset("" + i, list.get(i), Asset.AssetType.Material);
+                ImGui.separator();
+                list.get(i).imgui();
+            }
+        }
+
+        ImGui.popID();
+
+        return list;
+    }
+
     public static boolean checkbox(String label, boolean value) { return checkbox(label, value, false); }
 
     public static boolean checkbox(String label, boolean value, boolean onRight) {
@@ -664,7 +690,7 @@ public class EditorImGui {
         ImGui.pushStyleColor(ImGuiCol.Border, 0.0f, 0.0f, 0.0f, 0.0f);
 
         ImGui.setCursorPosX(ImGui.getCursorPosX() + 4.0f);
-        boolean result = ImGui.collapsingHeader(label);
+        boolean result = ImGui.collapsingHeader(label); // TODO MAKE HEADER SHORTEN
         ImGui.popStyleColor(4);
 
         ImGui.popID();
@@ -874,15 +900,18 @@ public class EditorImGui {
                 switch (assetType) {
                     case Model -> {
                         TexturedModel oldModel = (TexturedModel) field;
-                        RawModel model = OBJLoader.loadOBJ(payload[1]);
+                        Mesh model = OBJLoader.loadOBJ(payload[1]);
 
-                        Material material;
+                        List<Material> materials;
                         if (oldModel != null)
-                            material = oldModel.getMaterial();
-                        else
-                            material = Loader.get().loadMaterial(DefaultMeshes.getDefaultMaterialPath());
+                            materials = oldModel.getMaterials();
+                        else {
+                            materials = new ArrayList<>();
+                            for (int i = 0; i < model.getModels().size(); i++)
+                                materials.add(Loader.get().loadMaterial(DefaultMeshes.getDefaultMaterialPath()));
+                        }
 
-                        field = new TexturedModel(model, material);
+                        field = new TexturedModel(model, materials);
                     }
                     case Texture -> {
                         field = Loader.get().loadTexture(payload[1]);
@@ -903,7 +932,7 @@ public class EditorImGui {
             switch (assetType) {
                 case Model -> {
                     TexturedModel model = (TexturedModel) field;
-                    assetName = model.getRawModel().getFilepath();
+                    assetName = model.getFilepath();
                     assetIcon = Loader.get().loadTexture("engineFiles/images/icons/icon=cube-solid-(32x32).png").getTextureID();
                 }
                 case Texture -> {

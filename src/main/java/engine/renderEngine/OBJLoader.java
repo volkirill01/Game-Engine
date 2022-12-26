@@ -1,18 +1,19 @@
 package engine.renderEngine;
 
-import de.javagl.obj.Obj;
-import de.javagl.obj.ObjData;
-import de.javagl.obj.ObjReader;
-import de.javagl.obj.ObjUtils;
+import de.javagl.obj.*;
+import engine.renderEngine.models.Mesh;
 import engine.renderEngine.models.RawModel;
 
 import java.io.*;
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class OBJLoader {
 
-    public static RawModel loadOBJ(String filepath) {
+    public static Mesh loadOBJ(String filepath) {
+        List<RawModel> models = new ArrayList<>();
+
         InputStream inputStream;
         try {
             inputStream = new FileInputStream(filepath);
@@ -27,27 +28,27 @@ public class OBJLoader {
             throw new RuntimeException(e);
         }
 
-        IntBuffer indicesB = ObjData.getFaceVertexIndices(obj);
-        FloatBuffer verticesB = ObjData.getVertices(obj);
-        FloatBuffer texCoordsB = ObjData.getTexCoords(obj, 2);
-        FloatBuffer normalsB = ObjData.getNormals(obj);
+        Map<String, Obj> materialGroups = ObjSplitting.splitByMaterialGroups(obj);
 
-        int[] indicesBArray = new int[indicesB.capacity()];
-        for (int i = 0; i < indicesBArray.length; i++)
-            indicesBArray[i] = indicesB.get(i);
+        if (materialGroups.size() > 1) {
+            for (String matObjKey : materialGroups.keySet()) {
+                Obj matObj = materialGroups.get(matObjKey);
+                int[] indicesB = ObjData.getFaceVertexIndicesArray(matObj);
+                float[] verticesB = ObjData.getVerticesArray(matObj);
+                float[] texCoordsB = ObjData.getTexCoordsArray(matObj, 2);
+                float[] normalsB = ObjData.getNormalsArray(matObj);
 
-        float[] verticesBArray = new float[verticesB.capacity()];
-        for (int i = 0; i < verticesBArray.length; i++)
-            verticesBArray[i] = verticesB.get(i);
+                models.add(Loader.get().loadToVAO(verticesB, texCoordsB, normalsB, indicesB, matObjKey));
+            }
+        } else {
+            int[] indicesB = ObjData.getFaceVertexIndicesArray(obj);
+            float[] verticesB = ObjData.getVerticesArray(obj);
+            float[] texCoordsB = ObjData.getTexCoordsArray(obj, 2);
+            float[] normalsB = ObjData.getNormalsArray(obj);
 
-        float[] texCoordsBArray = new float[texCoordsB.capacity()];
-        for (int i = 0; i < texCoordsBArray.length; i++)
-            texCoordsBArray[i] = texCoordsB.get(i);
+            models.add(Loader.get().loadToVAO(verticesB, texCoordsB, normalsB, indicesB, "Material"));
+        }
 
-        float[] normalsBArray = new float[normalsB.capacity()];
-        for (int i = 0; i < normalsBArray.length; i++)
-            normalsBArray[i] = normalsB.get(i);
-
-        return Loader.get().loadToVAO(verticesBArray, texCoordsBArray, normalsBArray, indicesBArray, filepath);
+        return new Mesh(models, filepath);
     }
 }

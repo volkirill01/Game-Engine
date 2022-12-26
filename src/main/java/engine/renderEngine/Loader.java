@@ -263,14 +263,14 @@ public class Loader {
     }
     //</editor-fold>
 
-    public RawModel loadToVAO(float[] positions, float[] textureCoords, float[] normals, int[] indices, String filepath) {
+    public RawModel loadToVAO(float[] positions, float[] textureCoords, float[] normals, int[] indices, String materialGroup) {
         int vaoID = createVao();
         bindIndicesBuffer(indices);
         storeDataInAttributeList(0, 3, positions);
         storeDataInAttributeList(1, 2, textureCoords);
         storeDataInAttributeList(2, 3, normals);
         unbindVAO();
-        return new RawModel(vaoID, indices.length, filepath);
+        return new RawModel(vaoID, indices.length, materialGroup);
     }
 
     public int loadToVAO(float[] positions, float[] textureCoords) {
@@ -285,7 +285,7 @@ public class Loader {
         int vaoID = createVao();
         storeDataInAttributeList(0, dimensions, positions);
         unbindVAO();
-        return new RawModel(vaoID, positions.length / dimensions);
+        return new RawModel(vaoID, positions.length / dimensions, "Material");
     }
 
     public int createEmptyVbo(int floatCount) {
