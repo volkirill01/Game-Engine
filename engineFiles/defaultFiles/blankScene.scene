@@ -1,50 +1,5 @@
 [
   {
-    "name": "Dragon",
-    "tags": [],
-    "components": [
-      {
-        "type": "engine.components.Transform",
-        "properties": {
-          "position": {
-            "x": 0.2,
-            "y": 0.0,
-            "z": -0.3
-          },
-          "rotation": {
-            "x": 0.0,
-            "y": -20.0,
-            "z": 0.0
-          },
-          "scale": {
-            "x": 1.5,
-            "y": 1.5,
-            "z": 1.5
-          },
-          "childs": [],
-          "isActive": true
-        }
-      },
-      {
-        "type": "engine.renderEngine.components.MeshRenderer",
-        "properties": {
-          "model": {
-            "rawModel": {
-              "filepath": "Assets\\dragon.obj",
-              "metaFilepath": "Assets\\dragon.obj"
-            },
-            "material": {
-              "filepath": "Assets\\mramorMaterial.material"
-            }
-          },
-          "textureIndex": 1,
-          "isActive": true
-        }
-      }
-    ],
-    "doSerialization": true
-  },
-  {
     "name": "Sun",
     "tags": [],
     "components": [

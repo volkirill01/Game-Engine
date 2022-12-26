@@ -105,9 +105,13 @@ public class GameViewWindow extends EditorImGuiWindow {
         rightX = topLeft.x + windowSize.x;
         topY = topLeft.y + windowSize.y - 16;
 
-        int textureId = Window.getScreenImage();
+        int screenImage = Window.getScreenImage();
+        int uiScreenImage = Window.getUIImage();
 
-        ImGui.image(textureId, windowSize.x, windowSize.y, 0, 1, 1, 0);
+        ImVec2 startCursorPos = ImGui.getCursorPos();
+        ImGui.image(screenImage, windowSize.x, windowSize.y, 0, 1, 1, 0);
+        ImGui.setCursorPos(startCursorPos.x, startCursorPos.y);
+        ImGui.image(uiScreenImage, windowSize.x, windowSize.y, 0, 1, 1, 0);
 
         if (ImGui.beginDragDropTarget() && ImGui.getDragDropPayload("ASSETS_WINDOW_PAYLOAD") != null) {
             String[] payload = ImGui.getDragDropPayload("ASSETS_WINDOW_PAYLOAD");

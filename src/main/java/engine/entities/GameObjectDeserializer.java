@@ -25,11 +25,6 @@ public class GameObjectDeserializer implements JsonDeserializer<GameObject> {
         for (JsonElement e: components) {
             Component c = context.deserialize(e, Component.class);
             go.addComponent(c);
-            if (c.getClass() == MeshRenderer.class) {
-                MeshRenderer renderer = (MeshRenderer) c;
-                if (renderer.getModel() != null)
-                    renderer.setModel(new TexturedModel(OBJLoader.loadOBJ(renderer.getModel().getRawModel().getFilepath()), Loader.get().loadMaterial(renderer.getModel().getMaterial().getFilepath())));
-            }
         }
         if (childs != null)
             for (JsonElement e: childs) {

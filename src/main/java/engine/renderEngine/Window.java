@@ -37,6 +37,7 @@ public class Window implements Observer {
     private static float delta;
 
     private static int screenImage;
+    private static int uiImage;
 
     private int[] tmpWidth = new int[1];
     private int[] tmpHeight = new int[1];
@@ -164,6 +165,10 @@ public class Window implements Observer {
     public static void setScreenImage(int _screenImage) { screenImage = _screenImage; }
 
     public static int getScreenImage() { return screenImage; }
+
+    public static void setUIImage(int _uiImage) { uiImage = _uiImage; }
+
+    public static int getUIImage() { return uiImage; }
 
     public ImGuiLayer getImGuiLayer() { return imGuiLayer; }
 

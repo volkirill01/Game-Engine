@@ -2,7 +2,6 @@ package engine.entities;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import engine.TestFieldsWindow;
 import engine.components.Component;
 import engine.components.ComponentDeserializer;
 import engine.components.Transform;
@@ -10,8 +9,13 @@ import engine.imGui.Console;
 import engine.imGui.ConsoleMessage;
 import engine.imGui.EditorImGui;
 import engine.renderEngine.Loader;
+import engine.renderEngine.OBJLoader;
 import engine.renderEngine.Window;
+import engine.renderEngine.components.MeshRenderer;
 import engine.renderEngine.components.ObjectRenderer;
+import engine.renderEngine.guis.UIRenderer;
+import engine.renderEngine.guis.UIImage;
+import engine.renderEngine.models.TexturedModel;
 import engine.toolbox.customVariables.GameObjectTag;
 import imgui.ImGui;
 import imgui.ImVec2;
@@ -91,6 +95,13 @@ public class GameObject {
         c.generateId();
         this.components.add(c);
         c.gameObject = this;
+
+        if (c.getClass() == UIImage.class) {
+            ((UIImage) c).setTexture(Loader.get().loadTexture(((UIImage) c).getTexture().getFilepath()));
+        } if (c.getClass() == MeshRenderer.class) {
+            MeshRenderer renderer = (MeshRenderer) c;
+            renderer.setModel(new TexturedModel(OBJLoader.loadOBJ(renderer.getModel().getRawModel().getFilepath()), Loader.get().loadMaterial(renderer.getModel().getMaterial().getFilepath())));
+        }
     }
 
     public boolean hasComponent(Class component) {

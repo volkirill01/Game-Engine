@@ -1,7 +1,8 @@
 package engine.renderEngine.font.fontRendering;
 
 import engine.renderEngine.font.fontMeshCreator.FontType;
-import engine.renderEngine.font.fontMeshCreator.GUIText;
+import engine.renderEngine.font.fontMeshCreator.UIText;
+import org.joml.Vector2f;
 
 import java.util.List;
 import java.util.Map;
@@ -14,12 +15,12 @@ public class FontRenderer {
 
 	public FontRenderer() { shader = new FontShader(); }
 
-	public void render(Map<FontType, List<GUIText>> texts) {
+	public void render(Map<FontType, List<UIText>> texts) {
 		prepare();
 		for (FontType font : texts.keySet()) {
 			glActiveTexture(GL_TEXTURE0);
 			glBindTexture(GL_TEXTURE_2D, font.getTextureAtlas());
-			for (GUIText text : texts.get(font)) {
+			for (UIText text : texts.get(font)) {
 				renderText(text);
 			}
 		}
@@ -35,11 +36,14 @@ public class FontRenderer {
 		shader.start();
 	}
 	
-	private void renderText(GUIText text) {
+	private void renderText(UIText text) {
+		if (text.gameObject == null)
+			return;
+
 		glBindVertexArray(text.getMesh());
 		glEnableVertexAttribArray(0);
 		glEnableVertexAttribArray(1);
-		shader.loadUniformVector2("translation", text.getPosition());
+		shader.loadUniformVector2("translation", new Vector2f(text.gameObject.transform.position.x, text.gameObject.transform.position.y));
 
 		shader.loadUniformColorWithAlpha("color", text.getFontColor());
 		shader.loadUniformFloat("width", text.getFontWidth());

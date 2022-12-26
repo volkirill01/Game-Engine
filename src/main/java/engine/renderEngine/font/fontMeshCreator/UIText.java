@@ -1,10 +1,11 @@
 package engine.renderEngine.font.fontMeshCreator;
 
+import engine.components.Component;
 import engine.renderEngine.font.fontRendering.TextMaster;
 import engine.toolbox.customVariables.Color;
 import org.joml.Vector2f;
 
-public class GUIText {
+public class UIText extends Component {
 
 	private String textString;
 	private float fontSize;
@@ -12,11 +13,10 @@ public class GUIText {
 	private int textMeshVao;
 	private int vertexCount;
 
-	private Vector2f position;
 	private float lineMaxSize;
 	private int numberOfLines;
 
-	private FontType font;
+	private transient FontType font;
 
 	private Color fontColor = Color.Black;
 	private float fontWidth = 0.5f;
@@ -33,11 +33,10 @@ public class GUIText {
 
 	private boolean centerText;
 
-	public GUIText(String text, float fontSize, FontType font, Vector2f position, float maxLineLength, boolean centered) {
+	public UIText(String text, float fontSize, FontType font, float maxLineLength, boolean centered) {
 		this.textString = text;
 		this.fontSize = fontSize;
 		this.font = font;
-		this.position = position;
 		this.lineMaxSize = maxLineLength;
 		this.centerText = centered;
 		TextMaster.loadText(this);
@@ -50,10 +49,6 @@ public class GUIText {
 	public Color getFontColor() { return this.fontColor; }
 
 	public int getNumberOfLines() { return numberOfLines; }
-
-	public void setPosition(Vector2f position) { this.position = position; }
-
-	public Vector2f getPosition() { return position; }
 
 	public int getMesh() { return textMeshVao; }
 
@@ -110,5 +105,10 @@ public class GUIText {
 		this.dropShadowOffset = dropShadowOffset;
 		this.dropShadowWidth = dropShadowWidth;
 		this.dropShadowSoftness = dropShadowSoftness;
+	}
+
+	@Override
+	public void reset() {
+
 	}
 }

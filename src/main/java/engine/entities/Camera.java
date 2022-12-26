@@ -51,6 +51,9 @@ public class Camera {
 //    }
 
     public void move() { // TODO MAKE EDITOR CAMERA
+        if (!Window.get().getImGuiLayer().getGameViewWindow().getWantCaptureMouse())
+            return;
+
 //        calculateZoom();
         if (MouseListener.mouseButtonDown(GLFW_MOUSE_BUTTON_RIGHT)) {
             calculatePitch();

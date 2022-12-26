@@ -1,12 +1,11 @@
 import engine.entities.Camera;
 import engine.entities.GameObject;
-import engine.entities.Light;
 import engine.renderEngine.Window;
 import engine.renderEngine.Loader;
 import engine.renderEngine.font.fontMeshCreator.FontType;
 import engine.renderEngine.font.fontRendering.TextMaster;
-import engine.renderEngine.guis.GuiRenderer;
-import engine.renderEngine.guis.GuiTexture;
+import engine.renderEngine.guis.UIRenderer;
+import engine.renderEngine.guis.UIImage;
 import engine.renderEngine.particles.*;
 import engine.renderEngine.postProcessing.Fbo;
 import engine.renderEngine.postProcessing.PostProcessing;
@@ -286,7 +285,7 @@ public class Main {
 //        // TERRAIN
 //
 //        // GUIS
-        List<GuiTexture> guis = new ArrayList<>();
+        List<UIImage> guis = new ArrayList<>();
 //        GuiTexture gui = new GuiTexture(Loader.get().loadTexture("Assets/testGui.png"), new Vector2f(-0.8f, 0.8f), 0, new Vector2f(0.2f, 0.2f));
 //        guis.add(gui);
 //
@@ -299,7 +298,7 @@ public class Main {
 ////        GuiTexture reflectionsMapGui = new GuiTexture(renderer.getReflectionsMap(), new Vector2f(0.4f, -0.3f), 0, new Vector2f(0.2f, 0.2f));
 ////        guis.add(reflectionsMapGui);
 //
-        GuiRenderer guiRenderer = new GuiRenderer();
+        UIRenderer UIRenderer = new UIRenderer();
 //        // GUIS
 //
 //        // Light
@@ -334,6 +333,7 @@ public class Main {
 
         Fbo multisampleSceneFbo = new Fbo((int) Window.getWidth(), (int) Window.getHeight(), false);
         Fbo outputFbo = new Fbo((int) Window.getWidth(), (int) Window.getHeight(), Fbo.DEPTH_TEXTURE);
+        Fbo uiFbo = new Fbo((int) Window.getWidth(), (int) Window.getHeight(), Fbo.NONE);
 
         PostProcessing.init();
 
@@ -407,11 +407,18 @@ public class Main {
 
 //            cameraOutputGui.setTexture(PostProcessing.getFinalImage());
 
+            multisampleSceneFbo.unbindFrameBuffer(); // all inside this affected by postProcessing
+
+            uiFbo.bindFrameBuffer();
+
+            glClearColor(0, 0, 0, 0);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
             // render gui after all worlds
-            guiRenderer.render(guis);
+            UIRenderer.render();
             TextMaster.render();
 
-            multisampleSceneFbo.unbindFrameBuffer(); // all inside this affected by postProcessing
+            uiFbo.unbindFrameBuffer();
 
             multisampleSceneFbo.resolveToFbo(GL_COLOR_ATTACHMENT0, outputFbo);
 //            Window.setScreenImage(Window.get().getImGuiLayer().getInspectorWindow().getPickingTexture().getPickingTextureId());
@@ -421,6 +428,7 @@ public class Main {
                 PostProcessing.doPostProcessing(outputFbo.getColourTexture());
                 Window.setScreenImage(PostProcessing.getFinalImage());
             }
+            Window.setUIImage(uiFbo.getColourTexture());
 
             Window.get().getImGuiLayer().update(Window.getDelta(), Window.get().getScene());
 
@@ -435,7 +443,7 @@ public class Main {
         outputFbo.cleanUp();
         ParticleMaster.cleanUp();
         TextMaster.cleanUp();
-        guiRenderer.cleanUp();
+        UIRenderer.cleanUp();
         renderer.cleanUp();
         Loader.get().cleanUp();
         Window.closeDisplay();

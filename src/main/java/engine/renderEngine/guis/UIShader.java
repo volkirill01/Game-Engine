@@ -2,9 +2,9 @@ package engine.renderEngine.guis;
 
 import engine.renderEngine.shaders.ShaderProgram;
 
-public class GuiShader extends ShaderProgram {
+public class UIShader extends ShaderProgram {
 
-    public GuiShader(String VERTEX_FILE, String FRAGMENT_FILE) { super(VERTEX_FILE, FRAGMENT_FILE); }
+    public UIShader(String VERTEX_FILE, String FRAGMENT_FILE) { super(VERTEX_FILE, FRAGMENT_FILE); }
 
     @Override
     protected void bindAttributes() {
