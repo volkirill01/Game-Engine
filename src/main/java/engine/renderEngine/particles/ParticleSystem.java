@@ -1,13 +1,18 @@
 package engine.renderEngine.particles;
 
+import engine.assets.Asset;
+import engine.components.Component;
+import engine.imGui.EditorImGui;
+import engine.renderEngine.Loader;
 import engine.renderEngine.Window;
+import engine.renderEngine.textures.Texture;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
 import java.util.Random;
 
-public class ParticleSystem {
+public class ParticleSystem extends Component {
 
     private float particlesPerSecond, averageSpeed, gravityComplient, averageLifeLength, averageScale;
 
@@ -17,17 +22,19 @@ public class ParticleSystem {
     private float directionDeviation = 0;
     private boolean useBlend = false;
 
-    private ParticleTexture texture;
+    private transient Texture texture;
 
-    private Random random = new Random();
+    private transient Random random;
 
-    public ParticleSystem(ParticleTexture texture, float particlesPerSecond, float speed, float gravityComplient, float lifeLength, float scale) {
+    public ParticleSystem(Texture texture, float particlesPerSecond, float speed, float gravityComplient, float lifeLength, float scale, boolean randomRotation, boolean useBlend) {
         this.particlesPerSecond = particlesPerSecond;
         this.averageSpeed = speed;
         this.gravityComplient = gravityComplient;
         this.averageLifeLength = lifeLength;
         this.averageScale = scale;
-        this.texture = texture;
+        this.texture = Loader.get().loadTexture(texture.getFilepath());
+        this.randomRotation = randomRotation;
+        this.useBlend = useBlend;
     }
 
     /**
@@ -71,16 +78,28 @@ public class ParticleSystem {
 
     public void setUseBlend(boolean useBlend) { this.useBlend = useBlend; }
 
-    public void generateParticles(Vector3f systemCenter) {
+    @Override
+    public void editorUpdate() {
+        if (Window.get().getImGuiLayer().getInspectorWindow().getActiveGameObject() == this.gameObject)
+            generateParticles();
+    }
+
+    @Override
+    public void update() {
+        if (Window.get().runtimePlaying)
+            generateParticles();
+    }
+
+    private void generateParticles() {
         float delta = Window.getDelta();
         float particlesToCreate = particlesPerSecond * delta;
         int count = (int) Math.floor(particlesToCreate);
         float partialParticle = particlesToCreate % 1;
         for (int i = 0; i < count; i++) {
-            emitParticle(systemCenter);
+            emitParticle(gameObject.transform.position);
         }
         if (Math.random() < partialParticle) {
-            emitParticle(systemCenter);
+            emitParticle(gameObject.transform.position);
         }
     }
 
@@ -99,11 +118,15 @@ public class ParticleSystem {
     }
 
     private float generateValue(float average, float errorMargin) {
+        if (this.random == null)
+            this.random = new Random();
         float offset = (random.nextFloat() - 0.5f) * 2f * errorMargin;
         return average + offset;
     }
 
     private float generateRotation() {
+        if (this.random == null)
+            this.random = new Random();
         if (randomRotation) {
             return random.nextFloat() * 360f;
         } else {
@@ -135,12 +158,41 @@ public class ParticleSystem {
     }
 
     private Vector3f generateRandomUnitVector() {
+        if (this.random == null)
+            this.random = new Random();
         float theta = (float) (random.nextFloat() * 2f * Math.PI);
         float z = (random.nextFloat() * 2) - 1;
         float rootOneMinusZSquared = (float) Math.sqrt(1 - z * z);
         float x = (float) (rootOneMinusZSquared * Math.cos(theta));
         float y = (float) (rootOneMinusZSquared * Math.sin(theta));
         return new Vector3f(x, y, z);
+    }
+
+    @Override
+    public void imgui() {
+        this.particlesPerSecond = EditorImGui.field_Float("particlesPerSecond", this.particlesPerSecond);
+        this.averageSpeed = EditorImGui.field_Float("averageSpeed", this.averageSpeed);
+        this.gravityComplient = EditorImGui.field_Float("gravityComplient", this.gravityComplient);
+        this.averageLifeLength = EditorImGui.field_Float("averageLifeLength", this.averageLifeLength);
+        this.averageScale = EditorImGui.field_Float("averageScale", this.averageScale);
+
+        this.speedError = EditorImGui.field_Float("speedError", this.speedError);
+        this.lifeError = EditorImGui.field_Float("lifeError", this.lifeError);
+        this.scaleError = EditorImGui.field_Float("scaleError", this.scaleError);
+
+        this.randomRotation = EditorImGui.field_Boolean("randomRotation", this.randomRotation);
+        if (direction != null)
+            this.direction = EditorImGui.field_Vector3f("direction", this.direction);
+
+        this.directionDeviation = EditorImGui.field_Float("directionDeviation", this.directionDeviation);
+        this.useBlend = EditorImGui.field_Boolean("useBlend", this.useBlend);
+
+        this.texture = (Texture) EditorImGui.field_Asset("texture", this.texture, Asset.AssetType.Texture);
+    }
+
+    @Override
+    public void reset() {
+
     }
 
     // Simple Particle system

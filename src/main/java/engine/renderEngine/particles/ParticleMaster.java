@@ -2,21 +2,22 @@ package engine.renderEngine.particles;
 
 import engine.entities.Camera;
 import engine.renderEngine.Loader;
+import engine.renderEngine.textures.Texture;
 import org.joml.Matrix4f;
 
 import java.util.*;
 
 public class ParticleMaster {
 
-    private static Map<ParticleTexture, List<Particle>> particles = new HashMap<>();
+    private static Map<Texture, List<Particle>> particles = new HashMap<>();
     private static ParticleRenderer renderer;
 
     public static void init(Matrix4f projectionMatrix) { renderer = new ParticleRenderer(projectionMatrix); }
 
     public static void update(Camera camera) {
-        Iterator<Map.Entry<ParticleTexture, List<Particle>>> mapIterator = particles.entrySet().iterator();
+        Iterator<Map.Entry<Texture, List<Particle>>> mapIterator = particles.entrySet().iterator();
         while (mapIterator.hasNext()) {
-            Map.Entry<ParticleTexture, List<Particle>> entry = mapIterator.next();
+            Map.Entry<Texture, List<Particle>> entry = mapIterator.next();
             List<Particle> batch = entry.getValue();
 
             Iterator<Particle> iterator = batch.iterator();
@@ -30,8 +31,8 @@ public class ParticleMaster {
                         mapIterator.remove();
                 }
             }
-            if (!entry.getKey().isAdditive())
-                InsertionSort.sortHighToLow(batch);
+//            if (!entry.getKey().isAdditive())
+//                InsertionSort.sortHighToLow(batch);
         }
     }
 

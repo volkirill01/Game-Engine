@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Transform extends Component {
+
     public Vector3f position;
     public Vector3f rotation;
     public Vector3f scale;

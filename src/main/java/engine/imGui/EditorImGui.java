@@ -884,7 +884,7 @@ public class EditorImGui {
 
                         field = new TexturedModel(model, material);
                     }
-                    case Image -> {
+                    case Texture -> {
                         field = Loader.get().loadTexture(payload[1]);
                     }
                     case Material -> {
@@ -906,7 +906,7 @@ public class EditorImGui {
                     assetName = model.getRawModel().getFilepath();
                     assetIcon = Loader.get().loadTexture("engineFiles/images/icons/icon=cube-solid-(32x32).png").getTextureID();
                 }
-                case Image -> {
+                case Texture -> {
                     Texture texture = (Texture) field;
                     assetName = texture.getFilepath();
                     assetIcon = Loader.get().loadTexture("engineFiles/images/icons/icon=image-solid(32x32).png").getTextureID();
@@ -995,7 +995,7 @@ public class EditorImGui {
         if (ImGui.beginDragDropTarget() && ImGui.getDragDropPayload("ASSETS_WINDOW_PAYLOAD") != null) {
             String[] payload = ImGui.getDragDropPayload("ASSETS_WINDOW_PAYLOAD");
 
-            if (payload[0].equals(Asset.AssetType.Image.name()) && ImGui.acceptDragDropPayload("ASSETS_WINDOW_PAYLOAD") != null) {
+            if (payload[0].equals(Asset.AssetType.Texture.name()) && ImGui.acceptDragDropPayload("ASSETS_WINDOW_PAYLOAD") != null) {
                 field = Loader.get().loadTexture(payload[1]);
                 System.out.println("Texture Field-" + payload[1]);
             }

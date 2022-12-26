@@ -16,6 +16,8 @@ public class ParticleTexture {
 
     public int getTextureID() { return this.textureID; }
 
+    public void setTextureID(int newId) { this.textureID = newId; }
+
     public int getNumberOfRows() { return this.numberOfRows; }
 
     public int getNumberOfColumns() { return this.numberOfColumns; }

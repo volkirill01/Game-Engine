@@ -4,7 +4,6 @@ import engine.assets.Asset;
 import engine.assets.assetsTypes.*;
 import engine.renderEngine.Loader;
 import engine.renderEngine.Window;
-import engine.renderEngine.textures.Material;
 import engine.scene.SceneManager;
 import engine.toolbox.DefaultMeshes;
 import engine.toolbox.SystemClipboard;
@@ -322,6 +321,13 @@ public class AssetsWindow extends EditorImGuiWindow {
                     throw new RuntimeException(e);
                 }
             }
+            if (ImGui.menuItem("Open In Explorer")) {
+                try {
+                    Desktop.getDesktop().open(new File(currentDirectory));
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
 
             if (ImGui.menuItem("Delete")) {
                 try {
@@ -540,7 +546,7 @@ public class AssetsWindow extends EditorImGuiWindow {
                         SceneManager.loadScene(assets.get(i).assetPath);
                     }
                     break;
-                case Image:
+                case Texture:
                     float spriteW = 256;
                     float spriteH = 256;
                     float ratio = spriteW / spriteH;
@@ -627,7 +633,7 @@ public class AssetsWindow extends EditorImGuiWindow {
 
                     if (result[1] != null && result[1].equals("false")) {
                         assets.remove(i);
-                        mkFile(currentNewSceneName + ".scene", Loader.get().getMetaString("engineFiles/defaultAssets/defaultScene.meta", "", true));
+                        mkFile(currentNewSceneName + ".scene", Loader.get().getFileString("engineFiles/defaultFiles/blankScene.scene"));
                         refrashingFiles = true;
 
                         ImGui.nextColumn();

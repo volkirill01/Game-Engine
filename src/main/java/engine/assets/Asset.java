@@ -30,7 +30,7 @@ public abstract class Asset {
         NewFolder,
         Scene,
         NewScene,
-        Image,
+        Texture,
         Model,
         Sound,
         Font,

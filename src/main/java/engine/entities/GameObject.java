@@ -27,7 +27,7 @@ import java.util.List;
 public class GameObject {
 
     private static int ID_COUNTER = 0;
-    private int uid = -1;
+    private transient int uid = -1;
 
     public String name;
     private List<GameObjectTag> tags;
@@ -35,7 +35,7 @@ public class GameObject {
     public transient Transform transform;
     private boolean doSerialization = true;
 
-    private boolean isDeath = false;
+    private transient boolean isDeath = false;
 
     private transient List<Class> addComponentBlackList = new ArrayList<>(){{
         add(Transform.class);
@@ -231,7 +231,7 @@ public class GameObject {
                 } else
                     ImGui.textDisabled("Move Up"); // TODO IF MOVE UP OR DOWN DON'T WORK, REPLACE IF STATEMENTS
 
-                if (i > 1 && i < components.size() - 1) {
+                if (i > 0 && i < components.size() - 1) {
                     if (ImGui.menuItem("Move Down"))
                         swapTwoComponents(i, i + 1);
                 } else
@@ -453,6 +453,9 @@ public class GameObject {
     }
 
     public void destroy() {
+        if (Window.get().getImGuiLayer().getInspectorWindow().getActiveGameObject() == this)
+            Window.get().getImGuiLayer().getInspectorWindow().clearSelected();
+
         this.isDeath = true;
 
         for (int i = 0; i < transform.childs.size(); i++) {

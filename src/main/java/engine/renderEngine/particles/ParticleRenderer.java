@@ -7,6 +7,7 @@ import java.util.Map;
 import engine.entities.Camera;
 import engine.renderEngine.Loader;
 import engine.renderEngine.models.RawModel;
+import engine.renderEngine.textures.Texture;
 import engine.toolbox.Maths;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -47,10 +48,10 @@ public class ParticleRenderer {
 		shader.stop();
 	}
 	
-	protected void render(Map<ParticleTexture, List<Particle>> particles, Camera camera) {
+	protected void render(Map<Texture, List<Particle>> particles, Camera camera) {
 		Matrix4f viewMatrix = Maths.createViewMatrix(camera);
 		prepare();
-		for (ParticleTexture texture : particles.keySet()) {
+		for (Texture texture : particles.keySet()) {
 			bindTexture(texture);
 			List<Particle> particleList = particles.get(texture);
 			pointer = 0;
@@ -79,13 +80,14 @@ public class ParticleRenderer {
 		data[pointer++] = particle.getBlendFactor();
 	}
 
-	private void bindTexture(ParticleTexture texture) {
-		if (texture.isAdditive())
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE); // additive particles
-		else
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // simple alpha particles
+	private void bindTexture(Texture texture) {
+//		if (texture.isAdditive())
+//			glBlendFunc(GL_SRC_ALPHA, GL_ONE); // additive particles
+//		else
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // simple alpha particles
 
-		shader.loadUniformBoolean("isAdditive", texture.isAdditive());
+//		shader.loadUniformBoolean("isAdditive", texture.isAdditive());
+		shader.loadUniformBoolean("isAdditive", false);
 
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, texture.getTextureID());

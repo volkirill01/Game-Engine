@@ -11,7 +11,7 @@ import java.util.Map;
 public class Asset_Image extends Asset {
 
     public Asset_Image(String assetPath, String assetName, Map<String, Object> data, Texture fileIcon) {
-        super(assetPath, assetName, data, AssetType.Image, fileIcon);
+        super(assetPath, assetName, data, AssetType.Texture, fileIcon);
     }
 
     @Override

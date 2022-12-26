@@ -3,7 +3,11 @@ package engine.components;
 import engine.entities.GameObject;
 import engine.entities.Light;
 import engine.imGui.EditorImGui;
+import engine.renderEngine.Loader;
 import engine.renderEngine.components.MeshRenderer;
+import engine.renderEngine.particles.ParticleSystem;
+import engine.renderEngine.particles.ParticleTexture;
+import engine.renderEngine.textures.Texture;
 import engine.toolbox.customVariables.Color;
 import imgui.ImGui;
 import imgui.type.ImInt;
@@ -19,14 +23,18 @@ import java.util.*;
 public abstract class Component {
 
     private static int ID_COUNTER = 0;
-    private int uid = -1;
+    private transient int uid = -1;
     private boolean isActive = true;
 
     public transient GameObject gameObject;
 
+    // TMP
+    private static Texture particleTexture = Loader.get().loadTexture("Assets/explosionParticles.png");
+
     public static List<Component> allComponents = new ArrayList<>(){{
         add(new MeshRenderer(null));
-        add(new Light(Color.White, 1.0f));
+        add(new Light(Color.White, 1.0f)); // rotation -40, 45, -30
+        add(new ParticleSystem(particleTexture, 50, 5, 0.3f, 4, 0.2f, true, true));
     }};
 
     public Component() { }

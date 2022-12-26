@@ -3,6 +3,7 @@ package engine.renderEngine.particles;
 import engine.Settings;
 import engine.entities.Camera;
 import engine.renderEngine.Window;
+import engine.renderEngine.textures.Texture;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
@@ -15,7 +16,7 @@ public class Particle {
     private float rotation;
     private float scale;
 
-    private ParticleTexture texture;
+    private Texture texture;
 
     private Vector2f textureOffsetCurrentFrame = new Vector2f();
     private Vector2f textureOffsetNextFrame = new Vector2f();
@@ -28,7 +29,7 @@ public class Particle {
 
     private Vector3f change = new Vector3f();
 
-    public Particle(ParticleTexture texture, boolean useBlend, Vector3f position, Vector3f velocity, float gravityEffect, float lifeLength, float rotation, float scale) {
+    public Particle(Texture texture, boolean useBlend, Vector3f position, Vector3f velocity, float gravityEffect, float lifeLength, float rotation, float scale) {
         this.texture = texture;
         this.useBlend = useBlend;
         this.position = position;
@@ -40,7 +41,7 @@ public class Particle {
         ParticleMaster.addParticle(this);
     }
 
-    public ParticleTexture getTexture() { return this.texture; }
+    public Texture getTexture() { return this.texture; }
 
     public Vector3f getPosition() { return this.position; }
 

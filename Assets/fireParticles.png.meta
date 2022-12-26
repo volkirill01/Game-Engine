@@ -1,8 +1,8 @@
 filterMode = Bilinear
-numberOfColumns = 1
+numberOfColumns = 8
 repeatHorizontally = true
-sliceMode = Single
+sliceMode = Multiple
 useMipmaps = false
-numberOfRows = 1
+numberOfRows = 8
 repeatVertically = true
 useAnisotropicFiltering = true

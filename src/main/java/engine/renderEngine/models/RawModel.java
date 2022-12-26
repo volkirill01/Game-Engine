@@ -6,12 +6,12 @@ import java.util.Map;
 
 public class RawModel {
 
-    private int vaoID;
-    private int vertexCount;
+    private transient int vaoID;
+    private transient int vertexCount;
     private String filepath;
 
     private String metaFilepath;
-    private Map<String, Object> metaData;
+    private transient Map<String, Object> metaData;
 
     public RawModel(int vaoID, int vertexCount) {
         this.vaoID = vaoID;

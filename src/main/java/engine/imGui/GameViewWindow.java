@@ -114,6 +114,8 @@ public class GameViewWindow extends EditorImGuiWindow {
 
             if (ImGui.acceptDragDropPayload("ASSETS_WINDOW_PAYLOAD") != null) {
                 switch (Enum.valueOf(Asset.AssetType.class, payload[0])) {
+                    case Scene ->
+                        SceneManager.loadScene(payload[1]);
                     case Model -> {
                         RawModel model = OBJLoader.loadOBJ(payload[1]);
                         Material material = Loader.get().loadMaterial(DefaultMeshes.getDefaultMaterialPath());
@@ -125,24 +127,18 @@ public class GameViewWindow extends EditorImGuiWindow {
                         Window.get().getImGuiLayer().getInspectorWindow().setActiveAsset(null);
                         Window.get().getImGuiLayer().getInspectorWindow().setActiveGameObject(go);
                     }
+                    default -> System.out.println("Error- This AssetType not implemented");
                 }
+
+                ImGui.endDragDropTarget();
                 System.out.println("GameViewWindow-" + payload[1]);
-            }
-            ImGui.endDragDropTarget();
+            } else
+                ImGui.endDragDropTarget();
         }
 
         topRightCornerPosition = new Vector2f(ImGui.getCursorStartPosX() + ImGui.getWindowPosX() + ImGui.getWindowSizeX(), ImGui.getCursorStartPosY() + ImGui.getWindowPosY());
 
         captureMouse = toolsWindowsImgui();
-
-        if (ImGui.beginDragDropTarget() && ImGui.getDragDropPayload("ASSETS_WINDOW_PAYLOAD") != null) {
-            String[] payload = ImGui.getDragDropPayload("ASSETS_WINDOW_PAYLOAD");
-
-            if (payload[0].equals("Scene") && ImGui.acceptDragDropPayload("ASSETS_WINDOW_PAYLOAD") != null)
-                SceneManager.loadScene(payload[1]);
-
-            ImGui.endDragDropTarget();
-        }
 
         MouseListener.setGameViewportPos(new Vector2f(topLeft.x, topLeft.y - 16));
         MouseListener.setGameViewportSize(new Vector2f(windowSize.x, windowSize.y - 16));

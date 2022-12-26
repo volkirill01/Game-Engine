@@ -107,6 +107,16 @@ public class Loader {
         return fileMeta.toString();
     }
 
+    public String getFileString(String filepath) {
+        StringBuilder fileData = new StringBuilder();
+        List<String> data = loadFileMeta_Lines(filepath, false);
+
+        for (String line : data)
+            fileData.append(line);
+
+        return fileData.toString();
+    }
+
     public Asset_Material loadAsset_Material(String filepath) {
         if (assets.containsKey(filepath))
             return (Asset_Material) assets.get(filepath);

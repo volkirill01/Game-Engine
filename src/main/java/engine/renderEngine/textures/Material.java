@@ -16,26 +16,26 @@ import java.util.Map;
 public class Material {
 
     private String filepath;
-    private Map<String, Object> data;
+    private transient Map<String, Object> data;
 
-    private Texture texture;
-    private Vector2f tiling = new Vector2f(1.0f, 1.0f);
-    private Color color = Color.White;
+    private transient Texture texture;
+    private transient Vector2f tiling = new Vector2f(1.0f, 1.0f);
+    private transient Color color = Color.White;
 
-    private Texture metallicMap;
-    private float metallicIntensity = 0.0f;
+    private transient Texture metallicMap;
+    private transient float metallicIntensity = 0.0f;
 
-    private Texture specularMap;
-    private float specularIntensity = 0.0f;
-    private float shineDumper = 10.0f;
+    private transient Texture specularMap;
+    private transient float specularIntensity = 0.0f;
+    private transient float shineDumper = 10.0f;
 
-    private Texture emissionMap;
-    private float emissionIntensity = 0.0f;
-    private boolean useAlbedoEmission = false;
+    private transient Texture emissionMap;
+    private transient float emissionIntensity = 0.0f;
+    private transient boolean useAlbedoEmission = false;
 
-    private float alphaClip = 0.0f;
-    private RenderCullSide renderCullSide = RenderCullSide.Front;
-    boolean useFakeLighting = false;
+    private transient float alphaClip = 0.0f;
+    private transient RenderCullSide renderCullSide = RenderCullSide.Front;
+    private transient boolean useFakeLighting = false;
 
     public String getFilepath() { return this.filepath; }
 

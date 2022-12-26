@@ -29,27 +29,15 @@ public class FastMeshPlace {
             GameObject cube = Window.get().getScene().createGameObject("Cube");
             cube.addComponent(new MeshRenderer(DefaultMeshes.DefaultCube()));
             Window.get().getScene().addGameObjectToScene(cube);
+            Window.get().getImGuiLayer().getInspectorWindow().setActiveGameObject(cube);
         }
         ImGui.sameLine();
 
         if (ImGui.imageButton(Loader.get().loadTexture("engineFiles/defaultMeshes/icon=defaultSphere(256x256).png").getTextureID(), 46.0f, 46.0f, 0, 1, 1, 0)) {
-            GameObject cube = Window.get().getScene().createGameObject("Sphere");
-            cube.addComponent(new MeshRenderer(DefaultMeshes.DefaultSphere()));
-            Window.get().getScene().addGameObjectToScene(cube);
-        }
-        ImGui.sameLine();
-
-        if (ImGui.imageButton(Loader.get().loadTexture("engineFiles/defaultMeshes/icon=defaultSphere(256x256).png").getTextureID(), 46.0f, 46.0f, 0, 1, 1, 0)) {
-            GameObject cube = Window.get().getScene().createGameObject("Sphere");
-            cube.addComponent(new MeshRenderer(DefaultMeshes.DefaultSphere()));
-            Window.get().getScene().addGameObjectToScene(cube);
-        }
-        ImGui.sameLine();
-
-        if (ImGui.imageButton(Loader.get().loadTexture("engineFiles/defaultMeshes/icon=defaultSphere(256x256).png").getTextureID(), 46.0f, 46.0f, 0, 1, 1, 0)) {
-            GameObject cube = Window.get().getScene().createGameObject("Sphere");
-            cube.addComponent(new MeshRenderer(DefaultMeshes.DefaultSphere()));
-            Window.get().getScene().addGameObjectToScene(cube);
+            GameObject sphere = Window.get().getScene().createGameObject("Sphere");
+            sphere.addComponent(new MeshRenderer(DefaultMeshes.DefaultSphere()));
+            Window.get().getScene().addGameObjectToScene(sphere);
+            Window.get().getImGuiLayer().getInspectorWindow().setActiveGameObject(sphere);
         }
 
         ImGui.popStyleVar();

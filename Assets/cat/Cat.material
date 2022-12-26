@@ -1,0 +1,14 @@
+renderCullSide = Front
+metallicIntensity = 0.0
+color = 255.0, 255.0, 255.0, 255.0
+tiling = 1.0, 1.0
+useFakeLighting = false
+emissionIntensity = 0.0
+specularIntensity = 0.244
+shineDumper = 10.0
+metallicMap = engineFiles/images/utils/whitePixel.png
+emissionMap = engineFiles/images/utils/whitePixel.png
+alphaClip = 1.0
+specularMap = engineFiles/images/utils/whitePixel.png
+albedo = Assets\cat\20430_cat_diff_v1.png
+useAlbedoEmission = false

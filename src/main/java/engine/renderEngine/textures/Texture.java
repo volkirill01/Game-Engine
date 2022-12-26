@@ -6,14 +6,14 @@ import java.util.Map;
 
 public class Texture {
 
-    private int textureID;
+    private transient int textureID;
     private String filepath;
 
     private String metaFilepath;
-    private Map<String, Object> metaData;
+    private transient Map<String, Object> metaData;
 
-    private int width;
-    private int height;
+    private transient int width;
+    private transient int height;
 
     public Texture(int textureID, String filepath, int width, int height) {
         this.textureID = textureID;
