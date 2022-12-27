@@ -18,7 +18,13 @@ import static org.lwjgl.opengl.GL30.*;
 
 public class ParticleRenderer {
 	
-	private static final float[] VERTICES = { -0.5f, 0.5f, -0.5f, -0.5f, 0.5f, 0.5f, 0.5f, -0.5f };
+	private static final float[] VERTICES = {
+			-0.5f, 0.5f, 	// 1
+			-0.5f, -0.5f, 	// 2
+			0.5f, 0.5f, 	// 3
+			0.5f, -0.5f, 	// 4
+	};
+//	private static final float[] VERTICES = { -0.5f, 0.5f, -0.5f, -0.5f, 0.5f, 0.5f, 0.5f, -0.5f };
 	private static final int MAX_INSTANCES = 10_000;
 	private static final int INSTANCE_DATA_LENGTH = 21;
 
@@ -146,6 +152,7 @@ public class ParticleRenderer {
 		glEnableVertexAttribArray(5);
 		glEnableVertexAttribArray(6);
 		glEnable(GL_BLEND);
+		glDisable(GL_CULL_FACE);
 		glDepthMask(false);
 	}
 	
@@ -160,6 +167,7 @@ public class ParticleRenderer {
 		glDisableVertexAttribArray(5);
 		glDisableVertexAttribArray(6);
 		glBindVertexArray(0);
+		glEnable(GL_CULL_FACE);
 		shader.stop();
 	}
 }

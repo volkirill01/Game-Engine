@@ -17,6 +17,8 @@ import engine.renderEngine.components.ObjectRenderer;
 import engine.renderEngine.guis.UIRenderer;
 import engine.renderEngine.guis.UIImage;
 import engine.renderEngine.models.TexturedModel;
+import engine.renderEngine.particles.particleSystemComponents_PSC.PSComponentDeserializer;
+import engine.renderEngine.particles.particleSystemComponents_PSC.ParticleSystemComponent;
 import engine.renderEngine.textures.Material;
 import engine.toolbox.customVariables.GameObjectTag;
 import imgui.ImGui;
@@ -138,9 +140,17 @@ public class GameObject {
 
     public void removeTag(String tag) { this.tags.removeIf(goTag -> goTag.tag.equals(tag)); }
 
-    public void editorUpdate() { for (Component component : components) component.editorUpdate(); }
+    public void editorUpdate() {
+        for (Component component : components)
+            if (component.isActive())
+                component.editorUpdate();
+    }
 
-    public void update() { for (Component component : components) component.update(); }
+    public void update() {
+        for (Component component : components)
+            if (component.isActive())
+                component.update();
+    }
 
     public void start() { for (int i = 0; i < components.size(); i++) components.get(i).start(); }
 
@@ -250,7 +260,7 @@ public class GameObject {
                     if (ImGui.menuItem("Move Up"))
                         swapTwoComponents(i, i - 1);
                 } else
-                    ImGui.textDisabled("Move Up"); // TODO IF MOVE UP OR DOWN DON'T WORK, REPLACE IF STATEMENTS
+                    ImGui.textDisabled("Move Up");
 
                 if (i > 0 && i < components.size() - 1) {
                     if (ImGui.menuItem("Move Down"))
@@ -288,7 +298,7 @@ public class GameObject {
         ImVec2 popupPosition = new ImVec2(centerOfWindow - 105.0f, popupPosY);
 
         if (EditorImGui.BeginPopup("ComponentAdder", popupPosition, isOpen)) {
-            for (Component c : Component.getAllComponents()) {
+            for (Component c : Component.allComponents) {
                 if (getComponent(c.getClass()) == null && !addComponentBlackList.contains(c.getClass()))
                     if (ImGui.menuItem(c.getClass().getSimpleName())) {
 //                        if (c.getClass()== UIRenderer.class) {
@@ -501,6 +511,7 @@ public class GameObject {
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(Component.class, new ComponentDeserializer())
                 .registerTypeAdapter(GameObject.class, new GameObjectDeserializer())
+                .registerTypeAdapter(ParticleSystemComponent.class, new PSComponentDeserializer())
                 .enableComplexMapKeySerialization()
                 .create();
         String objAsJson = gson.toJson(this);

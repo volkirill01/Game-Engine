@@ -62,8 +62,10 @@ public class Particle {
     public float getDistanceFromCamera() { return this.distanceFromCamera; }
 
     protected boolean update(Camera camera) {
-        velocity.y += Settings.GRAVITY * gravityEffect * Window.getDelta();
-        change.set(velocity);
+        if (this.velocity != null) {
+            velocity.y += Settings.GRAVITY * gravityEffect * Window.getDelta();
+            change.set(velocity);
+        }
         change.mul(Window.getDelta());
         position.add(change);
         distanceFromCamera = new Vector3f(camera.getPosition()).sub(position).lengthSquared();

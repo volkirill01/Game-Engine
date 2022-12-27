@@ -33,12 +33,12 @@ public abstract class Component {
 
     public transient GameObject gameObject;
 
-    public static List<Component> allComponents = new ArrayList<>(){{
+    public static final List<Component> allComponents = new ArrayList<>(){{
         add(new MeshRenderer(null));
         add(new Light(Color.White, 1.0f)); // rotation -40, 45, -30
 
-        Texture particleTexture = Loader.get().loadTexture("Assets/explosionParticles.png");
-        add(new ParticleSystem(particleTexture, 50, 5, 0.3f, 4, 0.2f, true, true));
+        Texture particleTexture = Loader.get().loadTexture("Assets/fireParticles.png");
+        add(new ParticleSystem(particleTexture));
 
         add(new UIImage(Loader.get().loadTexture("engineFiles/images/utils/whitePixel.png")));
 
@@ -164,21 +164,21 @@ public abstract class Component {
 
     public static void init(int maxId) { ID_COUNTER = maxId; }
 
-    public static List<Component> getAllComponents() {
-//        Reflections reflections = new Reflections("engine");
-//        Set<Class<? extends Component>> allClasses = reflections.getSubTypesOf(Component.class);
-//        List<Component> components = new ArrayList<>();
+//    public static List<Component> getAllComponents() {
+////        Reflections reflections = new Reflections("engine");
+////        Set<Class<? extends Component>> allClasses = reflections.getSubTypesOf(Component.class);
+////        List<Component> components = new ArrayList<>();
+////
+////        for (Class<? extends Component> c : allClasses) {
+////            try { components.add(c.newInstance()); }
+////            catch (InstantiationException | IllegalAccessException e) {
+//////                System.out.println("Error " + c);
+////                continue;
+////            }
+////        }
 //
-//        for (Class<? extends Component> c : allClasses) {
-//            try { components.add(c.newInstance()); }
-//            catch (InstantiationException | IllegalAccessException e) {
-////                System.out.println("Error " + c);
-//                continue;
-//            }
-//        }
-
-        return allComponents;
-    }
+//        return allComponents;
+//    }
 
     public boolean isActive() { return this.isActive; }
 

@@ -25,5 +25,5 @@ void main() {
 
 	blend = blendFactor;
 
-	gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 0.0, 1.0);
+	gl_Position = projectionMatrix * modelViewMatrix * vec4(position.x, -position.y, 0.0, 1.0);
 }

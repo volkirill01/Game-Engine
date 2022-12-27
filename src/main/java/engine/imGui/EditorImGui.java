@@ -996,7 +996,8 @@ public class EditorImGui {
         assetName = assetName.replace("\\", "/").split("/")[assetName.replace("\\", "/").split("/").length - 1];
 
         if (field != null) {
-            ImGui.image(assetIcon, 16, 16, 0, 1, 1, 0);
+            ImVec4 textColor = ImGui.getStyle().getColor(ImGuiCol.Text);
+            ImGui.image(assetIcon, 16, 16, 0.0f, 0.0f, 1.0f, -1.0f, textColor.x, textColor.y, textColor.z, textColor.w);
             ImGui.sameLine();
             ImGui.setCursorPos(ImGui.getCursorPosX() + 1.5f, ImGui.getCursorPosY() - 1.0f);
         }

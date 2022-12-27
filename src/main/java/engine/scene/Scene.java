@@ -13,6 +13,8 @@ import engine.renderEngine.OBJLoader;
 import engine.renderEngine.Window;
 import engine.renderEngine.components.MeshRenderer;
 import engine.renderEngine.models.TexturedModel;
+import engine.renderEngine.particles.particleSystemComponents_PSC.PSComponentDeserializer;
+import engine.renderEngine.particles.particleSystemComponents_PSC.ParticleSystemComponent;
 import engine.renderEngine.textures.Material;
 import org.joml.Vector3f;
 
@@ -210,6 +212,7 @@ public class Scene {
                 .setPrettyPrinting()
                 .registerTypeAdapter(Component.class, new ComponentDeserializer())
                 .registerTypeAdapter(GameObject.class, new GameObjectDeserializer())
+                .registerTypeAdapter(ParticleSystemComponent.class, new PSComponentDeserializer())
                 .enableComplexMapKeySerialization()
                 .create();
 
@@ -232,6 +235,7 @@ public class Scene {
                 .setPrettyPrinting()
                 .registerTypeAdapter(Component.class, new ComponentDeserializer())
                 .registerTypeAdapter(GameObject.class, new GameObjectDeserializer())
+                .registerTypeAdapter(ParticleSystemComponent.class, new PSComponentDeserializer())
                 .enableComplexMapKeySerialization()
                 .create();
         String inFile = "";
