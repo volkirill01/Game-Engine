@@ -8,6 +8,7 @@ import engine.components.Transform;
 import engine.imGui.Console;
 import engine.imGui.ConsoleMessage;
 import engine.imGui.EditorImGui;
+import engine.imGui.InspectorWindow;
 import engine.renderEngine.Loader;
 import engine.renderEngine.OBJLoader;
 import engine.renderEngine.Window;
@@ -385,6 +386,9 @@ public class GameObject {
             showAddTag = true;
 
         ImGui.popStyleVar();
+
+        Window.get().getImGuiLayer().getInspectorWindow().drawIsLockedButton(0.0f);
+
         ImGui.endMenuBar();
 
         showCreateTagPopup();

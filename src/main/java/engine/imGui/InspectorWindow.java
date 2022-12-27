@@ -1,8 +1,11 @@
 package engine.imGui;
 
+import engine.TestFieldsWindow;
 import engine.assets.Asset;
 import engine.entities.GameObject;
 import engine.renderEngine.PickingTexture;
+import imgui.ImVec2;
+import imgui.flag.ImGuiStyleVar;
 import imgui.flag.ImGuiWindowFlags;
 import org.joml.Vector4f;
 import imgui.ImGui;
@@ -33,12 +36,10 @@ public class InspectorWindow extends EditorImGuiWindow {
         if (activeAsset != null) {
             ImGui.begin(" \uEF4E Inspector ");
             activeAsset.mainImgui();
-            this.isLocked = EditorImGui.field_Boolean("Is Locked", this.isLocked);
 
             activeAsset.imgui();
         } else if (activeGameObjects.size() == 1 && activeGameObjects.get(0) != null) {
             ImGui.begin(" \uEF4E Inspector ", ImGuiWindowFlags.MenuBar);
-            this.isLocked = EditorImGui.field_Boolean("Is Locked", this.isLocked);
 
             activeGameObject = activeGameObjects.get(0);
             activeGameObject.imgui();
@@ -51,6 +52,24 @@ public class InspectorWindow extends EditorImGuiWindow {
 
         super.imgui();
         ImGui.end();
+    }
+
+    public void drawIsLockedButton(float xOffset) {
+        ImVec2 buttonPos = new ImVec2(ImGui.getWindowContentRegionMaxX() - 21.0f + xOffset, ImGui.getCursorPosY());
+
+        ImVec2 startPos = ImGui.getCursorPos();
+
+        ImGui.setCursorPos(buttonPos.x, buttonPos.y);
+        ImGui.pushStyleVar(ImGuiStyleVar.FramePadding, ImGui.getStyle().getFramePaddingX() - 1.0f,  ImGui.getStyle().getFramePaddingY() - 3.0f);
+        isLocked = EditorImGui.toggledButton(isLocked ? "\uF01A" : "\uF01B", isLocked);
+        if (ImGui.isItemHovered()) {
+            ImGui.beginTooltip();
+            ImGui.text(!isLocked ? "Lock`s the Inspector\nNot allow to change Selection" : "Unlock the Inspector\nAllow to change Selection");
+            ImGui.endTooltip();
+        }
+        ImGui.popStyleVar();
+
+        ImGui.setCursorPos(startPos.x, startPos.y);
     }
 
     public void setActiveAsset(Asset asset) {

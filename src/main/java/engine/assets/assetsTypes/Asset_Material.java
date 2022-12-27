@@ -18,6 +18,6 @@ public class Asset_Material extends Asset {
     public void imgui() {
         Material mat = Loader.get().loadMaterial(assetPath);
         if (!mat.getFilepath().equals(DefaultMeshes.getDefaultMaterialPath()))
-            mat.imgui();
+            mat.imgui(0.0f);
     }
 }

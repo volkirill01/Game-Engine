@@ -6,6 +6,7 @@ import engine.renderEngine.models.TexturedModel;
 import engine.renderEngine.textures.Material;
 import engine.renderEngine.textures.TextureSliceMode;
 import engine.toolbox.DefaultMeshes;
+import imgui.ImGui;
 import org.joml.Vector2f;
 
 import java.util.Collections;
@@ -61,14 +62,14 @@ public class MeshRenderer extends ObjectRenderer {
         this.model = (TexturedModel) EditorImGui.field_Asset("Model", this.model, Asset.AssetType.Model);
 
         if (this.model != null) {
-            EditorImGui.field_MaterialsList("Materials", model.getMaterials());
+            if (this.model.getMaterials().size() > 1)
+                EditorImGui.field_MaterialsList("Materials", model.getMaterials());
+            else {
+                this.model.getMaterials().set(0, (Material) EditorImGui.field_Asset("Material", this.model.getMaterials().get(0), Asset.AssetType.Material));
 
-            for (int i = 0; i < model.getMaterials().size(); i++) {
-                model.setMaterial((Material) EditorImGui.field_Asset(model.getMesh().getModels().get(i).getMaterialGroup(), model.getMaterials().get(i), Asset.AssetType.Material), i);
-                if (!model.getMaterials().get(i).getFilepath().equals(DefaultMeshes.getDefaultMaterialPath())) {
-                    if (EditorImGui.collapsingHeader(model.getMesh().getModels().get(i).getMaterialGroup()))
-                        model.getMaterials().get(i).imgui();
-                }
+                if (this.model.getMaterials().get(0) != null && !this.model.getMaterials().get(0).getFilepath().equals(DefaultMeshes.getDefaultMaterialPath()))
+                    if (EditorImGui.collapsingHeader("Material"))
+                        this.model.getMaterials().get(0).imgui(10.0f);
             }
         }
     }

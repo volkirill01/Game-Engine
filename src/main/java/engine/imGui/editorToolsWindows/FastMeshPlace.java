@@ -6,6 +6,7 @@ import engine.renderEngine.Window;
 import engine.renderEngine.components.MeshRenderer;
 import engine.toolbox.DefaultMeshes;
 import imgui.ImGui;
+import imgui.ImVec2;
 import imgui.flag.ImGuiStyleVar;
 import imgui.flag.ImGuiWindowFlags;
 import org.joml.Vector2f;
@@ -19,6 +20,9 @@ public class FastMeshPlace {
         ImGui.setNextWindowPos(windowPos.x - windowSize.x - 8.5f, windowPos.y - 6.5f);
         ImGui.setNextWindowSize(windowSize.x, windowSize.y);
 
+        float startFrameRounding = ImGui.getStyle().getFrameRounding();
+        ImVec2 startFramePadding = ImGui.getStyle().getFramePadding();
+
         ImGui.pushStyleVar(ImGuiStyleVar.WindowPadding, 3.0f, 3.0f);
         ImGui.pushStyleVar(ImGuiStyleVar.WindowRounding, 0.0f);
         ImGui.pushStyleVar(ImGuiStyleVar.FramePadding, 2.0f, 2.0f);
@@ -31,6 +35,14 @@ public class FastMeshPlace {
             Window.get().getScene().addGameObjectToScene(cube);
             Window.get().getImGuiLayer().getInspectorWindow().setActiveGameObject(cube);
         }
+        ImGui.pushStyleVar(ImGuiStyleVar.WindowRounding, startFrameRounding);
+        ImGui.pushStyleVar(ImGuiStyleVar.WindowPadding, startFramePadding.x, startFramePadding.y);
+        if (ImGui.isItemHovered()) {
+            ImGui.beginTooltip();
+            ImGui.text("Create Cube Object\nOn Scene");
+            ImGui.endTooltip();
+        }
+        ImGui.popStyleVar(2);
         ImGui.sameLine();
 
         if (ImGui.imageButton(Loader.get().loadTexture("engineFiles/defaultMeshes/icon=defaultSphere(256x256).png").getTextureID(), 46.0f, 46.0f, 0, 1, 1, 0)) {
@@ -39,6 +51,14 @@ public class FastMeshPlace {
             Window.get().getScene().addGameObjectToScene(sphere);
             Window.get().getImGuiLayer().getInspectorWindow().setActiveGameObject(sphere);
         }
+        ImGui.pushStyleVar(ImGuiStyleVar.WindowRounding, startFrameRounding);
+        ImGui.pushStyleVar(ImGuiStyleVar.WindowPadding, startFramePadding.x, startFramePadding.y);
+        if (ImGui.isItemHovered()) {
+            ImGui.beginTooltip();
+            ImGui.text("Create Sphere Object\nOn Scene");
+            ImGui.endTooltip();
+        }
+        ImGui.popStyleVar(2);
 
         ImGui.popStyleVar();
         ImGui.end();

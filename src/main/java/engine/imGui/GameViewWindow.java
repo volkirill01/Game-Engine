@@ -64,9 +64,19 @@ public class GameViewWindow extends EditorImGuiWindow {
             isPlaying = true;
             EventSystem.notify(null, new Event(EventType.GameEngineStartPlay));
         }
+        if (ImGui.isItemHovered()) {
+            ImGui.beginTooltip();
+            ImGui.text("Start`s the Game");
+            ImGui.endTooltip();
+        }
         if (ImGui.menuItem("\uEFFC", "", !isPlaying, isPlaying)) {
             isPlaying = false;
             EventSystem.notify(null, new Event(EventType.GameEngineStopPlay));
+        }
+        if (ImGui.isItemHovered()) {
+            ImGui.beginTooltip();
+            ImGui.text("Stop`s the Game");
+            ImGui.endTooltip();
         }
 
         ImGui.nextColumn();

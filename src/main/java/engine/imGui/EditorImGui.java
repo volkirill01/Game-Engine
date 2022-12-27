@@ -5,7 +5,6 @@ import engine.assets.Asset;
 import engine.renderEngine.Loader;
 import engine.renderEngine.OBJLoader;
 import engine.renderEngine.models.Mesh;
-import engine.renderEngine.models.RawModel;
 import engine.renderEngine.models.TexturedModel;
 import engine.renderEngine.textures.Material;
 import engine.renderEngine.textures.Texture;
@@ -28,6 +27,8 @@ public class EditorImGui {
 
     private static float leftPadding = 150.0f;
     private static float textVerticalOffset = 4.0f;
+
+    private static ImVec4 TRANSPARENT = new ImVec4(0.0f, 0.0f, 0.0f, 0.0f);
 
     public enum BooleanType {
         Checkbox,
@@ -159,7 +160,9 @@ public class EditorImGui {
         ImGui.setColumnWidth(0, 3.0f);
         ImGui.nextColumn();
 
+        ImGui.pushFont(ImGuiLayer.boldText);
         ImGui.text(header);
+        ImGui.popFont();
 
         ImGui.columns(1);
         ImGui.popID();
@@ -186,6 +189,11 @@ public class EditorImGui {
         ImGui.pushStyleColor(ImGuiCol.ButtonActive, 204, 36, 29, 255);
         if (ImGui.button("X", buttonSize.x, buttonSize.y))
             values.x = resetValues.x;
+        if (ImGui.isItemHovered()) {
+            ImGui.beginTooltip();
+            ImGui.text("Reset X to: " + resetValues.x);
+            ImGui.endTooltip();
+        }
         ImGui.popStyleColor(3);
 
         ImGui.sameLine();
@@ -200,6 +208,11 @@ public class EditorImGui {
         ImGui.pushStyleColor(ImGuiCol.ButtonActive, 152, 151, 26, 255);
         if (ImGui.button("Y", buttonSize.x, buttonSize.y))
             values.y = resetValues.y;
+        if (ImGui.isItemHovered()) {
+            ImGui.beginTooltip();
+            ImGui.text("Reset Y to: " + resetValues.x);
+            ImGui.endTooltip();
+        }
         ImGui.popStyleColor(3);
 
         ImGui.sameLine();
@@ -240,6 +253,11 @@ public class EditorImGui {
         ImGui.pushStyleColor(ImGuiCol.ButtonActive, 204, 36, 29, 255);
         if (ImGui.button("X", buttonSize.x, buttonSize.y))
             values.x = resetValues.x;
+        if (ImGui.isItemHovered()) {
+            ImGui.beginTooltip();
+            ImGui.text("Reset X to: " + resetValues.x);
+            ImGui.endTooltip();
+        }
         ImGui.popStyleColor(3);
 
         ImGui.sameLine();
@@ -254,6 +272,11 @@ public class EditorImGui {
         ImGui.pushStyleColor(ImGuiCol.ButtonActive, 152, 151, 26, 255);
         if (ImGui.button("Y", buttonSize.x, buttonSize.y))
             values.y = resetValues.y;
+        if (ImGui.isItemHovered()) {
+            ImGui.beginTooltip();
+            ImGui.text("Reset Y to: " + resetValues.y);
+            ImGui.endTooltip();
+        }
         ImGui.popStyleColor(3);
 
         ImGui.sameLine();
@@ -269,6 +292,11 @@ public class EditorImGui {
         ImGui.pushStyleColor(ImGuiCol.ButtonActive, 69, 133, 136, 255);
         if (ImGui.button("Z", buttonSize.x, buttonSize.y))
             values.z = resetValues.z;
+        if (ImGui.isItemHovered()) {
+            ImGui.beginTooltip();
+            ImGui.text("Reset Z to: " + resetValues.z);
+            ImGui.endTooltip();
+        }
         ImGui.popStyleColor(3);
 
         ImGui.sameLine();
@@ -630,7 +658,8 @@ public class EditorImGui {
     }
 
     public static List<Material> field_MaterialsList(String label, List<Material> list) {
-        ImGui.pushID("List-" + label);
+        ImGui.pushID("ListMaterials-" + label);
+        ImVec2 startPos = ImGui.getCursorPos();
 
         ImGui.columns(2, "", false);
         ImGui.setColumnWidth(0, leftPadding);
@@ -638,13 +667,22 @@ public class EditorImGui {
         ImGui.setCursorPosY(ImGui.getCursorPosY() + textVerticalOffset);
         ImGui.text("\t" + label);
         ImGui.nextColumn();
+
+        boolean isOpen = collapsingHeader(label + " (" + list.size() + ")");
         ImGui.columns(1);
 
-        for (int i = 0; i < list.size(); i++) {
-            if (collapsingHeader("Element (" + i + ")")) {
-                field_Asset("" + i, list.get(i), Asset.AssetType.Material);
-                ImGui.separator();
-                list.get(i).imgui();
+        if (isOpen) {
+            for (int i = 0; i < list.size(); i++) {
+                ImGui.setCursorPosX(startPos.x);
+                if (collapsingHeader("Element (" + i + ")")) {
+                    list.set(i, (Material) field_Asset("Material (" + i + ")", list.get(i), Asset.AssetType.Material));
+
+                    if (list.get(i) != null && !list.get(i).getFilepath().equals(DefaultMeshes.getDefaultMaterialPath()))
+                        if (collapsingHeader("Material##" + i, 0.0f, false)) {
+                            list.get(i).imgui(10.0f);
+                            ImGui.separator();
+                        }
+                }
             }
         }
 
@@ -677,19 +715,27 @@ public class EditorImGui {
         return endValue;
     }
 
-    public static boolean collapsingHeader(String label) {
+    public static boolean collapsingHeader(String label) { return collapsingHeader(label, 0.0f, true); }
+
+    public static boolean collapsingHeader(String label, float xOffset, boolean hasBackground) {
         ImGui.pushID("CollapsingHeader-" + label);
 
-        ImVec4 idleColor = ImGui.getStyle().getColor(ImGuiCol.FrameBg);
-        ImVec4 hoveredColor = ImGui.getStyle().getColor(ImGuiCol.FrameBgHovered);
-        ImVec4 activeColor = ImGui.getStyle().getColor(ImGuiCol.FrameBgActive);
+        ImVec4 idleColor = TRANSPARENT;
+        ImVec4 hoveredColor = TRANSPARENT;
+        ImVec4 activeColor = TRANSPARENT;
+
+        if (hasBackground) {
+            idleColor = ImGui.getStyle().getColor(ImGuiCol.FrameBg);
+            hoveredColor = ImGui.getStyle().getColor(ImGuiCol.FrameBgHovered);
+            activeColor = ImGui.getStyle().getColor(ImGuiCol.FrameBgActive);
+        }
 
         ImGui.pushStyleColor(ImGuiCol.Header, idleColor.x, idleColor.y, idleColor.z, idleColor.w);
         ImGui.pushStyleColor(ImGuiCol.HeaderHovered, hoveredColor.x, hoveredColor.y, hoveredColor.z, hoveredColor.w);
         ImGui.pushStyleColor(ImGuiCol.HeaderActive, activeColor.x, activeColor.y, activeColor.z, activeColor.w);
         ImGui.pushStyleColor(ImGuiCol.Border, 0.0f, 0.0f, 0.0f, 0.0f);
 
-        ImGui.setCursorPosX(ImGui.getCursorPosX() + 4.0f);
+        ImGui.setCursorPosX(ImGui.getCursorPosX() + 4.0f + xOffset);
         boolean result = ImGui.collapsingHeader(label); // TODO MAKE HEADER SHORTEN
         ImGui.popStyleColor(4);
 
@@ -993,10 +1039,10 @@ public class EditorImGui {
             float[] tmpIntensity = { intensity };
             ImGui.columns(2, "", false);
             ImGui.setColumnWidth(0, leftPadding);
-            ImGui.setCursorPos(ImGui.getCursorPosX() - 2.0f, ImGui.getCursorPosY() - 17.0f);
+            ImGui.setCursorPos(ImGui.getCursorPosX() - 2.0f, ImGui.getCursorPosY() - 9.0f);
             ImGui.text("\t\tIntensity");
             ImGui.nextColumn();
-            ImGui.setCursorPos(ImGui.getCursorPosX() - 2.0f, ImGui.getCursorPosY() - 20.0f);
+            ImGui.setCursorPos(ImGui.getCursorPosX() - 2.0f, ImGui.getCursorPosY() - 12.0f);
             ImGui.setNextItemWidth(ImGui.getContentRegionAvailX() - 124.0f);
             ImGui.sliderFloat("##Intensity", tmpIntensity, intensityMin, intensityMax);
             intensity = tmpIntensity[0];
@@ -1004,9 +1050,9 @@ public class EditorImGui {
         }
 
         ImGui.setCursorPos(startCursorPos.x, startCursorPos.y + 19.0f);
-        tiling = EditorImGui.vector2("Tiling", tiling, new Vector2f(1.0f), 62.0f);
+        EditorImGui.textureField_Vector2("Tiling", tiling, new Vector2f(1.0f));
         ImGui.setCursorPos(startCursorPos.x, startCursorPos.y + 49.0f);
-        offset = EditorImGui.vector2("Offset", offset, new Vector2f(0.0f), 62.0f);
+        EditorImGui.textureField_Vector2("Offset", offset, new Vector2f(0.0f));
 
         ImGui.setCursorPos(startCursorPos.x, startCursorPos.y - 44.0f);
         ImGui.setCursorPosX(ImGui.getContentRegionAvailX() + ImGui.getStyle().getWindowPaddingX() + 30.0f);
@@ -1050,7 +1096,7 @@ public class EditorImGui {
         return result;
     }
 
-    private static Vector2f vector2(String label, Vector2f values, Vector2f resetValues, float size) {
+    private static Vector2f textureField_Vector2(String label, Vector2f values, Vector2f resetValues) {
         ImGui.pushID(label);
 
         ImGui.columns(2, "", false);
@@ -1069,11 +1115,16 @@ public class EditorImGui {
         ImGui.pushStyleColor(ImGuiCol.ButtonActive, 204, 36, 29, 255);
         if (ImGui.button("X", buttonSize.x, buttonSize.y))
             values.x = resetValues.x;
+        if (ImGui.isItemHovered()) {
+            ImGui.beginTooltip();
+            ImGui.text("Reset X to: " + resetValues.x);
+            ImGui.endTooltip();
+        }
         ImGui.popStyleColor(3);
 
         ImGui.sameLine();
         float[] vecValuesX = {values.x};
-        ImGui.setNextItemWidth((ImGui.getContentRegionAvailX() / 2f) - (buttonSize.x / 2) - ImGui.getStyle().getItemSpacingX() - size);
+        ImGui.setNextItemWidth((ImGui.getContentRegionAvailX() / 2f) - (buttonSize.x / 2) - ImGui.getStyle().getItemSpacingX() - (float) 62.0);
         ImGui.dragFloat("##x", vecValuesX, 0.1f);
         ImGui.sameLine();
 
@@ -1083,11 +1134,16 @@ public class EditorImGui {
         ImGui.pushStyleColor(ImGuiCol.ButtonActive, 152, 151, 26, 255);
         if (ImGui.button("Y", buttonSize.x, buttonSize.y))
             values.y = resetValues.y;
+        if (ImGui.isItemHovered()) {
+            ImGui.beginTooltip();
+            ImGui.text("Reset Y to: " + resetValues.x);
+            ImGui.endTooltip();
+        }
         ImGui.popStyleColor(3);
 
         ImGui.sameLine();
         float[] vecValuesY = {values.y};
-        ImGui.setNextItemWidth(ImGui.getContentRegionAvailX() - (size * 2.0f));
+        ImGui.setNextItemWidth(ImGui.getContentRegionAvailX() - ((float) 62.0 * 2.0f));
         ImGui.dragFloat("##y", vecValuesY, 0.1f);
         ImGui.popItemWidth();
 

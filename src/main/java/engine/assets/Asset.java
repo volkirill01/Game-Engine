@@ -1,6 +1,8 @@
 package engine.assets;
 
+import engine.TestFieldsWindow;
 import engine.renderEngine.Loader;
+import engine.renderEngine.Window;
 import engine.renderEngine.textures.Texture;
 import imgui.ImGui;
 import imgui.ImVec2;
@@ -42,6 +44,8 @@ public abstract class Asset {
 
     public void mainImgui() {
         ImVec2 startCursorPos = ImGui.getCursorPos();
+        float startFrameRounding = ImGui.getStyle().getFrameRounding();
+        ImVec2 startFramePadding = ImGui.getStyle().getFramePadding();
 
         ImGui.setCursorPos(3.0f, 30.0f);
         ImGui.pushStyleVar(ImGuiStyleVar.FrameRounding, 0);
@@ -53,6 +57,12 @@ public abstract class Asset {
         ImGui.sameLine();
         ImGui.setCursorPos(ImGui.getCursorPosX() + 8.0f, ImGui.getCursorPosY() + 3.0f);
         ImGui.text(this.assetName);
+
+        ImGui.pushStyleVar(ImGuiStyleVar.FrameRounding, startFrameRounding);
+        ImGui.pushStyleVar(ImGuiStyleVar.FramePadding, startFramePadding.x, startFramePadding.y);
+        ImGui.setCursorPosY(startCursorPos.y - 34.0f + 7.0f);
+        Window.get().getImGuiLayer().getInspectorWindow().drawIsLockedButton(0.0f);
+        ImGui.popStyleVar(2);
 
         ImGui.endChildFrame();
         ImGui.popStyleVar(2);

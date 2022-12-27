@@ -1,6 +1,7 @@
 package engine.renderEngine.textures;
 
 import engine.imGui.EditorImGui;
+import engine.imGui.ImGuiLayer;
 import engine.renderEngine.Loader;
 import engine.renderEngine.renderer.RenderCullSide;
 import engine.toolbox.customVariables.Color;
@@ -66,7 +67,7 @@ public class Material {
         this.data.replace("alphaClip", this.alphaClip);
         this.data.replace("renderCullSide", this.renderCullSide);
         this.data.replace("useFakeLighting", this.useFakeLighting);
-        Loader.get().saveMaterial(this.filepath, this.data); // TODO SAVE IN INSPECTOR
+        Loader.get().saveMaterial(this.filepath, this.data);
     }
 
     public void setMetallicMap(Texture metallicMap) {
@@ -155,35 +156,44 @@ public class Material {
 
     public void setUseFakeLighting(boolean useFakeLighting) { this.useFakeLighting = useFakeLighting; }
 
-    public void imgui() {
-        EditorImGui.header("Albedo");
-        EditorImGui.filed_Color("Color", color);
-        this.texture = EditorImGui.field_Texture("Albedo", this.texture, this.tiling, new Vector2f());
+    public void imgui(float xOffset) {
+        if (EditorImGui.collapsingHeader("Albedo", xOffset, true)) {
+            EditorImGui.filed_Color("Color", color);
+            this.texture = EditorImGui.field_Texture("Albedo", this.texture, this.tiling, new Vector2f());
 
-        ImGui.separator();
-        EditorImGui.header("Metallic");
-        List<Object> tmpMetallic = EditorImGui.field_Texture("Metallic Map", this.metallicMap, new Vector2f(), new Vector2f(), this.metallicIntensity);
-        this.metallicMap = (Texture) tmpMetallic.get(0);
-        this.metallicIntensity = (float) tmpMetallic.get(1);
+            ImGui.separator();
+        }
 
-        ImGui.separator();
-        EditorImGui.header("Specular");
-        List<Object> tmpSpecular = EditorImGui.field_Texture("Specular Map", this.specularMap, new Vector2f(), new Vector2f(), this.specularIntensity);
-        this.specularMap = (Texture) tmpSpecular.get(0);
-        this.specularIntensity = (float) tmpSpecular.get(1);
-        this.shineDumper = EditorImGui.field_Float("Shine Dumper", this.shineDumper, 0.02f, 0);
+        if (EditorImGui.collapsingHeader("Metallic", xOffset, true)) {
+            List<Object> tmpMetallic = EditorImGui.field_Texture("Metallic Map", this.metallicMap, new Vector2f(), new Vector2f(), this.metallicIntensity);
+            this.metallicMap = (Texture) tmpMetallic.get(0);
+            this.metallicIntensity = (float) tmpMetallic.get(1);
 
-        ImGui.separator();
-        EditorImGui.header("Emission");
-        List<Object> tmpEmission = EditorImGui.field_Texture("Emission Map", this.emissionMap, new Vector2f(), new Vector2f(), this.emissionIntensity);
-        this.emissionMap = (Texture) tmpEmission.get(0);
-        this.emissionIntensity = (float) tmpEmission.get(1);
-        this.useAlbedoEmission = EditorImGui.field_Boolean("Use Albedo Emission", this.useAlbedoEmission);
+            ImGui.separator();
+        }
 
-        ImGui.separator();
-        EditorImGui.header("Other");
-        this.alphaClip = EditorImGui.field_Float("Alpha Clip", this.alphaClip, 0.02f, 0.0f, 1.0f);
-        this.renderCullSide = (RenderCullSide) EditorImGui.field_Enum("Render Cull Side", this.renderCullSide);
-        this.useFakeLighting = EditorImGui.field_Boolean("Use Fake Lighting", this.useFakeLighting);
+        if (EditorImGui.collapsingHeader("Specular", xOffset, true)) {
+            List<Object> tmpSpecular = EditorImGui.field_Texture("Specular Map", this.specularMap, new Vector2f(), new Vector2f(), this.specularIntensity);
+            this.specularMap = (Texture) tmpSpecular.get(0);
+            this.specularIntensity = (float) tmpSpecular.get(1);
+            this.shineDumper = EditorImGui.field_Float("Shine Dumper", this.shineDumper, 0.02f, 0);
+
+            ImGui.separator();
+        }
+
+        if (EditorImGui.collapsingHeader("Emission", xOffset, true)) {
+            List<Object> tmpEmission = EditorImGui.field_Texture("Emission Map", this.emissionMap, new Vector2f(), new Vector2f(), this.emissionIntensity);
+            this.emissionMap = (Texture) tmpEmission.get(0);
+            this.emissionIntensity = (float) tmpEmission.get(1);
+            this.useAlbedoEmission = EditorImGui.field_Boolean("Use Albedo Emission", this.useAlbedoEmission);
+
+            ImGui.separator();
+        }
+
+        if (EditorImGui.collapsingHeader("Other", xOffset, true)) {
+            this.alphaClip = EditorImGui.field_Float("Alpha Clip", this.alphaClip, 0.02f, 0.0f, 1.0f);
+            this.renderCullSide = (RenderCullSide) EditorImGui.field_Enum("Render Cull Side", this.renderCullSide);
+            this.useFakeLighting = EditorImGui.field_Boolean("Use Fake Lighting", this.useFakeLighting);
+        }
     }
 }
