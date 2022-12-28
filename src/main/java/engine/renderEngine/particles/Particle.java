@@ -63,7 +63,7 @@ public class Particle {
 
     protected boolean update(Camera camera) {
         if (this.velocity != null) {
-            velocity.y += Settings.GRAVITY * gravityEffect * Window.getDelta();
+            velocity.y += Settings.GRAVITY * (gravityEffect * 0.1f) * Window.getDelta();
             change.set(velocity);
         }
         change.mul(Window.getDelta());

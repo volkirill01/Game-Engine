@@ -20,4 +20,12 @@ public class DefaultMeshes {
     public static TexturedModel DefaultSphere() {
         return new TexturedModel(OBJLoader.loadOBJ("engineFiles/defaultMeshes/defaultSphere.obj"), Loader.get().loadMaterial(getDefaultMaterialPath()));
     }
+
+    public static TexturedModel DefaultCapsule() {
+        return new TexturedModel(OBJLoader.loadOBJ("engineFiles/defaultMeshes/defaultCapsule.obj"), Loader.get().loadMaterial(getDefaultMaterialPath()));
+    }
+
+    public static TexturedModel DefaultPyramid() {
+        return new TexturedModel(OBJLoader.loadOBJ("engineFiles/defaultMeshes/defaultPyramid.obj"), Loader.get().loadMaterial(getDefaultMaterialPath()));
+    }
 }

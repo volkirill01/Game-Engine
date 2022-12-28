@@ -52,9 +52,13 @@ public class EditorImGui {
         ImVec4 buttonDisabledColor = ImGui.getStyle().getColor(ImGuiCol.ButtonActive);
         ImVec4 headerDisabledColor = ImGui.getStyle().getColor(ImGuiCol.HeaderActive);
         ImVec4 frameDisabledColor = ImGui.getStyle().getColor(ImGuiCol.FrameBgActive);
+        ImVec4 borderDisabledColor = ImGui.getStyle().getColor(ImGuiCol.Border);
+        borderDisabledColor = new ImVec4(borderDisabledColor.x, borderDisabledColor.y, borderDisabledColor.z, borderDisabledColor.w / 2.0f);
 
         ImGui.pushStyleColor(ImGuiCol.Text, textDisabledColor.x, textDisabledColor.y, textDisabledColor.z, textDisabledColor.w);
         ImGui.pushStyleColor(ImGuiCol.CheckMark, textDisabledColor.x, textDisabledColor.y, textDisabledColor.z, textDisabledColor.w);
+
+        ImGui.pushStyleColor(ImGuiCol.Border, borderDisabledColor.x, borderDisabledColor.y, borderDisabledColor.z, borderDisabledColor.w);
 
         ImGui.pushStyleColor(ImGuiCol.Button, buttonDisabledColor.x, buttonDisabledColor.y, buttonDisabledColor.z, buttonDisabledColor.w);
         ImGui.pushStyleColor(ImGuiCol.ButtonHovered, buttonDisabledColor.x, buttonDisabledColor.y, buttonDisabledColor.z, buttonDisabledColor.w);
@@ -69,9 +73,7 @@ public class EditorImGui {
         ImGui.pushStyleColor(ImGuiCol.FrameBgActive, frameDisabledColor.x, frameDisabledColor.y, frameDisabledColor.z, frameDisabledColor.w);
     }
 
-    public static void popDisabled() {
-        ImGui.popStyleColor(11);
-    }
+    public static void popDisabled() { ImGui.popStyleColor(12); }
 
     public static void helpMarker(String description) { helpMarker("(?)", description); }
 

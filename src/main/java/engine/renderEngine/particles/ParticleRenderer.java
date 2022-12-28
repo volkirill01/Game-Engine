@@ -18,13 +18,7 @@ import static org.lwjgl.opengl.GL30.*;
 
 public class ParticleRenderer {
 	
-	private static final float[] VERTICES = {
-			-0.5f, 0.5f, 	// 1
-			-0.5f, -0.5f, 	// 2
-			0.5f, 0.5f, 	// 3
-			0.5f, -0.5f, 	// 4
-	};
-//	private static final float[] VERTICES = { -0.5f, 0.5f, -0.5f, -0.5f, 0.5f, 0.5f, 0.5f, -0.5f };
+	private static final float[] VERTICES = { -0.5f, 0.5f, -0.5f, -0.5f, 0.5f, 0.5f, 0.5f, -0.5f, };
 	private static final int MAX_INSTANCES = 10_000;
 	private static final int INSTANCE_DATA_LENGTH = 21;
 

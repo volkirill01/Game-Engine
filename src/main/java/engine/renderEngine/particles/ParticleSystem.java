@@ -22,7 +22,9 @@ import imgui.flag.ImGuiCol;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
+import org.lwjgl.BufferUtils;
 
+import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -40,9 +42,10 @@ public class ParticleSystem extends Component {
 //    private boolean randomRotation = false;
 //    private boolean useBlend = false;
 
-    private Vector3f velocity = new Vector3f(0.0f, 1.0f, 0.0f);
+    private transient Vector3f velocity;
+    private transient FloatBuffer gravity;
 
-    private float playTime;
+    private transient float playTime;
 
     private List<ParticleSystemComponent> components;
 
@@ -68,14 +71,7 @@ public class ParticleSystem extends Component {
 
     @Override
     public void editorUpdate() {
-        this.texture.update();
-
-        if (this.random == null)
-            this.random = new Random();
-
-        if (this.components != null && this.components.size() > 0)
-            for (ParticleSystemComponent component : this.components)
-                component.update(playTime, random, velocity);
+        updateParticleSystem();
 
         if (Window.get().getImGuiLayer().getInspectorWindow().getActiveGameObject() == this.gameObject)
             generateParticles();
@@ -83,6 +79,22 @@ public class ParticleSystem extends Component {
 
     @Override
     public void update() {
+        updateParticleSystem();
+
+        if (Window.get().runtimePlaying)
+            generateParticles();
+    }
+
+    private void updateParticleSystem() {
+        if (velocity == null)
+            velocity = new Vector3f(0.0f, 1.0f, 0.0f);
+
+        if (gravity == null) {
+            gravity = BufferUtils.createFloatBuffer(1);
+            gravity.put(0.0f);
+        }
+        gravity.clear();
+
         this.texture.update();
 
         if (this.random == null)
@@ -90,10 +102,7 @@ public class ParticleSystem extends Component {
 
         if (this.components != null && this.components.size() > 0)
             for (ParticleSystemComponent component : this.components)
-                component.update(playTime, random, velocity);
-
-        if (Window.get().runtimePlaying)
-            generateParticles();
+                component.update(playTime, random, velocity, gravity);
     }
 
     public <T extends ParticleSystemComponent> T getComponent(Class<T> componentClass) {
@@ -145,7 +154,10 @@ public class ParticleSystem extends Component {
 //        velocity.mul(generateValue(averageSpeed, speedError));
 //        float scale = generateValue(averageScale, scaleError);
 //        float lifeLength = generateValue(averageLifeLength, lifeError);
-        new Particle(Loader.get().loadTexture(texture.getFilepath()), false, new Vector3f(gameObject.transform.position), new Vector3f(velocity), 0.0f, 1.0f, 0.0f, 1.0f);
+        Vector3f _position = new Vector3f(gameObject.transform.position);
+        Vector3f _velocity = new Vector3f(velocity);
+
+        new Particle(Loader.get().loadTexture(texture.getFilepath()), false, _position, _velocity, gravity.get(0), 1.0f, 0.0f, 1.0f);
     }
 
     private float generateValue(float average, float errorMargin) {

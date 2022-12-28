@@ -3,15 +3,15 @@ package engine.renderEngine.particles.particleSystemComponents_PSC;
 import engine.imGui.EditorImGui;
 import org.joml.Vector3f;
 
+import java.nio.FloatBuffer;
 import java.util.Random;
 
 public class PSC_RandomVelocity extends ParticleSystemComponent {
 
-    private float a = 1.0f;
-    private float b = 1.0f;
+    private float speed = 1.0f;
 
     @Override
-    public void update(float time, Random random, Vector3f velocity) {
+    public void update(float time, Random random, Vector3f velocity, FloatBuffer gravity) {
         generateRandomUnitVector(random, velocity);
     }
 
@@ -23,16 +23,15 @@ public class PSC_RandomVelocity extends ParticleSystemComponent {
         float y = (float) (rootOneMinusZSquared * Math.sin(theta));
 
         if (velocity != null) {
-            velocity.x = x;
-            velocity.y = y;
-            velocity.z = z;
+            velocity.x = x * speed;
+            velocity.y = y * speed;
+            velocity.z = z * speed;
         }
     }
 
     @Override
     public void imgui() {
-        this.a = EditorImGui.field_Float("A", this.a, 0.005f);
-        this.b = EditorImGui.field_Float("B", this.b, 0.005f);
+        this.speed = EditorImGui.field_Float("Speed", this.speed, 0.005f);
     }
 
     @Override

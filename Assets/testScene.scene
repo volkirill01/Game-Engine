@@ -77,16 +77,18 @@
             "metaFilepath": "Assets/fireParticles.png"
           },
           "particlesPerSecond": 20,
-          "velocity": {
-            "x": 0.94131196,
-            "y": -0.33616224,
-            "z": 0.03044188
-          },
-          "playTime": 0.0,
           "components": [
             {
               "type": "engine.renderEngine.particles.particleSystemComponents_PSC.PSC_RandomVelocity",
-              "properties": {}
+              "properties": {
+                "speed": 1.0
+              }
+            },
+            {
+              "type": "engine.renderEngine.particles.particleSystemComponents_PSC.PSC_GravityModifier",
+              "properties": {
+                "gravity": 0.5
+              }
             }
           ],
           "isActive": true
