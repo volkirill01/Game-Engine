@@ -1,6 +1,5 @@
 package engine.renderEngine;
 
-import engine.entities.Camera;
 import engine.entities.GameObject;
 import engine.eventSystem.EventSystem;
 import engine.eventSystem.Events.Event;
@@ -8,16 +7,14 @@ import engine.eventSystem.Observer;
 import engine.imGui.ConsoleMessage;
 import engine.imGui.ImGuiLayer;
 import engine.scene.*;
-import engine.toolbox.KeyListener;
-import engine.toolbox.MouseListener;
+import engine.toolbox.input.KeyListener;
+import engine.toolbox.input.MouseListener;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 
 import javax.swing.*;
-
-import java.awt.*;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL30.*;
@@ -54,6 +51,8 @@ public class Window implements Observer {
 
     public boolean drawGrid = true;
     public boolean drawDebug = true;
+
+    private boolean lockControl = false;
 
     private Scene currentScene;
 
@@ -230,6 +229,10 @@ public class Window implements Observer {
     public static float getHeight() { return HEIGHT; }
 
     private static long getCurrentTime() { return (long) (glfwGetTime() * 1000); }
+
+    public boolean isLockControl() { return get().lockControl; }
+
+    public void setLockControl(boolean value) { get().lockControl = value; }
 
     @Override
     public void addToEventSystem() { EventSystem.addObserver(this); }

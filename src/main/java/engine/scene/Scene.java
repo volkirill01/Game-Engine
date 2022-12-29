@@ -155,15 +155,6 @@ public class Scene {
 //            this.physics2D.add(go);
         }
         pendingObjects.clear();
-
-//        if (KeyListener.isKeyPressed(GLFW_KEY_DOWN)) // TODO MAKE CAMERA MOVABLE WITH KEYS
-//            camera.position.y -= deltaTime * 150f;
-//        else if (KeyListener.isKeyPressed(GLFW_KEY_UP))
-//            camera.position.y += deltaTime * 150f;
-//        if (KeyListener.isKeyPressed(GLFW_KEY_LEFT))
-//            camera.position.x -= deltaTime * 150f;
-//        else if (KeyListener.isKeyPressed(GLFW_KEY_RIGHT))
-//            camera.position.x += deltaTime * 150f;
     }
 
     public void update() {
@@ -193,8 +184,6 @@ public class Scene {
         }
         pendingObjects.clear();
     }
-
-    public void render() {  } // this.renderer.render();
 
     public Camera camera() { return this.camera; }
 

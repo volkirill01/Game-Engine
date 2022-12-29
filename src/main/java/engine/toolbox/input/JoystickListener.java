@@ -1,4 +1,4 @@
-package engine.toolbox;
+package engine.toolbox.input;
 
 import static org.lwjgl.glfw.GLFW.*;
 

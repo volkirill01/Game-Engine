@@ -1,4 +1,4 @@
-package engine.toolbox;
+package engine.toolbox.input;
 
 public class Shortcut {
     public String shortcutName = "Key";

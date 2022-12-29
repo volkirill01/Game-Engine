@@ -1,4 +1,4 @@
-package engine.toolbox;
+package engine.toolbox.input;
 
 
 import engine.renderEngine.Window;
@@ -14,7 +14,7 @@ public class MouseListener {
     private double scrollX, scrollY;
     private double xPos, yPos, lastX, lastY, worldX, worldY, lastWorldX, lastWorldY;
     private boolean mouseButtonPressed[] = new boolean[9];
-    private boolean mouseButtonBeginPress[] = new boolean[9];
+    private boolean mouseButtonClick[] = new boolean[9];
     private boolean[] isDragging = new boolean[9];
 
     private int mouseButtonDown = 0;
@@ -36,7 +36,7 @@ public class MouseListener {
         get().lastY = get().yPos;
         get().lastWorldX = get().worldX;
         get().lastWorldY = get().worldY;
-        get().mouseButtonBeginPress = new boolean[9];
+        get().mouseButtonClick = new boolean[9];
     }
 
     public static void clear() {
@@ -51,7 +51,7 @@ public class MouseListener {
         get().mouseButtonDown = 0;
         Arrays.fill(get().isDragging, false);
         Arrays.fill(get().mouseButtonPressed, false);
-        Arrays.fill(get().mouseButtonBeginPress, false);
+        Arrays.fill(get().mouseButtonClick, false);
     }
 
     public static MouseListener get() {
@@ -79,14 +79,14 @@ public class MouseListener {
 
             if (button < get().mouseButtonPressed.length) {
                 get().mouseButtonPressed[button] = true;
-                get().mouseButtonBeginPress[button] = true;
+                get().mouseButtonClick[button] = true;
             }
         } else if (action == GLFW_RELEASE) {
             get().mouseButtonDown--;
 
             if (button < get().mouseButtonPressed.length) {
                 get().mouseButtonPressed[button] = false;
-                get().mouseButtonBeginPress[button] = false;
+                get().mouseButtonClick[button] = false;
                 get().isDragging[button] = false;
             }
         }
@@ -113,7 +113,7 @@ public class MouseListener {
 
     public static boolean mouseButtonDown(int button) { return get().mouseButtonPressed[button]; }
 
-    public static boolean mouseButtonBeginPress(int button) { return get().mouseButtonBeginPress[button]; }
+    public static boolean mouseButtonClick(int button) { return get().mouseButtonClick[button]; }
 
     public static float getScreenX() { return getScreen().x; }
 

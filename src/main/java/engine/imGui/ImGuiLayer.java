@@ -7,9 +7,9 @@ import engine.renderEngine.PickingTexture;
 import engine.renderEngine.Window;
 import engine.renderEngine.postProcessing.PostProcessingGui;
 import engine.scene.Scene;
-import engine.toolbox.JoystickListener;
-import engine.toolbox.KeyListener;
-import engine.toolbox.MouseListener;
+import engine.toolbox.input.JoystickListener;
+import engine.toolbox.input.KeyListener;
+import engine.toolbox.input.MouseListener;
 import imgui.*;
 import imgui.callback.ImStrConsumer;
 import imgui.callback.ImStrSupplier;
@@ -18,7 +18,6 @@ import imgui.gl3.ImGuiImplGl3;
 import imgui.glfw.ImGuiImplGlfw;
 import imgui.type.ImBoolean;
 import org.apache.commons.lang3.SerializationUtils;
-import org.joml.Vector2f;
 
 import java.io.File;
 import java.util.Map;
@@ -402,55 +401,60 @@ public class ImGuiLayer {
     }
 
     private void footer() {
-//        ImGui.setCursorPosY(ImGui.getCursorPosY() - 30.0f);
+//        ImGui.setNextWindowPos(Window.get().windowPosition.x, Window.get().windowPosition.y + Window.get().windowSize.y - 30.0f - TestFieldsWindow.getFloats[0]);
+//        ImGui.setNextWindowSize(Window.get().windowSize.x, 30.0f);
+
+//        ImGui.setCursorPosX(Window.get().windowPosition.x);
+//        ImGui.setCursorPosY(Window.get().windowPosition.y + Window.get().windowSize.y);
         ImGui.pushStyleVar(ImGuiStyleVar.WindowRounding, 0.0f);
         ImGui.pushStyleVar(ImGuiStyleVar.WindowBorderSize, 0.0f);
         ImGui.pushStyleVar(ImGuiStyleVar.WindowPadding, 0.0f, 0.0f);
         ImVec4 footerColor = ImGui.getStyle().getColor(ImGuiCol.MenuBarBg);
         ImGui.pushStyleColor(ImGuiCol.ChildBg, footerColor.x, footerColor.y, footerColor.z, footerColor.w);
-        int footerWindowFlags = ImGuiWindowFlags.NoDocking | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoCollapse |
-                ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove |
+
+        ImGui.setCursorPosY(ImGui.getCursorPosY() - 3.4f);
+
+//        ImGui.beginChildFrame(90901, Window.get().windowSize.x, 30.0f, ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoCollapse |
+        ImGui.begin("##Footer", ImGuiWindowFlags.NoDocking | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoCollapse |
+                ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoDocking |
                 ImGuiWindowFlags.NoBringToFrontOnFocus | ImGuiWindowFlags.NoNavFocus |
-                ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse;
+                ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse);
 
-//        ImGui.setCursorPosY(ImGui.getCursorPosY() - 50.0f);
-        ImGui.beginChild("##Footer", Window.getWidth(), 30.0f, true, footerWindowFlags);
+        ImGui.setCursorPosX(Window.get().windowSize.x - (Window.get().windowSize.x / 3.0f));
+        ImGui.pushStyleColor(ImGuiCol.ChildBg, 0, 0, 0, 0);
+        ImGui.beginChild("Messages Info", Window.get().windowSize.x / 3.0f, Window.get().windowSize.y);
 
-//        ImGui.setCursorPosX(ImGui.getWindowWidth() - (ImGui.getWindowWidth() / 3.0f));
-//        ImGui.pushStyleColor(ImGuiCol.ChildBg, 0, 0, 0, 0);
-//        ImGui.beginChild("Messages Info", ImGui.getWindowWidth() / 3.0f, ImGui.getWindowHeight());
-//
-//        ImGui.pushStyleVar(ImGuiStyleVar.ItemSpacing, ImGui.getStyle().getItemSpacingX() * 1.5f, 0);
-//        ImGui.beginChild("Messages Count", ImGui.getWindowWidth() / 2.0f, ImGui.getWindowHeight());
+        ImGui.pushStyleVar(ImGuiStyleVar.ItemSpacing, ImGui.getStyle().getItemSpacingX() * 1.5f, 0);
+        ImGui.beginChild("Messages Count", Window.get().windowSize.x / 2.0f, Window.get().windowSize.y);
         Map<ConsoleMessage.MessageType, Integer> messages = Console.getMessagesCount();
-//        ImGui.setCursorPosY(ImGui.getCursorPosY() + 5.0f);
-//        for (Message.MessageType messageType : messages.keySet()) {
-//            ImVec4 messageColor = Message.getMessageColor(messageType);
-//            String messageIcon = Message.getMessageIcon(messageType);
-//            ImGui.textColored(
-//                    messageColor.x / 255.0f, messageColor.y / 255.0f, messageColor.z / 255.0f, messageColor.w / 255.0f,
-//                    messageIcon + " " + messages.get(messageType).toString());
-//            ImGui.sameLine();
-//        }
-//        ImGui.endChild();
-//        ImGui.popStyleVar();
-//
-//        ImGui.sameLine();
-//        ImGui.beginChild("Last Message", ImGui.getWindowWidth() / 2.0f, ImGui.getWindowHeight());
+        ImGui.setCursorPosY(ImGui.getCursorPosY() + 5.0f);
+        for (ConsoleMessage.MessageType messageType : messages.keySet()) {
+            ImVec4 messageColor = ConsoleMessage.getMessageColor(messageType);
+            String messageIcon = ConsoleMessage.getMessageIcon(messageType);
+            ImGui.textColored(
+                    messageColor.x / 255.0f, messageColor.y / 255.0f, messageColor.z / 255.0f, messageColor.w / 255.0f,
+                    messageIcon + " " + messages.get(messageType).toString());
+            ImGui.sameLine();
+        }
+        ImGui.endChild();
+        ImGui.popStyleVar();
+
+        ImGui.sameLine();
+        ImGui.beginChild("Last Message", Window.get().windowSize.x / 2.0f, Window.get().windowSize.y);
         ConsoleMessage lastMessage = Console.getLastMessage();
-//        ImGui.setCursorPosY(ImGui.getCursorPosY() + 5.0f);
-//        if (!lastMessage.messageText.equals("")) {
-//            ImGui.textColored(
-//                    lastMessage.messageColor.x, lastMessage.messageColor.y,
-//                    lastMessage.messageColor.z, lastMessage.messageColor.w,
-//                    "[" + lastMessage.messageType + "] " + lastMessage.messageText);
-//        }
-//        ImGui.endChild();
-//
-//        ImGui.endChild();
-//        ImGui.popStyleColor();
+        ImGui.setCursorPosY(ImGui.getCursorPosY() + 5.0f);
+        if (!lastMessage.messageText.equals("")) {
+            ImGui.textColored(
+                    lastMessage.messageColor.x, lastMessage.messageColor.y,
+                    lastMessage.messageColor.z, lastMessage.messageColor.w,
+                    "[" + lastMessage.messageType + "] " + lastMessage.messageText);
+        }
+        ImGui.endChild();
 
         ImGui.endChild();
+        ImGui.popStyleColor();
+
+        ImGui.end();
         ImGui.popStyleVar(3);
         ImGui.popStyleColor();
     }
@@ -464,7 +468,7 @@ public class ImGuiLayer {
         ImGui.setNextWindowSize(mainViewport.getWorkSizeX(), mainViewport.getWorkSizeY());
         ImGui.setNextWindowViewport(mainViewport.getID());
         ImGui.setNextWindowSize(mainViewport.getWorkSizeX(), mainViewport.getWorkSizeY());
-        ImGui.setNextWindowSize(Window.getWidth(), Window.getHeight()); // TODO / - 30.0f
+        ImGui.setNextWindowSize(Window.getWidth(), Window.getHeight());
         ImGui.pushStyleVar(ImGuiStyleVar.WindowRounding, 0.0f);
         ImGui.pushStyleVar(ImGuiStyleVar.WindowBorderSize, 0.0f);
         windowFlags |= ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoCollapse |
@@ -479,11 +483,11 @@ public class ImGuiLayer {
 
         menuBar.imgui();
 
-//        ImGui.setNextWindowPos(mainViewport.getWorkPosX(), mainViewport.getWorkPosY() + Window.getHeight() - 30.0f); no uncomment
-//        ImGui.setNextWindowSize(Window.getWidth(), 30.0f); no uncomment
-//        footer();
-
         ImGui.end();
+
+//        ImGui.setNextWindowPos(mainViewport.getWorkPosX(), mainViewport.getWorkPosY() + mainViewport.getWorkSizeY() - TestFieldsWindow.getFloats[4]);
+//        ImGui.setNextWindowSize(mainViewport.getWorkSizeX(), 30.0f - TestFieldsWindow.getFloats[5]);
+//        footer();
     }
 
     public void showModalPopup(String text, ConsoleMessage.MessageType type) {

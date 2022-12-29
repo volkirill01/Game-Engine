@@ -11,14 +11,15 @@ import engine.renderEngine.OBJLoader;
 import engine.renderEngine.Window;
 import engine.renderEngine.components.MeshRenderer;
 import engine.renderEngine.models.Mesh;
-import engine.renderEngine.models.RawModel;
 import engine.renderEngine.models.TexturedModel;
 import engine.renderEngine.textures.Material;
 import engine.scene.SceneManager;
 import engine.toolbox.DefaultMeshes;
-import engine.toolbox.MouseListener;
+import engine.toolbox.input.MouseListener;
 import imgui.ImGui;
 import imgui.ImVec2;
+import imgui.ImVec4;
+import imgui.flag.ImGuiCol;
 import imgui.flag.ImGuiStyleVar;
 import imgui.flag.ImGuiWindowFlags;
 import org.joml.Vector2f;
@@ -49,60 +50,7 @@ public class GameViewWindow extends EditorImGuiWindow {
 
         topLeftCornerPosition = new Vector2f(ImGui.getCursorStartPosX() + ImGui.getWindowPosX(), ImGui.getCursorStartPosY() + ImGui.getWindowPosY());
 
-        ImGui.setCursorPosX(ImGui.getCursorPosX() - 6.0f);
-        ImGui.beginMenuBar();
-
-        ImGui.columns(2, "", false);
-        ImVec2 drawGridTmp = new ImVec2();
-        ImGui.calcTextSize(drawGridTmp, "Show grid");
-        ImVec2 drawDebugTmp = new ImVec2();
-        ImGui.calcTextSize(drawDebugTmp, "Show debug");
-
-        ImGui.setCursorPos(ImGui.getContentRegionAvailX() / 2.0f + 97.0f, ImGui.getCursorPosY() - 0.4f);
-        ImGui.setColumnWidth(0, ImGui.getWindowWidth() - ((drawGridTmp.x + drawDebugTmp.x) * 1.55f));
-        if (ImGui.menuItem("\uEC74", "", isPlaying, !isPlaying)) {
-            isPlaying = true;
-            EventSystem.notify(null, new Event(EventType.GameEngineStartPlay));
-        }
-        if (ImGui.isItemHovered()) {
-            ImGui.beginTooltip();
-            ImGui.text("Start`s the Game");
-            ImGui.endTooltip();
-        }
-        if (ImGui.menuItem("\uEFFC", "", !isPlaying, isPlaying)) {
-            isPlaying = false;
-            EventSystem.notify(null, new Event(EventType.GameEngineStopPlay));
-        }
-        if (ImGui.isItemHovered()) {
-            ImGui.beginTooltip();
-            ImGui.text("Stop`s the Game");
-            ImGui.endTooltip();
-        }
-
-        ImGui.nextColumn();
-        ImGui.pushStyleVar(ImGuiStyleVar.FramePadding, 1f, 1f);
-        ImGui.setCursorPos(ImGui.getCursorPosX(), ImGui.getCursorPosY() + 4.0f);
-        ImGui.text("Show grid");
-        if (ImGui.isItemClicked(0))
-            Window.get().drawGrid = !Window.get().drawGrid;
-        ImGui.sameLine();
-        if (ImGui.checkbox("##showGrid", Window.get().drawGrid))
-            Window.get().drawGrid = !Window.get().drawGrid;
-
-        ImGui.spacing();
-        ImGui.spacing();
-
-        ImGui.text("Show debug");
-        if (ImGui.isItemClicked(0))
-            Window.get().drawDebug = !Window.get().drawDebug;
-        ImGui.sameLine();
-        if (ImGui.checkbox("##showDebug", Window.get().drawDebug))
-            Window.get().drawDebug = !Window.get().drawDebug;
-        ImGui.popStyleVar();
-
-        ImGui.columns(1);
-        ImGui.nextColumn();
-        ImGui.endMenuBar();
+        drawMenuBar();
 
         ImVec2 windowSize = getLargestSizeForViewport();
         windowPos = getCenteredPositionForViewport(windowSize);
@@ -167,6 +115,93 @@ public class GameViewWindow extends EditorImGuiWindow {
         ImGui.end();
     }
 
+    private void drawMenuBar() {
+        ImGui.setCursorPosX(ImGui.getCursorPosX() - 6.0f);
+        ImGui.beginMenuBar();
+
+        ImGui.columns(2, "", false);
+        ImVec2 drawGridTmp = new ImVec2();
+        ImGui.calcTextSize(drawGridTmp, "Show grid");
+        ImVec2 drawDebugTmp = new ImVec2();
+        ImGui.calcTextSize(drawDebugTmp, "Show debug");
+
+        ImGui.setCursorPos(ImGui.getContentRegionAvailX() / 2.0f + 97.0f, ImGui.getCursorPosY() - 0.4f);
+        ImGui.setColumnWidth(0, ImGui.getWindowWidth() - ((drawGridTmp.x + drawDebugTmp.x) * 1.55f));
+        ImGui.setCursorPosY(ImGui.getCursorPosY() + 3.6f);
+        ImVec4 textDisabledColor = ImGui.getStyle().getColor(ImGuiCol.TextDisabled);
+
+        ImGui.pushStyleVar(ImGuiStyleVar.FramePadding, ImGui.getStyle().getFramePaddingX() - 1.0f, ImGui.getStyle().getFramePaddingY() - 3.0f);
+        ImGui.pushStyleColor(ImGuiCol.Button, 0.0f, 0.0f, 0.0f, 0.0f);
+        ImGui.pushStyleColor(ImGuiCol.Border, 0.0f, 0.0f, 0.0f, 0.0f);
+        if (!isPlaying) {
+            if (ImGui.button("\uEC74")) {
+                isPlaying = true;
+                EventSystem.notify(null, new Event(EventType.GameEngineStartPlay));
+            }
+        } else {
+            ImGui.pushStyleColor(ImGuiCol.ButtonHovered, 0.0f, 0.0f, 0.0f, 0.0f);
+            ImGui.pushStyleColor(ImGuiCol.ButtonActive, 0.0f, 0.0f, 0.0f, 0.0f);
+            ImGui.pushStyleColor(ImGuiCol.Text, textDisabledColor.x, textDisabledColor.y, textDisabledColor.z, textDisabledColor.w);
+            ImGui.button("\uEC74");
+            ImGui.popStyleColor(3);
+        }
+        ImGui.popStyleColor(2);
+        ImGui.popStyleVar();
+        if (ImGui.isItemHovered()) {
+            ImGui.beginTooltip();
+            ImGui.text("Start`s the Game");
+            ImGui.endTooltip();
+        }
+
+        ImGui.pushStyleVar(ImGuiStyleVar.FramePadding, ImGui.getStyle().getFramePaddingX() - 1.0f, ImGui.getStyle().getFramePaddingY() - 3.0f);
+        ImGui.pushStyleColor(ImGuiCol.Button, 0.0f, 0.0f, 0.0f, 0.0f);
+        ImGui.pushStyleColor(ImGuiCol.Border, 0.0f, 0.0f, 0.0f, 0.0f);
+        if (isPlaying) {
+            if (ImGui.button("\uEFFC")) {
+                isPlaying = false;
+                EventSystem.notify(null, new Event(EventType.GameEngineStopPlay));
+            }
+        } else {
+            ImGui.pushStyleColor(ImGuiCol.ButtonHovered, 0.0f, 0.0f, 0.0f, 0.0f);
+            ImGui.pushStyleColor(ImGuiCol.ButtonActive, 0.0f, 0.0f, 0.0f, 0.0f);
+            ImGui.pushStyleColor(ImGuiCol.Text, textDisabledColor.x, textDisabledColor.y, textDisabledColor.z, textDisabledColor.w);
+            ImGui.button("\uEFFC");
+            ImGui.popStyleColor(3);
+        }
+        ImGui.popStyleColor(2);
+        ImGui.popStyleVar();
+        if (ImGui.isItemHovered()) {
+            ImGui.beginTooltip();
+            ImGui.text("Stop the Game");
+            ImGui.endTooltip();
+        }
+
+        ImGui.nextColumn();
+        ImGui.pushStyleVar(ImGuiStyleVar.FramePadding, 1f, 1f);
+        ImGui.setCursorPos(ImGui.getCursorPosX(), ImGui.getCursorPosY() + 4.0f);
+        ImGui.text("Show grid");
+        if (ImGui.isItemClicked(0))
+            Window.get().drawGrid = !Window.get().drawGrid;
+        ImGui.sameLine();
+        if (ImGui.checkbox("##showGrid", Window.get().drawGrid))
+            Window.get().drawGrid = !Window.get().drawGrid;
+
+        ImGui.spacing();
+        ImGui.spacing();
+
+        ImGui.text("Show debug");
+        if (ImGui.isItemClicked(0))
+            Window.get().drawDebug = !Window.get().drawDebug;
+        ImGui.sameLine();
+        if (ImGui.checkbox("##showDebug", Window.get().drawDebug))
+            Window.get().drawDebug = !Window.get().drawDebug;
+        ImGui.popStyleVar();
+
+        ImGui.columns(1);
+        ImGui.nextColumn();
+        ImGui.endMenuBar();
+    }
+
     public boolean getWantCaptureMouse() {
         if (!captureMouse || GameObject.showAddTag)
             return false;
@@ -174,6 +209,8 @@ public class GameViewWindow extends EditorImGuiWindow {
         return MouseListener.getX() >= leftX && MouseListener.getX() <= rightX &&
                 MouseListener.getY() >= bottomY && MouseListener.getY() <= topY;
     }
+
+    public void setWantCaptureMouse(boolean value) { this.captureMouse = value; }
 
     private boolean toolsWindowsImgui() {
 //        if (!ImGui.isWindowHovered())

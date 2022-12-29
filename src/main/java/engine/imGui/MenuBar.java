@@ -3,9 +3,9 @@ package engine.imGui;
 import engine.eventSystem.EventSystem;
 import engine.eventSystem.Events.Event;
 import engine.eventSystem.Events.EventType;
-import engine.toolbox.InputManager;
-import engine.toolbox.KeyListener;
-import engine.toolbox.Shortcut;
+import engine.toolbox.input.InputManager;
+import engine.toolbox.input.KeyListener;
+import engine.toolbox.input.Shortcut;
 import imgui.ImGui;
 import imgui.flag.ImGuiStyleVar;
 
@@ -19,10 +19,10 @@ public class MenuBar {
         Shortcut saveShortcut = InputManager.getShortcut("saveScene");
         Shortcut loadShortcut = InputManager.getShortcut("loadScene");
 
-        if (KeyListener.isKeyPressed(saveShortcut.firstKeyCode) && KeyListener.keyBeginPress(saveShortcut.secondKeyCode))
+        if (KeyListener.isKeyDown(saveShortcut.firstKeyCode) && KeyListener.isKeyClick(saveShortcut.secondKeyCode))
             EventSystem.notify(null, new Event(EventType.SaveLevel));
 
-        if (KeyListener.isKeyPressed(loadShortcut.firstKeyCode) && KeyListener.keyBeginPress(loadShortcut.secondKeyCode))
+        if (KeyListener.isKeyDown(loadShortcut.firstKeyCode) && KeyListener.isKeyClick(loadShortcut.secondKeyCode))
             EventSystem.notify(null, new Event(EventType.LoadLevel));
 
         if (ImGui.beginMenu("File")) {

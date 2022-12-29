@@ -1,7 +1,5 @@
 package engine.graphEditor;
 
-import engine.TestFieldsWindow;
-import engine.toolbox.KeyListener;
 import imgui.ImVec4;
 import imgui.extension.nodeditor.NodeEditor;
 import imgui.extension.nodeditor.NodeEditorConfig;
@@ -13,11 +11,6 @@ import imgui.flag.ImGuiCond;
 import imgui.flag.ImGuiStyleVar;
 import imgui.internal.ImGui;
 import imgui.type.ImLong;
-import org.w3c.dom.Node;
-
-import java.util.Arrays;
-
-import static org.lwjgl.glfw.GLFW.*;
 
 public class ExampleImGuiNodeEditor {
 
