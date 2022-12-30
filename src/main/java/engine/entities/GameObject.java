@@ -45,6 +45,11 @@ public class GameObject {
 
     private transient boolean isDeath = false;
 
+    public static boolean showAddTag = false;
+    private transient Vector3f newTagColor = new Vector3f(216 / 255.0f, 162 / 255.0f, 77 / 255.0f);
+    private final transient String newTagNameRef = "New tag";
+    private transient String newTagName = newTagNameRef;
+
     private transient List<Class> addComponentBlackList = new ArrayList<>(){{
         add(Transform.class);
         add(ObjectRenderer.class);
@@ -54,9 +59,6 @@ public class GameObject {
         this.name = name;
         this.tags = new ArrayList<>();
         this.components = new ArrayList<>();
-
-//        addComponent(new Transform());
-//        this.transform = getComponent(Transform.class);
 
         this.uid = ID_COUNTER++;
     }
@@ -190,22 +192,6 @@ public class GameObject {
         for (int i = 0; i < components.size(); i++) {
             ImGui.pushID("##component" + components.get(i).getUid());
 
-//            if (!components.get(i).isActive()) {  // ------------------------------------------
-//                ImVec4 buttonDisabledColor = ImGui.getStyle().getColor(ImGuiCol.ButtonActive);
-//                ImVec4 textDisabledColor = ImGui.getStyle().getColor(ImGuiCol.TextDisabled);
-//
-//                ImGui.pushStyleColor(ImGuiCol.Text, textDisabledColor.x, textDisabledColor.y, textDisabledColor.z, textDisabledColor.w);
-//                ImGui.pushStyleColor(ImGuiCol.CheckMark, textDisabledColor.x, textDisabledColor.y, textDisabledColor.z, textDisabledColor.w);
-//
-//                ImGui.pushStyleColor(ImGuiCol.Button, buttonDisabledColor.x, buttonDisabledColor.y, buttonDisabledColor.z, buttonDisabledColor.w);
-//                ImGui.pushStyleColor(ImGuiCol.ButtonHovered, buttonDisabledColor.x, buttonDisabledColor.y, buttonDisabledColor.z, buttonDisabledColor.w);
-//                ImGui.pushStyleColor(ImGuiCol.ButtonActive, buttonDisabledColor.x, buttonDisabledColor.y, buttonDisabledColor.z, buttonDisabledColor.w);
-//
-//                ImGui.pushStyleColor(ImGuiCol.Header, buttonDisabledColor.x, buttonDisabledColor.y, buttonDisabledColor.z, buttonDisabledColor.w);
-//                ImGui.pushStyleColor(ImGuiCol.HeaderHovered, buttonDisabledColor.x, buttonDisabledColor.y, buttonDisabledColor.z, buttonDisabledColor.w);
-//                ImGui.pushStyleColor(ImGuiCol.HeaderActive, buttonDisabledColor.x, buttonDisabledColor.y, buttonDisabledColor.z, buttonDisabledColor.w);
-//            }
-
             ImGui.columns(2, "", false);
 
             //<editor-fold desc="Is Active checkbox">
@@ -300,28 +286,8 @@ public class GameObject {
         if (EditorImGui.BeginPopup("ComponentAdder", popupPosition, isOpen)) {
             for (Component c : Component.allComponents) {
                 if (getComponent(c.getClass()) == null && !addComponentBlackList.contains(c.getClass()))
-                    if (ImGui.menuItem(c.getClass().getSimpleName())) {
-//                        if (c.getClass()== UIRenderer.class) {
-//                            SpriteRenderer spr = getComponent(SpriteRenderer.class);
-//                            removeComponent(SpriteRenderer.class);
-//                            ((UIRenderer) c).setTexture(spr.getTexture());
-//                            ((UIRenderer) c).setColor(spr.getColor());
-//                            ((UIRenderer) c).setDirty();
-//                            getComponent(Transform.class).zIndex++;
-//                            getComponent(Transform.class).zIndex--;
-//                            addComponent(c);
-//                        } else if (c.getClass()== MeshRenderer.class) {
-//                            MeshRenderer mesh = getComponent(MeshRenderer.class);
-//                            removeComponent(SpriteRenderer.class);
-//                            ((MeshRenderer) c).setTexture(mesh.getTexture());
-//                            ((MeshRenderer) c).setColor(mesh.getColor());
-//                            ((MeshRenderer) c).setDirty();
-//                            getComponent(Transform.class).zIndex++;
-//                            getComponent(Transform.class).zIndex--;
-//                            addComponent(c);
-//                        } else
+                    if (ImGui.menuItem(c.getClass().getSimpleName()))
                         addComponent(c);
-                    }
             }
             EditorImGui.EndPopup();
         }
@@ -407,10 +373,6 @@ public class GameObject {
             ImGui.openPopup("\t\t\t\t\t\t\t\t\t\t \uF005 Add new Tag");
     }
 
-    public static boolean showAddTag = false;
-    private transient Vector3f newTagColor = new Vector3f(216 / 255.0f, 162 / 255.0f, 77 / 255.0f);
-    private final transient String newTagNameRef = "New tag";
-    private transient String newTagName = newTagNameRef;
     private void showCreateTagPopup() {
         ImGui.setNextWindowSize(438.0f, 550.0f);
         ImGui.setNextWindowPos(Window.get().windowSize.x / 2.0f - ImGui.getWindowSizeX() / 2.0f + Window.get().windowPosition.x,
@@ -517,12 +479,9 @@ public class GameObject {
         String objAsJson = gson.toJson(this);
         GameObject obj = gson.fromJson(objAsJson, GameObject.class);
         obj.generateUid();
+
         for (Component c: obj.getAllComponents())
             c.generateId();
-
-//        SpriteRenderer sprite = obj.getComponent(SpriteRenderer.class);
-//        if (sprite != null && sprite.getTexture() != null)
-//            sprite.setTexture(AssetPool.getTexture(sprite.getTexture().getFilepath()));
 
         return obj;
     }

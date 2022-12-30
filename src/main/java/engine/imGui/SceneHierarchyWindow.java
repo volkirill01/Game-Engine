@@ -46,25 +46,35 @@ public class SceneHierarchyWindow extends EditorImGuiWindow {
 
             ImGui.pushStyleVar(ImGuiStyleVar.ItemSpacing, itemSpacing.x, itemSpacing.y);
             if (ImGui.beginPopupContextItem("SceneHierarchy_Item" + gObject)) { // TODO ADD CONTEXT AND ITEM POPUPS TO HIERARCHY
-                ImGui.pushStyleColor(ImGuiCol.Text, textDisabled.x, textDisabled.y, textDisabled.z, textDisabled.w);
-                if (ImGui.menuItem("Copy")) {
-                    System.out.println("Copy Game Object");
-//                    SystemClipboard.copy(file.getAbsolutePath());
+                if (ImGui.menuItem("Copy", "Ctrl+C")) {
+                    Window.get().getImGuiLayer().getInspectorWindow().setCopyBuffer(gObject.copy());
+                    Window.get().getImGuiLayer().showModalPopup("Copy", ConsoleMessage.MessageType.Simple);
                 }
-                if (ImGui.menuItem("Paste")) {
-                    System.out.println("Paste Game Object");
+                if (ImGui.menuItem("Paste", "Ctrl+V")) {
+                    GameObject copy = Window.get().getImGuiLayer().getInspectorWindow().getCopyBuffer();
+                    copy.name += " (copy)";
+                    Window.get().getScene().addGameObjectToScene(copy);
+                    Window.get().getImGuiLayer().getInspectorWindow().setActiveGameObject(copy);
+                    Window.get().getImGuiLayer().showModalPopup("Paste", ConsoleMessage.MessageType.Simple);
                 }
                 ImGui.separator();
 
+                ImGui.pushStyleColor(ImGuiCol.Text, textDisabled.x, textDisabled.y, textDisabled.z, textDisabled.w);
                 if (ImGui.menuItem("Rename")) {
                     System.out.println("Rename Game Object");
                 }
-                if (ImGui.menuItem("Duplicate")) {
-                    System.out.println("Duplicate Game Object");
-                }
                 ImGui.popStyleColor();
-                if (ImGui.menuItem("Delete"))
+                if (ImGui.menuItem("Duplicate", "Ctrl+D")) {
+                    GameObject copy = gObject.copy();
+                    copy.name += " (copy)";
+                    Window.get().getScene().addGameObjectToScene(copy);
+                    Window.get().getImGuiLayer().getInspectorWindow().setActiveGameObject(copy);
+                    Window.get().getImGuiLayer().showModalPopup("Duplicate", ConsoleMessage.MessageType.Simple);
+                }
+                if (ImGui.menuItem("Delete", "Delete")) {
                     gObject.destroy();
+                    Window.get().getImGuiLayer().showModalPopup("Delete", ConsoleMessage.MessageType.Simple);
+                }
 
                 ImGui.endPopup();
             }
@@ -73,11 +83,13 @@ public class SceneHierarchyWindow extends EditorImGuiWindow {
         ImGui.popStyleVar();
 
         if (ImGui.beginPopupContextWindow("SceneHierarchy_Context", ImGuiPopupFlags.NoOpenOverItems | ImGuiPopupFlags.MouseButtonRight)) {
-            ImGui.pushStyleColor(ImGuiCol.Text, textDisabled.x, textDisabled.y, textDisabled.z, textDisabled.w);
-            if (ImGui.menuItem("Paste")) {
-                System.out.println("Paste Game Object");
+            if (ImGui.menuItem("Paste", "Ctrl+V")) {
+                GameObject copy = Window.get().getImGuiLayer().getInspectorWindow().getCopyBuffer();
+                copy.name += " (copy)";
+                Window.get().getScene().addGameObjectToScene(copy);
+                Window.get().getImGuiLayer().getInspectorWindow().setActiveGameObject(copy);
+                Window.get().getImGuiLayer().showModalPopup("Paste", ConsoleMessage.MessageType.Simple);
             }
-            ImGui.popStyleColor();
             ImGui.separator();
 
             if (ImGui.menuItem("Create Empty")) {

@@ -92,7 +92,7 @@ public class Camera {
 //        else
 //            actualMoveSpeed = moveSpeed;
 
-        if (!KeyListener.isAnyKeyPressed(ignoredKeys)) {
+        if (!Window.get().isLockControl() && !KeyListener.isAnyKeyPressed(ignoredKeys)) {
             if (KeyListener.isKeyDown(InputManager.getShortcut("cameraMove(front)").firstKeyCode))
                 direction.z += actualMoveSpeed * Window.getDelta();
             else if (KeyListener.isKeyDown(InputManager.getShortcut("cameraMove(back)").firstKeyCode))

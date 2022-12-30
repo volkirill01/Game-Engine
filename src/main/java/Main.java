@@ -1,6 +1,7 @@
 import engine.entities.Camera;
 import engine.entities.GameObject;
 import engine.gizmo.GizmoSystem;
+import engine.imGui.ConsoleMessage;
 import engine.imGui.ImGuiLayer;
 import engine.renderEngine.Window;
 import engine.renderEngine.Loader;
@@ -100,9 +101,33 @@ public class Main {
             // Poll events
             glfwPollEvents();
 
-            if (Window.get().getImGuiLayer().getInspectorWindow().getActiveGameObject() != null)
-                if (KeyListener.isKeyDown(KeyCode.Delete))
+            if (Window.get().getImGuiLayer().getInspectorWindow().getActiveGameObject() != null) {
+                if (KeyListener.isKeyDown(KeyCode.Delete)) {
                     Window.get().getImGuiLayer().getInspectorWindow().getActiveGameObject().destroy();
+                    Window.get().getImGuiLayer().showModalPopup("Delete", ConsoleMessage.MessageType.Simple);
+                }
+
+                if (KeyListener.isKeyDown(KeyCode.Left_Control) && KeyListener.isKeyClick(KeyCode.D)) {
+                    GameObject copy = Window.get().getImGuiLayer().getInspectorWindow().getActiveGameObject().copy();
+                    copy.name += " (copy)";
+                    Window.get().getScene().addGameObjectToScene(copy);
+                    Window.get().getImGuiLayer().getInspectorWindow().setActiveGameObject(copy);
+                    Window.get().getImGuiLayer().showModalPopup("Duplicate", ConsoleMessage.MessageType.Simple);
+                }
+
+                if (KeyListener.isKeyDown(KeyCode.Left_Control) && KeyListener.isKeyClick(KeyCode.C)) {
+                    Window.get().getImGuiLayer().getInspectorWindow().setCopyBuffer(Window.get().getImGuiLayer().getInspectorWindow().getActiveGameObject().copy());
+                    Window.get().getImGuiLayer().showModalPopup("Copy", ConsoleMessage.MessageType.Simple);
+                }
+
+                if (KeyListener.isKeyDown(KeyCode.Left_Control) && KeyListener.isKeyClick(KeyCode.V)) {
+                    GameObject copy = Window.get().getImGuiLayer().getInspectorWindow().getCopyBuffer();
+                    copy.name += " (copy)";
+                    Window.get().getScene().addGameObjectToScene(copy);
+                    Window.get().getImGuiLayer().getInspectorWindow().setActiveGameObject(copy);
+                    Window.get().getImGuiLayer().showModalPopup("Paste", ConsoleMessage.MessageType.Simple);
+                }
+            }
 
             gizmoSystem.update();
 

@@ -224,9 +224,9 @@ public class AssetsWindow extends EditorImGuiWindow {
                     FileUtils.copyFile(srcDir, destDir, true);
             else {
                 if (srcDir.isDirectory())
-                    FileUtils.copyDirectory(srcDir, new File(destDir.getAbsolutePath() + "-copy"), true);
+                    FileUtils.copyDirectory(srcDir, new File(destDir.getAbsolutePath() + " (copy)"), true);
                 else
-                    FileUtils.copyFile(srcDir, new File(destDir.getAbsolutePath().split("\\.")[0] + "-copy." + destDir.getAbsolutePath().split("\\.")[1]), true);
+                    FileUtils.copyFile(srcDir, new File(destDir.getAbsolutePath().split("\\.")[0] + " (copy)." + destDir.getAbsolutePath().split("\\.")[1]), true);
             }
         } catch (IOException e) {
             System.out.println("Error (AssetsWindow copy) '" + e + "'");
@@ -236,15 +236,17 @@ public class AssetsWindow extends EditorImGuiWindow {
 
     private void pasteButton() {
         if (ImGui.menuItem("Paste")) {
-            SystemClipboard.paste();
-            File file = new File(Objects.requireNonNull(SystemClipboard.get()));
+            if (Objects.requireNonNull(SystemClipboard.get()).split("% ")[0].equals("Asset")) {
+                SystemClipboard.paste();
+                File file = new File(Objects.requireNonNull(SystemClipboard.get()).split("% ")[1]);
 
-            String fileName = currentDirectory + "\\" + file.getAbsolutePath().replace("\\", "/").split("/")[file.getAbsolutePath().replace("\\", "/").split("/").length - 1];
-//            System.out.println(file);
-//            System.out.println(fileName);
+                String fileName = currentDirectory + "\\" + file.getAbsolutePath().replace("\\", "/").split("/")[file.getAbsolutePath().replace("\\", "/").split("/").length - 1];
+//                  System.out.println(file);
+//                  System.out.println(fileName);
 
-            copy(file, new File( fileName));
-            Window.get().getImGuiLayer().showModalPopup("Paste", ConsoleMessage.MessageType.Simple);
+                copy(file, new File(fileName));
+                Window.get().getImGuiLayer().showModalPopup("Paste", ConsoleMessage.MessageType.Simple);
+            }
         }
     }
 
@@ -307,7 +309,7 @@ public class AssetsWindow extends EditorImGuiWindow {
         if (ImGui.beginPopupContextItem("File Context Menu" + i)) {
             if (ImGui.menuItem("Copy")) {
                 File file = new File(assets.get(i).assetPath);
-                SystemClipboard.copy(file.getAbsolutePath());
+                SystemClipboard.copy("Asset% " + file.getAbsolutePath());
                 Window.get().getImGuiLayer().showModalPopup("Copy", ConsoleMessage.MessageType.Simple);
             }
 

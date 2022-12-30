@@ -22,6 +22,8 @@ public class InspectorWindow extends EditorImGuiWindow {
     private GameObject activeGameObject;
     private PickingTexture pickingTexture;
 
+    private GameObject copyBuffer;
+
     private boolean isLocked = false;
 
     public InspectorWindow(PickingTexture pickingTexture) {
@@ -125,4 +127,8 @@ public class InspectorWindow extends EditorImGuiWindow {
     public boolean isLocked() { return this.isLocked; }
 
     public void setLocked(boolean locked) { this.isLocked = locked; }
+
+    public GameObject getCopyBuffer() { return this.copyBuffer; }
+
+    public void setCopyBuffer(GameObject copyBuffer) { this.copyBuffer = copyBuffer; }
 }
