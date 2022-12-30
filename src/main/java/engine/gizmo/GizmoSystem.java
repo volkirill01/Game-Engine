@@ -53,19 +53,19 @@ public class GizmoSystem {
         ImGui.begin("Gizmo Tools", ImGuiWindowFlags.NoDocking | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoResize);
         ImGui.pushStyleVar(ImGuiStyleVar.FramePadding, 5.0f, 5.0f);
 
-        if (drawGizmoButton(startFrameRounding, startFramePadding, "Move", InputManager.getShortcut("translate").shortcutDisplayKeys, "Double press $ to move object\nPress [X] to move align x axis\nPress [Y] to move align y axis\nPress [Z] to move align z axis", true, "engineFiles/images/icons/tools/icon=translate-tool(256x256).png")) {
+        if (drawGizmoButton(startFrameRounding, startFramePadding, "Move", InputManager.getShortcut("translate").shortcutDisplayKeys, "Double press$to move object\nPress[X]to move align/X axis\nPress[Y]to move align/Y axis\nPress[Z]to move align/Z axis", true, "engineFiles/images/icons/tools/icon=translate-tool(256x256).png")) {
 
         }
 
-        if (drawGizmoButton(startFrameRounding, startFramePadding, "Rotate", InputManager.getShortcut("rotate").shortcutDisplayKeys, "Double press $ to rotate object\nPress [X] to rotate align x axis\nPress [Y] to rotate align y axis\nPress [Z] to rotate align z axis", true, "engineFiles/images/icons/tools/icon=rotate-tool(256x256).png")) {
+        if (drawGizmoButton(startFrameRounding, startFramePadding, "Rotate", InputManager.getShortcut("rotate").shortcutDisplayKeys, "Double press$to rotate object\nPress[X]to rotate align/X axis\nPress[Y]to rotate align/Y axis\nPress[Z]to rotate align/Z axis", true, "engineFiles/images/icons/tools/icon=rotate-tool(256x256).png")) {
 
         }
 
-        if (drawGizmoButton(startFrameRounding, startFramePadding, "Scale", InputManager.getShortcut("scale").shortcutDisplayKeys, "Double press $ to scale object\nPress [X] to scale align x axis\nPress [Y] to scale align y axis\nPress [Z] to scale align z axis", true, "engineFiles/images/icons/tools/icon=scale-tool(256x256).png")) {
+        if (drawGizmoButton(startFrameRounding, startFramePadding, "Scale", InputManager.getShortcut("scale").shortcutDisplayKeys, "Double press$to scale object\nPress[X]to scale align/X axis\nPress[Y]to scale align/Y axis\nPress[Z]to scale align/Z axis", true, "engineFiles/images/icons/tools/icon=scale-tool(256x256).png")) {
 
         }
 
-        if (drawGizmoButton(startFrameRounding, startFramePadding, "Select", InputManager.getShortcut("select").shortcutDisplayKeys, "Press $ to select object", false, "engineFiles/images/icons/tools/icon=select-tool(256x256).png")) {
+        if (drawGizmoButton(startFrameRounding, startFramePadding, "Select", InputManager.getShortcut("select").shortcutDisplayKeys, "Press$to select object", false, "engineFiles/images/icons/tools/icon=select-tool(256x256).png")) {
 
         }
 
@@ -93,30 +93,37 @@ public class GizmoSystem {
             ImGui.textDisabled(shortcut);
 
             if (displayXYZTooltips) {
-                ImGui.spacing();
+                ImGui.separator();
                 ImGui.textDisabled(tooltip.split("\n")[0].split("\\$")[0]);
                 ImGui.sameLine();
                 ImGui.text(shortcut);
                 ImGui.sameLine();
                 ImGui.textDisabled(tooltip.split("\n")[0].split("\\$")[1]);
 
+                ImGui.separator();
                 ImGui.textDisabled(tooltip.split("\n")[1].split("\\[")[0].split("]")[0]);
                 ImGui.sameLine();
                 ImGui.text(tooltip.split("\n")[1].split("\\[")[1].split("]")[0]);
                 ImGui.sameLine();
-                ImGui.textDisabled(tooltip.split("\n")[1].split("\\[")[1].split("]")[1]);
+                ImGui.textDisabled(tooltip.split("\n")[1].split("\\[")[1].split("]")[1].split("/")[0]);
+                ImGui.sameLine();
+                ImGui.textColored(221.0f / 255f, 71.0f / 255f, 51.0f / 255f, 1.0f, tooltip.split("\n")[1].split("\\[")[1].split("]")[1].split("/")[1]);
 
                 ImGui.textDisabled(tooltip.split("\n")[2].split("\\[")[0].split("]")[0]);
                 ImGui.sameLine();
                 ImGui.text(tooltip.split("\n")[2].split("\\[")[1].split("]")[0]);
                 ImGui.sameLine();
-                ImGui.textDisabled(tooltip.split("\n")[2].split("\\[")[1].split("]")[1]);
+                ImGui.textDisabled(tooltip.split("\n")[2].split("\\[")[1].split("]")[1].split("/")[0]);
+                ImGui.sameLine();
+                ImGui.textColored(123.0f / 255f, 179.0f / 255f, 33.0f / 255f, 1.0f, tooltip.split("\n")[2].split("\\[")[1].split("]")[1].split("/")[1]);
 
                 ImGui.textDisabled(tooltip.split("\n")[3].split("\\[")[0].split("]")[0]);
                 ImGui.sameLine();
                 ImGui.text(tooltip.split("\n")[3].split("\\[")[1].split("]")[0]);
                 ImGui.sameLine();
-                ImGui.textDisabled(tooltip.split("\n")[3].split("\\[")[1].split("]")[1]);
+                ImGui.textDisabled(tooltip.split("\n")[3].split("\\[")[1].split("]")[1].split("/")[0]);
+                ImGui.sameLine();
+                ImGui.textColored(22.0f / 255f, 126.0f / 255f, 213.0f / 255f, 1.0f, tooltip.split("\n")[3].split("\\[")[1].split("]")[1].split("/")[1]);
             }
             ImGui.endTooltip();
         }
