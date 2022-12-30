@@ -5,10 +5,10 @@ import java.util.Objects;
 public class InputManager { // TODO CHANGE THIS FIELDS IN CUSTOM INPUT MANAGER WINDOW
     public static Shortcut[] SHORTCUTS = {
             new Shortcut("cameraRotate", KeyCode.Mouse_Button_Right, "Right Mouse Button"),
-            new Shortcut("cameraMove(front)", KeyCode.Arrow_Up, "W"),
-            new Shortcut("cameraMove(back)", KeyCode.Arrow_Down, "S"),
-            new Shortcut("cameraMove(left)", KeyCode.Arrow_Left, "A"),
-            new Shortcut("cameraMove(right)", KeyCode.Arrow_Right, "D"),
+            new Shortcut("cameraMove(front)", KeyCode.W, "W"),
+            new Shortcut("cameraMove(back)", KeyCode.S, "S"),
+            new Shortcut("cameraMove(left)", KeyCode.A, "A"),
+            new Shortcut("cameraMove(right)", KeyCode.D, "D"),
             new Shortcut("cameraMove(up)", KeyCode.Space, "Space"),
             new Shortcut("cameraMove(down)", KeyCode.Left_Shift, "(L)Shift"),
 

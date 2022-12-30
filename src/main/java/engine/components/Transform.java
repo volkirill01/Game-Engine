@@ -53,6 +53,8 @@ public class Transform extends Component {
 
     public void increaseScale(Vector3f scale) { this.scale.add(scale); }
 
+    public void increaseScale(float x, float y, float z) { this.scale.add(x, y, z); }
+
     public void increaseScale(float scale) { this.scale.add(scale, scale, scale); }
 
     @Override
