@@ -7,6 +7,9 @@ import engine.toolbox.input.KeyListener;
 import engine.toolbox.input.MouseListener;
 import org.joml.Vector3f;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Camera {
 
 //    private float distanceFromPlayer = 1; // zoom
@@ -31,6 +34,15 @@ public class Camera {
     private Vector3f startRotation = new Vector3f(20.64f, 0.0f, 160.0f);
 //    private Vector3f startRotation = new Vector3f(23.8f, 0.0f, 160.0f);
 //    private float scrollSpeed = 0.15f;
+
+    private List<Integer> ignoredKeys = new ArrayList<>(){{
+        add(KeyCode.W);
+        add(KeyCode.A);
+        add(KeyCode.S);
+        add(KeyCode.D);
+        add(KeyCode.Space);
+        add(KeyCode.Left_Shift);
+    }};
 
     public Camera() {
         this.position = startPosition;
@@ -80,24 +92,22 @@ public class Camera {
 //        else
 //            actualMoveSpeed = moveSpeed;
 
-        if (Window.get().isLockControl() || KeyListener.isKeyDown(KeyCode.Left_Control) ||
-            KeyListener.isKeyDown(KeyCode.Right_Control))
-            return;
+        if (!KeyListener.isAnyKeyPressed(ignoredKeys)) {
+            if (KeyListener.isKeyDown(InputManager.getShortcut("cameraMove(front)").firstKeyCode))
+                direction.z += actualMoveSpeed * Window.getDelta();
+            else if (KeyListener.isKeyDown(InputManager.getShortcut("cameraMove(back)").firstKeyCode))
+                direction.z -= actualMoveSpeed * Window.getDelta();
 
-        if (KeyListener.isKeyDown(InputManager.getShortcut("cameraMove(front)").firstKeyCode))
-            direction.z += actualMoveSpeed * Window.getDelta();
-        else if (KeyListener.isKeyDown(InputManager.getShortcut("cameraMove(back)").firstKeyCode))
-            direction.z -= actualMoveSpeed * Window.getDelta();
+            if (KeyListener.isKeyDown(InputManager.getShortcut("cameraMove(left)").firstKeyCode))
+                direction.x += actualMoveSpeed * Window.getDelta();
+            else if (KeyListener.isKeyDown(InputManager.getShortcut("cameraMove(right)").firstKeyCode))
+                direction.x -= actualMoveSpeed * Window.getDelta();
 
-        if (KeyListener.isKeyDown(InputManager.getShortcut("cameraMove(left)").firstKeyCode))
-            direction.x += actualMoveSpeed * Window.getDelta();
-        else if (KeyListener.isKeyDown(InputManager.getShortcut("cameraMove(right)").firstKeyCode))
-            direction.x -= actualMoveSpeed * Window.getDelta();
-
-        if (KeyListener.isKeyDown(InputManager.getShortcut("cameraMove(up)").firstKeyCode))
-            direction.y += actualMoveSpeed * Window.getDelta();
-        else if (KeyListener.isKeyDown(InputManager.getShortcut("cameraMove(down)").firstKeyCode))
-            direction.y -= actualMoveSpeed * Window.getDelta();
+            if (KeyListener.isKeyDown(InputManager.getShortcut("cameraMove(up)").firstKeyCode))
+                direction.y += actualMoveSpeed * Window.getDelta();
+            else if (KeyListener.isKeyDown(InputManager.getShortcut("cameraMove(down)").firstKeyCode))
+                direction.y -= actualMoveSpeed * Window.getDelta();
+        }
     }
 
     private void movePos(Vector3f direction) {

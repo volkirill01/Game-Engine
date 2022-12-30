@@ -1,6 +1,7 @@
 package engine.imGui;
 
 import engine.TestFieldsWindow;
+import engine.gizmo.GizmoSystem;
 import engine.graphEditor.ExampleImGuiNodeEditor;
 import engine.graphEditor.Graph;
 import engine.renderEngine.PickingTexture;

@@ -17,7 +17,8 @@ public class InputManager { // TODO CHANGE THIS FIELDS IN CUSTOM INPUT MANAGER W
 
             new Shortcut("translate", KeyCode.G, "G"),
             new Shortcut("rotate", KeyCode.R, "R"),
-            new Shortcut("scale", KeyCode.S, "S")
+            new Shortcut("scale", KeyCode.S, "S"),
+            new Shortcut("select", KeyCode.V, "V")
     };
 
     public static Shortcut getShortcut(String shortcutName) {

@@ -1,6 +1,7 @@
 import engine.entities.Camera;
 import engine.entities.GameObject;
 import engine.gizmo.GizmoSystem;
+import engine.imGui.ImGuiLayer;
 import engine.renderEngine.Window;
 import engine.renderEngine.Loader;
 import engine.renderEngine.font.fontMeshCreator.FontType;
@@ -93,6 +94,7 @@ public class Main {
 //        guis.add(cameraOutputGui); // TODO this is camera output image
 
         GizmoSystem gizmoSystem = new GizmoSystem();
+        Window.get().getImGuiLayer().getGameViewWindow().setGizmoSystem(gizmoSystem);
 
         while (!Window.isClosed()) {
             // Poll events

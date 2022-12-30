@@ -1,6 +1,5 @@
 package engine.gizmo;
 
-import engine.imGui.Console;
 import engine.imGui.ConsoleMessage;
 import engine.renderEngine.Window;
 import engine.toolbox.input.InputManager;
@@ -27,14 +26,16 @@ public class ScaleGizmo extends Gizmo {
     }
 
     @Override
-    public void update() {
-        if (KeyListener.isKeyDoubleClick(InputManager.getShortcut("scale").firstKeyCode)) {
+    public boolean update(boolean use) {
+        if (use)
+            return false;
+
+        if (KeyListener.isKeyDoubleClick(InputManager.getShortcut("scale").firstKeyCode) && !KeyListener.isAnyKeyPressed(KeyCode.S)) {
             this.isScaling = true;
             this.startScale = new Vector3f(Window.get().getImGuiLayer().getInspectorWindow().getActiveGameObject().transform.scale);
             this.scaleDirection.x = 1.0f;
             this.scaleDirection.y = 1.0f;
             this.scaleDirection.z = 1.0f;
-            Console.log(ConsoleMessage.MessageType.Info, "Scaling");
         }
 
         this.scale = (MouseListener.getDy() + (-MouseListener.getDx()));
@@ -96,6 +97,8 @@ public class ScaleGizmo extends Gizmo {
             Window.get().getImGuiLayer().getInspectorWindow().setLocked(false);
             Window.get().setLockControl(false);
         }
+
+        return this.isScaling;
     }
 
     private void resetScale() { Window.get().getImGuiLayer().getInspectorWindow().getActiveGameObject().transform.scale = new Vector3f(this.startScale); }

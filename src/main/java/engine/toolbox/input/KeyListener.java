@@ -1,6 +1,7 @@
 package engine.toolbox.input;
 
 import java.util.Arrays;
+import java.util.List;
 
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -48,9 +49,19 @@ public class KeyListener {
 
     public static boolean isKeyDoubleClick(int keyCode) { return get().keyDoubleClicked[keyCode]; }
 
-    public static boolean isAnyKeyPressed() {
+    public static boolean isAnyKeyPressed() { return isAnyKeyPressed(-1); }
+
+    public static boolean isAnyKeyPressed(int ignoredKey) {
         for (int i = 0; i < get().keyDown.length; i++)
-            if (get().keyClicked[i])
+            if (get().keyDown[i] && i != ignoredKey)
+                return true;
+
+        return false;
+    }
+
+    public static boolean isAnyKeyPressed(List<Integer> ignoredKeys) {
+        for (int i = 0; i < get().keyDown.length; i++)
+            if (get().keyDown[i] && !ignoredKeys.contains(i))
                 return true;
 
         return false;

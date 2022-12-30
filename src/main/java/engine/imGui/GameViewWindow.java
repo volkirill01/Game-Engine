@@ -5,6 +5,7 @@ import engine.entities.GameObject;
 import engine.eventSystem.EventSystem;
 import engine.eventSystem.Events.Event;
 import engine.eventSystem.Events.EventType;
+import engine.gizmo.GizmoSystem;
 import engine.imGui.editorToolsWindows.FastMeshPlace;
 import engine.renderEngine.Loader;
 import engine.renderEngine.OBJLoader;
@@ -40,9 +41,13 @@ public class GameViewWindow extends EditorImGuiWindow {
 
     private boolean captureMouse = false;
 
+    private GizmoSystem gizmoSystem;
+
     public GameViewWindow() {
         this.fastMeshPlaceWindow = new FastMeshPlace();
     }
+
+    public void setGizmoSystem(GizmoSystem gizmoSystem) { this.gizmoSystem = gizmoSystem; }
 
     @Override
     public void imgui() {
@@ -216,12 +221,17 @@ public class GameViewWindow extends EditorImGuiWindow {
 //        if (!ImGui.isWindowHovered())
 //            return false;
 
+        boolean result = false;
+
         this.fastMeshPlaceWindow.imgui(); // TODO FIX SHOW THIS WINDOW BUG
-
         if (ImGui.isWindowHovered())
-            return true;
+            result = true;
 
-        return false;
+        this.gizmoSystem.imgui(); // TODO FIX SHOW THIS WINDOW BUG
+        if (ImGui.isWindowHovered())
+            result = true;
+
+        return result;
     }
 
     private ImVec2 getLargestSizeForViewport() {

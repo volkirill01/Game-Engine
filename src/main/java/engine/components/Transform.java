@@ -49,7 +49,15 @@ public class Transform extends Component {
 
     public void increasePosition(Vector3f position) { this.position.add(position); }
 
+    public void increasePosition(float x, float y, float z) { this.position.add(x, y, z); }
+
+    public void increasePosition(float position) { this.position.add(position, position, position); }
+
     public void increaseRotation(Vector3f rotation) { this.rotation.add(rotation); }
+
+    public void increaseRotation(float x, float y, float z) { this.rotation.add(x, y, z); }
+
+    public void increaseRotation(float rotation) { this.rotation.add(rotation, rotation, rotation); }
 
     public void increaseScale(Vector3f scale) { this.scale.add(scale); }
 
