@@ -114,14 +114,14 @@ public class Scene {
 
     public GameObject getGameObjectWithTag(String tag) {
         Optional<GameObject> result = this.gameObjects.stream()
-                .filter(gameObject -> gameObject.getAllTags().contains(tag))
+                .filter(gameObject -> gameObject.getAllTagsNames().contains(tag))
                 .findFirst();
         return result.orElse(null);
     }
 
     public List<GameObject> getGameObjectsWithTag(String tag) {
         List<GameObject> result = this.gameObjects.stream()
-                .filter(gameObject -> gameObject.getAllTags().contains(tag))
+                .filter(gameObject -> gameObject.getAllTagsNames().contains(tag))
                 .toList();
 
         if (result.size() > 0)

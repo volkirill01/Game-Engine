@@ -28,7 +28,7 @@ import org.joml.Vector2f;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GameViewWindow extends EditorImGuiWindow {
+public class SceneViewWindow extends EditorImGuiWindow {
 
     private float leftX, rightX, topY, bottomY;
     private boolean isPlaying = false;
@@ -43,15 +43,15 @@ public class GameViewWindow extends EditorImGuiWindow {
 
     private GizmoSystem gizmoSystem;
 
-    public GameViewWindow() {
+    public SceneViewWindow() {
         this.fastMeshPlaceWindow = new FastMeshPlace();
     }
 
     public void setGizmoSystem(GizmoSystem gizmoSystem) { this.gizmoSystem = gizmoSystem; }
 
     @Override
-    public void imgui() {
-        ImGui.begin(" \uEC5C Game Viewport ", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse | ImGuiWindowFlags.MenuBar);
+    public void imgui() { // \uEEF8 \uEFBE
+        ImGui.begin(" \uF02C Scene ", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse | ImGuiWindowFlags.MenuBar);
 
         topLeftCornerPosition = new Vector2f(ImGui.getCursorStartPosX() + ImGui.getWindowPosX(), ImGui.getCursorStartPosY() + ImGui.getWindowPosY());
 
@@ -208,7 +208,7 @@ public class GameViewWindow extends EditorImGuiWindow {
     }
 
     public boolean getWantCaptureMouse() {
-        if (!captureMouse || GameObject.showAddTag)
+        if (!captureMouse || InspectorWindow.showAddTag)
             return false;
 
         return MouseListener.getX() >= leftX && MouseListener.getX() <= rightX &&

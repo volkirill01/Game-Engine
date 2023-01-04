@@ -1,7 +1,6 @@
 package engine.imGui;
 
 import engine.TestFieldsWindow;
-import engine.gizmo.GizmoSystem;
 import engine.graphEditor.ExampleImGuiNodeEditor;
 import engine.graphEditor.Graph;
 import engine.renderEngine.PickingTexture;
@@ -38,7 +37,7 @@ public class ImGuiLayer {
     private EditorImGuiWindow windowOnFullscreen = null;
     private MenuBar menuBar;
 
-    private GameViewWindow gameViewWindow;
+    private SceneViewWindow sceneViewWindow;
     private Console console;
     private InspectorWindow inspectorWindow;
     private SceneHierarchyWindow sceneHierarchyWindow;
@@ -68,7 +67,7 @@ public class ImGuiLayer {
     public ImGuiLayer(long glfwWindow, PickingTexture pickingTexture) {
         this.glfwWindow = glfwWindow;
         this.menuBar = new MenuBar();
-        this.gameViewWindow = new GameViewWindow();
+        this.sceneViewWindow = new SceneViewWindow();
         this.console = new Console();
         this.inspectorWindow = new InspectorWindow(pickingTexture);
         this.sceneHierarchyWindow = new SceneHierarchyWindow();
@@ -135,14 +134,14 @@ public class ImGuiLayer {
             if (!io.getWantCaptureMouse() && mouseDown[1])
                 ImGui.setWindowFocus(null);
 
-            if (!io.getWantCaptureMouse()|| gameViewWindow.getWantCaptureMouse())
+            if (!io.getWantCaptureMouse()|| sceneViewWindow.getWantCaptureMouse())
                 MouseListener.mouseButtonCallback(w, button, action, mods);
         });
 
         glfwSetScrollCallback(glfwWindow, (w, xOffset, yOffset) -> {
             io.setMouseWheelH(io.getMouseWheelH() + (float) xOffset);
             io.setMouseWheel(io.getMouseWheel() + (float) yOffset);
-            if (!io.getWantCaptureMouse() || gameViewWindow.getWantCaptureMouse())
+            if (!io.getWantCaptureMouse() || sceneViewWindow.getWantCaptureMouse())
                 MouseListener.mouseScrollCallback(w, xOffset, yOffset);
             else
                 MouseListener.clear();
@@ -202,7 +201,7 @@ public class ImGuiLayer {
         defaultText = fontAtlas.addFontFromFileTTF("engineFiles/fonts/segueui/segoeui.ttf", 20.0f * fontSize, defaultFontConfig);
         fontConfig.setMergeMode(true);
         fontConfig.setGlyphMinAdvanceX(13.0f); // Use if you want to make the icon monospaced
-        short[] icons_ranges = { (short)0xEA5C, (short)0xF025, 0 }; // Min(0xEA5C), Max(0xF025) icons range // TODO -+-+- Change min and max
+        short[] icons_ranges = { (short)0xEA5C, (short)0xF02C, 0 }; // Min(0xEA5C), Max(0xF025) icons range // TODO -+-+- Change min and max
         fontAtlas.addFontFromFileTTF("engineFiles/fonts/icofont_all.ttf", 15.5f * fontSize, fontConfig, icons_ranges);
 
         boldText = fontAtlas.addFontFromFileTTF("engineFiles/fonts/segueui/seguisb.ttf", 20.0f * fontSize, defaultFontConfig);
@@ -333,7 +332,7 @@ public class ImGuiLayer {
             currentScene.imgui();
             TestFieldsWindow.imgui();
             ImGui.showDemoWindow();
-            gameViewWindow.imgui();
+            sceneViewWindow.imgui();
             console.imgui();
     //        scriptGraphWindow.imgui();
             sceneHierarchyWindow.imgui();
@@ -527,7 +526,7 @@ public class ImGuiLayer {
 
     public InspectorWindow getInspectorWindow() { return this.inspectorWindow; }
 
-    public GameViewWindow getGameViewWindow() { return this.gameViewWindow; }
+    public SceneViewWindow getGameViewWindow() { return this.sceneViewWindow; }
 
     public Console getConsole() { return this.console; }
 

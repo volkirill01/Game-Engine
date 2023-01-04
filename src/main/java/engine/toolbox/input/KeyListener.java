@@ -11,7 +11,7 @@ public class KeyListener {
     private boolean keyClicked[] = new boolean[350];
     private boolean keyDoubleClicked[] = new boolean[350];
 
-    private final float doubleClickTimer = 0.6f;
+    private final float doubleClickTimer = 0.8f;
     private float currentDoubleClickTimer = 0.0f;
 
     public static void endFrame() {

@@ -25,6 +25,18 @@ public class DefaultMeshes {
         return new TexturedModel(OBJLoader.loadOBJ("engineFiles/defaultMeshes/defaultCapsule.obj"), Loader.get().loadMaterial(getDefaultMaterialPath()));
     }
 
+    public static TexturedModel DefaultCylinder() {
+        return new TexturedModel(OBJLoader.loadOBJ("engineFiles/defaultMeshes/defaultCylinder.obj"), Loader.get().loadMaterial(getDefaultMaterialPath()));
+    }
+
+    public static TexturedModel DefaultPlane() {
+        return new TexturedModel(OBJLoader.loadOBJ("engineFiles/defaultMeshes/defaultPlane.obj"), Loader.get().loadMaterial(getDefaultMaterialPath()));
+    }
+
+    public static TexturedModel DefaultCone() {
+        return new TexturedModel(OBJLoader.loadOBJ("engineFiles/defaultMeshes/defaultCone.obj"), Loader.get().loadMaterial(getDefaultMaterialPath()));
+    }
+
     public static TexturedModel DefaultPyramid() {
         return new TexturedModel(OBJLoader.loadOBJ("engineFiles/defaultMeshes/defaultPyramid.obj"), Loader.get().loadMaterial(getDefaultMaterialPath()));
     }

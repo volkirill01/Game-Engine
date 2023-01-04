@@ -31,6 +31,8 @@ public class Color {
         this.a = a;
     }
 
+    public Color copy() { return new Color(r, g, b, a); }
+
     public Color toPercentColor() { return new Color(this.r / 255.0f, this.g / 255.0f, this.b / 255.0f, this.a / 255.0f); }
 
     public Vector3f toVector3() { return new Vector3f(this.r, this.g, this.b); }

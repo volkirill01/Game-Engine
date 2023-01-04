@@ -1,5 +1,6 @@
 package engine.imGui;
 
+import engine.TestFieldsWindow;
 import engine.assets.Asset;
 import engine.renderEngine.Loader;
 import engine.renderEngine.Window;
@@ -8,6 +9,7 @@ import imgui.ImGui;
 import imgui.ImVec2;
 import imgui.flag.*;
 import org.apache.commons.io.FileUtils;
+import org.joml.Vector2f;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,13 +42,27 @@ public class AssetsStructureWindow extends EditorImGuiWindow {
             boolean isEmpty = folders.size() == 0;
             boolean isEven = a % 2 == 0;
             a++;
-            boolean treeNodeOpen = doTreeNode(arr[index].getPath(), "", level, isEmpty, false, isEven, itemSpacing);
+            Vector2f iconPos = new Vector2f(0.0f);
+            boolean treeNodeOpen = doTreeNode(arr[index].getPath(), "", level, iconPos, isEmpty, false, isEven, itemSpacing);
+
+            ImVec2 startCursorPos;
 
             if (treeNodeOpen) {
                 // recursion for sub-directories
                 if (arr[index].listFiles() != null)
                     DrawFiles(arr[index].listFiles(), 0, level + 1, itemSpacing);
+
+                startCursorPos = ImGui.getCursorPos();
+                ImGui.setCursorPos(iconPos.x, iconPos.y);
+                ImGui.image(Loader.get().loadTexture("engineFiles/images/icons/icon=folder-open-regular-(256x256).png").getTextureID(), 16.0f, 16.0f, 0, 1, 1, 0);
+                ImGui.setCursorPos(startCursorPos.x, startCursorPos.y);
+
                 ImGui.treePop();
+            } else {
+                startCursorPos = ImGui.getCursorPos();
+                ImGui.setCursorPos(iconPos.x, iconPos.y);
+                ImGui.image(Loader.get().loadTexture("engineFiles/images/icons/icon=folder-solid-(256x256).png").getTextureID(), 16.0f, 16.0f, 0, 1, 1, 0);
+                ImGui.setCursorPos(startCursorPos.x, startCursorPos.y);
             }
         }
 
@@ -77,15 +93,26 @@ public class AssetsStructureWindow extends EditorImGuiWindow {
                 }
 
             boolean isEmpty = folders.size() == 0;
-            startX = ImGui.getCursorStartPosX() + 7.9f;
+            startX = ImGui.getCursorStartPosX() - 0.1f + TestFieldsWindow.getFloats[0];
             ImGui.setCursorPosX(ImGui.getCursorPosX() - 12.0f);
-            boolean treeNodeOpen = doTreeNode(Window.get().getImGuiLayer().getAssetsWindow().assetsDirectory, "", 0, isEmpty, true, false, itemSpacing);
+            Vector2f iconPos = new Vector2f(0.0f);
+            boolean treeNodeOpen = doTreeNode(Window.get().getImGuiLayer().getAssetsWindow().assetsDirectory, "", 0, iconPos, isEmpty, true, false, itemSpacing);
+
+            ImVec2 startCursorPos = ImGui.getCursorPos();
 
             if (treeNodeOpen) {
                 a = 0;
                 DrawFiles(arr, 0, 1, itemSpacing);
+
+                ImGui.setCursorPos(iconPos.x, iconPos.y);
+                ImGui.image(Loader.get().loadTexture("engineFiles/images/icons/icon=folder-open-regular-(256x256).png").getTextureID(), 16.0f, 16.0f, 0, 1, 1, 0);
                 ImGui.treePop();
+            } else {
+                ImGui.setCursorPos(iconPos.x, iconPos.y);
+                ImGui.image(Loader.get().loadTexture("engineFiles/images/icons/icon=folder-solid-(256x256).png").getTextureID(), 16.0f, 16.0f, 0, 1, 1, 0);
             }
+
+            ImGui.setCursorPos(startCursorPos.x, startCursorPos.y);
         }
         ImGui.popStyleVar();
 
@@ -117,7 +144,7 @@ public class AssetsStructureWindow extends EditorImGuiWindow {
         ImGui.end();
     }
 
-    public boolean doTreeNode(String filepath, String prefix, int level, boolean isEmpty, boolean defaultOpen, boolean isEven, ImVec2 itemSpacing) {
+    public boolean doTreeNode(String filepath, String prefix, int level, Vector2f iconPos, boolean isEmpty, boolean defaultOpen, boolean isEven, ImVec2 itemSpacing) {
         String fileName = filepath.replace("\\", "/").split("/")[filepath.replace("\\", "/").split("/").length - 1];
 
         ImGui.pushID(filepath);
@@ -151,19 +178,20 @@ public class AssetsStructureWindow extends EditorImGuiWindow {
             ImGui.setCursorPosX(ImGui.getCursorPosX() - 2.0f);
         }
 
-        ImGui.setCursorPos(ImGui.getCursorPosX() + 24.0f, ImGui.getCursorPosY() + 5.0f);
-        ImGui.image(Loader.get().loadTexture("engineFiles/images/icons/icon=folder-solid-(256x256).png").getTextureID(), 16.0f, 16.0f, 0, 1, 1, 0);
-        ImGui.setCursorPos((selectablePos.x * 0.856f) + 22.5f, selectablePos.y);
+        iconPos.x = ImGui.getCursorPosX() + 10.0f + TestFieldsWindow.getFloats[1];
+        iconPos.y = ImGui.getCursorPosY() + 5.0f;
+
+        ImGui.setCursorPos((selectablePos.x * 0.856f) + 6.5f + TestFieldsWindow.getFloats[1], selectablePos.y);
 
         ImGui.pushStyleColor(ImGuiCol.Header, 0, 0, 0, 0);
         ImGui.pushStyleColor(ImGuiCol.HeaderHovered, 0, 0, 0, 0);
         ImGui.pushStyleColor(ImGuiCol.HeaderActive, 0, 0, 0, 0);
         boolean treeNodeOpen = ImGui.treeNodeEx(
-                prefix + "\t" + fileName, //                         (Window.getImGuiLayer().getAssetsWindow().getCurrentDirectory().equals(filepath) ? ImGuiTreeNodeFlags.Selected : ImGuiTreeNodeFlags.FramePadding) |
+                prefix + "\t " + fileName, //                         (Window.getImGuiLayer().getAssetsWindow().getCurrentDirectory().equals(filepath) ? ImGuiTreeNodeFlags.Selected : ImGuiTreeNodeFlags.FramePadding) |
                         (isEmpty ? ImGuiTreeNodeFlags.Leaf : ImGuiTreeNodeFlags.OpenOnArrow) |
                         ImGuiTreeNodeFlags.FramePadding | ImGuiTreeNodeFlags.SpanAvailWidth |
                         (defaultOpen ? ImGuiTreeNodeFlags.DefaultOpen : ImGuiTreeNodeFlags.FramePadding),
-                prefix + "\t" + fileName
+                prefix + "\t " + fileName
         );
         ImGui.popStyleColor(3);
         ImGui.popID();

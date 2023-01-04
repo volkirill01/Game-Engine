@@ -30,7 +30,7 @@ public class TranslateGizmo extends Gizmo {
         if (use)
             return false;
 
-        if (KeyListener.isKeyDoubleClick(InputManager.getShortcut("translate").firstKeyCode) && !KeyListener.isAnyKeyPressed(KeyCode.G)) {
+        if (KeyListener.isKeyDoubleClick(InputManager.getShortcut("translate").firstKeyCode) && !KeyListener.isAnyKeyPressed(InputManager.getShortcut("translate").firstKeyCode)) {
             this.isTranslating = true;
             this.startTranslation = new Vector3f(Window.get().getImGuiLayer().getInspectorWindow().getActiveGameObject().transform.position);
             this.translationDirection.x = 1.0f;

@@ -480,7 +480,7 @@ public class EditorImGui {
 
         ImGui.setNextItemWidth(ImGui.getContentRegionAvailX());
         float[] imColor = { color.r / 255, color.g / 255, color.b / 255, color.a / 255 };
-        if (ImGui.colorEdit4("##colorPicker" + label, imColor)) {
+        if (ImGui.colorEdit4("##colorPicker" + label, imColor, ImGuiColorEditFlags.AlphaBar | ImGuiColorEditFlags.AlphaPreviewHalf)) {
             color.set(imColor[0] * 255, imColor[1] * 255, imColor[2] * 255, imColor[3] * 255);
             ifColorChange = true;
         }
@@ -848,14 +848,14 @@ public class EditorImGui {
         return value;
     }
 
-    public static void drawRectangle(ImVec2 position, ImVec2 scale, Color color) {
+    public static void drawRectangle(ImVec2 position, ImVec2 scale, ImVec4 color) {
         ImGui.setCursorPos(position.x, position.y);
-        ImGui.image(Loader.get().loadTexture("engineFiles/images/utils/whitePixel.png").getTextureID(), scale.x, scale.y, 0, 0, 0, 1, color.r, color.g, color.b, color.a);
+        ImGui.image(Loader.get().loadTexture("engineFiles/images/utils/whitePixel.png").getTextureID(), scale.x, scale.y, 0, 0, 0, 1, color.x, color.y, color.z, color.w);
     }
 
     public static void drawRectangle(Vector2f position, Vector2f scale, Color color) {
         ImGui.setCursorPos(position.x, position.y);
-        ImGui.image(Loader.get().loadTexture("engineFiles/images/utils/whitePixel.png").getTextureID(), scale.x, scale.y, 0, 0, 0, 1, color.r, color.g, color.b, color.a);
+        ImGui.image(Loader.get().loadTexture("engineFiles/images/utils/whitePixel.png").getTextureID(), scale.x, scale.y, 0, 0, 0, 1, color.r / 255.0f, color.g / 255.0f, color.b / 255.0f, color.a / 255.0f);
     }
 
     public static boolean BeginButtonDropDownImage(int textureID, String popupLabel, ImVec2 buttonSize, ImVec4 color, boolean noBackground) {

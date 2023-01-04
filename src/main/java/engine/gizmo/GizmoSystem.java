@@ -39,9 +39,9 @@ public class GizmoSystem {
 
     public void imgui() {
         Vector2f windowPos = Window.get().getImGuiLayer().getGameViewWindow().getTopLeftCorner();
-        Vector2f windowSize = new Vector2f(44.0f - TestFieldsWindow.getFloats[3], 182.7f - TestFieldsWindow.getFloats[0]);
+        Vector2f windowSize = new Vector2f(44.0f, 182.7f);
 
-        ImGui.setNextWindowPos(windowPos.x - 6.3f - TestFieldsWindow.getFloats[1], windowPos.y - 6.5f - TestFieldsWindow.getFloats[2]);
+        ImGui.setNextWindowPos(windowPos.x - 6.3f, windowPos.y - 6.5f);
         ImGui.setNextWindowSize(windowSize.x, windowSize.y);
 
         float startFrameRounding = ImGui.getStyle().getFrameRounding();
@@ -76,7 +76,7 @@ public class GizmoSystem {
 
     private boolean drawGizmoButton(float startFrameRounding, ImVec2 startFramePadding, String action, String shortcut, String tooltip, boolean displayXYZTooltips, String iconFilepath) {
 
-        ImGui.setCursorPosX(ImGui.getCursorPosX() + 1.2f + TestFieldsWindow.getFloats[6]);
+        ImGui.setCursorPosX(ImGui.getCursorPosX() + 1.2f);
         boolean isClick = ImGui.imageButton(Loader.get().loadTexture(iconFilepath).getTextureID(), 26.0f, 26.0f, 0, 1, 1, 0);
 
         ImGui.pushStyleVar(ImGuiStyleVar.WindowRounding, startFrameRounding);

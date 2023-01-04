@@ -30,7 +30,7 @@ public class ScaleGizmo extends Gizmo {
         if (use)
             return false;
 
-        if (KeyListener.isKeyDoubleClick(InputManager.getShortcut("scale").firstKeyCode) && !KeyListener.isAnyKeyPressed(KeyCode.S)) {
+        if (KeyListener.isKeyDoubleClick(InputManager.getShortcut("scale").firstKeyCode) && !KeyListener.isAnyKeyPressed(InputManager.getShortcut("scale").firstKeyCode)) {
             this.isScaling = true;
             this.startScale = new Vector3f(Window.get().getImGuiLayer().getInspectorWindow().getActiveGameObject().transform.scale);
             this.scaleDirection.x = 1.0f;

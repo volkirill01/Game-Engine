@@ -1,5 +1,7 @@
 package engine.renderEngine.postProcessing;
 
+import engine.TestFieldsWindow;
+import engine.components.Transform;
 import engine.imGui.EditorImGui;
 import engine.imGui.EditorImGuiWindow;
 import engine.renderEngine.Loader;
@@ -8,13 +10,14 @@ import imgui.ImVec2;
 import imgui.ImVec4;
 import imgui.flag.ImGuiCol;
 import imgui.flag.ImGuiStyleVar;
+import imgui.flag.ImGuiTreeNodeFlags;
 
 import java.util.List;
 
 public class PostProcessingGui extends EditorImGuiWindow {
 
     public void imgui() {
-        ImGui.begin(" Post Processing ");
+        ImGui.begin(" \uEC5F Post Processing ");
 
         EditorImGui.header("Ambient");
         EditorImGui.field_Color_WithAlpha("Ambient Light Color", PostProcessing.getAmbientLightColor());
@@ -64,9 +67,6 @@ public class PostProcessingGui extends EditorImGuiWindow {
     }
 
     private void drawLayers() {
-        float arrowsSize = 22.0f;
-        float checkboxSize = 37.0f;
-
         List<PostProcessLayer> layers = PostProcessing.getLayers();
         int layersCount = layers.size();
 
@@ -76,31 +76,60 @@ public class PostProcessingGui extends EditorImGuiWindow {
 
                 ImGui.pushID("##postProcessLayer" + i);
 
-                ImGui.columns(3, "", false);
-
-                //<editor-fold desc="Is Active checkbox">
-                ImGui.setColumnWidth(0, checkboxSize);
-                if (ImGui.checkbox("##isActive", layer.isActive()))
-                    layer.setActive(!layer.isActive());
-                ImGui.nextColumn();
-                //</editor-fold>
-
-                //<editor-fold desc="Header">
-                if (!layer.isActive())  // ------------------------------------------
+                if (!layer.isActive())
                     EditorImGui.pushDisabled();
 
-                ImGui.setColumnWidth(1, ImGui.getWindowWidth() - ImGui.getStyle().getWindowPaddingX() - checkboxSize - arrowsSize);
-                boolean collapsingHeader = ImGui.collapsingHeader(layer.getPostEffectName());
-                ImVec2 headerPos = ImGui.getCursorPos();
+                ImVec2 startCursorPos = ImGui.getCursorPos();
+
+                //<editor-fold desc="Header">
+                ImVec4 headerColor = ImGui.getStyle().getColor(ImGuiCol.FrameBg);
+                ImVec4 headerHoveredColor = ImGui.getStyle().getColor(ImGuiCol.FrameBgHovered);
+                ImGui.pushStyleColor(ImGuiCol.Border, 0.0f, 0.0f, 0.0f, 0.0f);
+                ImGui.pushStyleColor(ImGuiCol.Header, 0.0f, 0.0f, 0.0f, 0.0f);
+                ImGui.pushStyleColor(ImGuiCol.HeaderHovered, 0.0f, 0.0f, 0.0f, 0.0f);
+                ImGui.pushStyleColor(ImGuiCol.HeaderActive, 0.0f, 0.0f, 0.0f, 0.0f);
+                ImGui.pushStyleColor(ImGuiCol.Button, headerColor.x, headerColor.y, headerColor.z, headerColor.w);
+                ImGui.pushStyleColor(ImGuiCol.ButtonHovered, headerHoveredColor.x, headerHoveredColor.y, headerHoveredColor.z, headerHoveredColor.w);
+                ImGui.pushStyleColor(ImGuiCol.ButtonActive, headerHoveredColor.x, headerHoveredColor.y, headerHoveredColor.z, headerHoveredColor.w);
+                ImGui.pushStyleVar(ImGuiStyleVar.FrameRounding, 0.0f);
+
+                ImGui.pushStyleVar(ImGuiStyleVar.FramePadding, ImGui.getContentRegionAvailX() / 2.0f, ImGui.getStyle().getFramePaddingY());
+                ImGui.button("##componentBackground");
+                ImGui.setItemAllowOverlap();
+                ImGui.popStyleVar();
+
+                ImGui.setCursorPos(startCursorPos.x + 35.0f, startCursorPos.y);
+                ImVec4 separatorColor = ImGui.getStyle().getColor(ImGuiCol.Separator);
+                separatorColor.w -= 0.2f;
+                EditorImGui.drawRectangle(startCursorPos, new ImVec2(ImGui.getContentRegionAvailX() + 35.0f, 2.0f), separatorColor);
                 ImGui.setItemAllowOverlap();
 
-                if (!layer.isActive())  // ------------------------------------------
+                ImGui.setCursorPos(startCursorPos.x + 28.0f, startCursorPos.y);
+                ImGui.pushStyleVar(ImGuiStyleVar.FramePadding, ImGui.getStyle().getFramePaddingX() - 3.0f, ImGui.getStyle().getFramePaddingY());
+                boolean collapsingHeader = ImGui.collapsingHeader(layer.getPostEffectName());
+                ImGui.setItemAllowOverlap();
+                ImGui.popStyleVar();
+
+                ImGui.popStyleVar();
+                ImGui.popStyleColor(7);
+
+                ImVec2 headerPos = ImGui.getCursorPos();
+                if (!layer.isActive())
                     EditorImGui.popDisabled();
+                //</editor-fold>
+
+                //<editor-fold desc="Is Active checkbox">
+                ImGui.pushStyleVar(ImGuiStyleVar.FramePadding, 2.5f, 2.5f);
+                ImGui.setCursorPos(startCursorPos.x + 3.0f, startCursorPos.y + 2.5f);
+                if (ImGui.checkbox("##isActive", layer.isActive()))
+                    layer.setActive(!layer.isActive());
+                ImGui.popStyleVar();
                 //</editor-fold>
 
                 //<editor-fold desc="Dropdown menu">
                 ImGui.sameLine();
-                ImGui.setCursorPos(ImGui.getWindowWidth() - (16.0f * 2.0f) + 3.0f - arrowsSize - 7.0f, ImGui.getCursorPosY() + (16.0f / 2.0f) - 7.0f);
+                ImGui.setCursorPos(ImGui.getWindowWidth() - (16.0f * 2.0f) - ImGui.getStyle().getWindowPaddingX(), ImGui.getCursorPosY() + (16.0f / 2.0f) - 8.0f);
+
                 if (EditorImGui.BeginButtonDropDownImage(
                         Loader.get().loadTexture("engineFiles/images/utils/icon=ellipsis-solid(32x32).png").getTextureID(),
                         "PostProcessLayerMenu", new ImVec2(18, 18), layer.isActive() ? ImGui.getStyle().getColor(ImGuiCol.Text) : ImGui.getStyle().getColor(ImGuiCol.TextDisabled), true)) {
@@ -116,7 +145,7 @@ public class PostProcessingGui extends EditorImGuiWindow {
                         if (ImGui.menuItem("Move Up"))
                             PostProcessing.swapTwoLayers(i, i - 1);
                     } else
-                        ImGui.textDisabled("Move Up"); // TODO IF MOVE UP OR DOWN DON'T WORK, REPLACE IF STATEMENTS
+                        ImGui.textDisabled("Move Up");
 
                     if (i < layersCount - 1) {
                         if (ImGui.menuItem("Move Down"))
@@ -128,95 +157,10 @@ public class PostProcessingGui extends EditorImGuiWindow {
                 }
                 //</editor-fold>
 
-                if (!layer.isActive())  // ------------------------------------------
-                    EditorImGui.pushDisabled();
-
-                //<editor-fold desc="Arrows">
-                ImGui.nextColumn();
-
-                if (layersCount == 1) {
-                    ImVec4 disabledButtonColor = ImGui.getStyle().getColor(ImGuiCol.FrameBgActive);
-                    ImGui.pushStyleColor(ImGuiCol.Button, disabledButtonColor.x, disabledButtonColor.y, disabledButtonColor.z, disabledButtonColor.w);
-                    ImGui.pushStyleColor(ImGuiCol.ButtonHovered, disabledButtonColor.x, disabledButtonColor.y, disabledButtonColor.z, disabledButtonColor.w);
-                    ImGui.pushStyleColor(ImGuiCol.ButtonActive, disabledButtonColor.x, disabledButtonColor.y, disabledButtonColor.z, disabledButtonColor.w);
-                    ImGui.pushStyleVar(ImGuiStyleVar.FramePadding, 7.0f, ImGui.getStyle().getFramePaddingY());
-                    ImGui.button("##arrowsBackground");
-                    ImGui.popStyleVar();
-                    ImGui.popStyleColor(3);
-                } else if (i != 0 && i < layersCount - 1) {
-                    //<editor-fold desc="Arrows background">
-                    ImVec2 buttonPos = ImGui.getCursorPos();
-                    ImGui.pushStyleVar(ImGuiStyleVar.FramePadding, 7.0f, ImGui.getStyle().getFramePaddingY());
-                    ImGui.button("##arrowsBackground");
-                    ImGui.popStyleVar();
-                    ImGui.setItemAllowOverlap();
-
-                    ImGui.pushStyleVar(ImGuiStyleVar.FramePadding, 7.0f, -3.0f);
-                    ImGui.pushStyleVar(ImGuiStyleVar.ItemSpacing, 0.0f, -2f);
-                    ImGui.pushStyleVar(ImGuiStyleVar.FrameRounding, 0.0f);
-                    ImGui.pushStyleColor(ImGuiCol.Button, 0.0f, 0.0f, 0.0f, 0.0f);
-                    ImGui.pushStyleColor(ImGuiCol.ButtonHovered, 0.0f, 0.0f, 0.0f, 0.0f);
-                    ImGui.pushStyleColor(ImGuiCol.ButtonActive, 0.0f, 0.0f, 0.0f, 0.0f);
-                    ImGui.pushStyleColor(ImGuiCol.Border, 0.0f, 0.0f, 0.0f, 0.0f);
-
-                    float arrowsOffset = 4.0f;
-                    ImGui.setCursorPos(buttonPos.x, buttonPos.y + 0.5f);
-                    buttonPos = ImGui.getCursorPos();
-                    //</editor-fold>
-
-                    //<editor-fold desc="Up button">
-                    if (ImGui.button("##\uEA6A"))
-                        PostProcessing.swapTwoLayers(i, i - 1);
-
-                    ImGui.setCursorPos(buttonPos.x + 2.0f, buttonPos.y - 3.8f);
-                    ImGui.textDisabled("_");
-                    ImGui.setCursorPos(buttonPos.x + 6.8f, buttonPos.y - 3.8f);
-                    ImGui.textDisabled("_");
-
-                    ImGui.setCursorPos(buttonPos.x, buttonPos.y - arrowsOffset);
-                    ImGui.text("\uEA6A");
-                    buttonPos = ImGui.getCursorPos();
-                    //</editor-fold>
-
-                    //<editor-fold desc="Down button">
-                    if (ImGui.button("##\uEA67"))
-                        PostProcessing.swapTwoLayers(i, i + 1);
-
-                    ImGui.setCursorPos(buttonPos.x, buttonPos.y - arrowsOffset);
-                    ImGui.text("\uEA67");
-                    //</editor-fold>
-
-                    ImGui.popStyleColor(4);
-                    ImGui.popStyleVar(3);
-                } else if (i == 0) {
-                    //<editor-fold desc="Down button">
-                    ImVec2 buttonPos = ImGui.getCursorPos();
-                    ImGui.pushStyleVar(ImGuiStyleVar.FramePadding, 7.0f, ImGui.getStyle().getFramePaddingY());
-                    if (ImGui.button("##\uEA67"))
-                        PostProcessing.swapTwoLayers(i, i + 1);
-                    ImGui.popStyleVar();
-
-                    float arrowsOffset = 4.0f;
-                    ImGui.setCursorPos(buttonPos.x, buttonPos.y + arrowsOffset);
-                    ImGui.text("\uEA67");
-                    //</editor-fold>
-                } else if (i == layersCount - 1) {
-                    //<editor-fold desc="Up button">
-                    ImVec2 buttonPos = ImGui.getCursorPos();
-                    ImGui.pushStyleVar(ImGuiStyleVar.FramePadding, 7.0f, ImGui.getStyle().getFramePaddingY());
-                    if (ImGui.button("##\uEA6A"))
-                        PostProcessing.swapTwoLayers(i, i - 1);
-                    ImGui.popStyleVar();
-
-                    float arrowsOffset = 4.0f;
-                    ImGui.setCursorPos(buttonPos.x, buttonPos.y + arrowsOffset);
-                    ImGui.text("\uEA6A");
-                    //</editor-fold>
-                }
-                //</editor-fold>
-
-                ImGui.columns(1);
                 ImGui.setCursorPos(headerPos.x, headerPos.y);
+
+                if (!layer.isActive())
+                    EditorImGui.pushDisabled();
 
                 if (collapsingHeader) {
                     layer.imgui(layer.isActive(), "");
@@ -225,7 +169,7 @@ public class PostProcessingGui extends EditorImGuiWindow {
                 }
 
                 if (!layer.isActive())
-                    EditorImGui.popDisabled(); // ------------------------------------------
+                    EditorImGui.popDisabled();
 
                 ImGui.popID();
             } catch (Exception e) {

@@ -1,8 +1,6 @@
 import engine.entities.Camera;
 import engine.entities.GameObject;
 import engine.gizmo.GizmoSystem;
-import engine.imGui.ConsoleMessage;
-import engine.imGui.ImGuiLayer;
 import engine.renderEngine.Window;
 import engine.renderEngine.Loader;
 import engine.renderEngine.font.fontMeshCreator.FontType;
@@ -13,7 +11,8 @@ import engine.renderEngine.postProcessing.Fbo;
 import engine.renderEngine.postProcessing.PostProcessing;
 import engine.renderEngine.renderer.MasterRenderer;
 import engine.terrain.Terrain;
-import engine.toolbox.input.KeyCode;
+import engine.toolbox.GameObject_Manager;
+import engine.toolbox.input.InputManager;
 import engine.toolbox.input.KeyListener;
 import engine.toolbox.input.MouseListener;
 
@@ -102,31 +101,17 @@ public class Main {
             glfwPollEvents();
 
             if (Window.get().getImGuiLayer().getInspectorWindow().getActiveGameObject() != null) {
-                if (KeyListener.isKeyDown(KeyCode.Delete)) {
-                    Window.get().getImGuiLayer().getInspectorWindow().getActiveGameObject().destroy();
-                    Window.get().getImGuiLayer().showModalPopup("Delete", ConsoleMessage.MessageType.Simple);
-                }
+                if (KeyListener.isKeyDown(InputManager.getShortcut("delete").firstKeyCode))
+                    GameObject_Manager.deleteGameObject(Window.get().getImGuiLayer().getInspectorWindow().getActiveGameObject());
 
-                if (KeyListener.isKeyDown(KeyCode.Left_Control) && KeyListener.isKeyClick(KeyCode.D)) {
-                    GameObject copy = Window.get().getImGuiLayer().getInspectorWindow().getActiveGameObject().copy();
-                    copy.name += " (copy)";
-                    Window.get().getScene().addGameObjectToScene(copy);
-                    Window.get().getImGuiLayer().getInspectorWindow().setActiveGameObject(copy);
-                    Window.get().getImGuiLayer().showModalPopup("Duplicate", ConsoleMessage.MessageType.Simple);
-                }
+                if (KeyListener.isKeyDown(InputManager.getShortcut("duplicate").firstKeyCode) && KeyListener.isKeyClick(InputManager.getShortcut("duplicate").secondKeyCode))
+                    GameObject_Manager.duplicateGameObject(Window.get().getImGuiLayer().getInspectorWindow().getActiveGameObject());
 
-                if (KeyListener.isKeyDown(KeyCode.Left_Control) && KeyListener.isKeyClick(KeyCode.C)) {
-                    Window.get().getImGuiLayer().getInspectorWindow().setCopyBuffer(Window.get().getImGuiLayer().getInspectorWindow().getActiveGameObject().copy());
-                    Window.get().getImGuiLayer().showModalPopup("Copy", ConsoleMessage.MessageType.Simple);
-                }
+                if (KeyListener.isKeyDown(InputManager.getShortcut("copy").firstKeyCode) && KeyListener.isKeyClick(InputManager.getShortcut("copy").secondKeyCode))
+                    GameObject_Manager.copyGameObject(Window.get().getImGuiLayer().getInspectorWindow().getActiveGameObject());
 
-                if (KeyListener.isKeyDown(KeyCode.Left_Control) && KeyListener.isKeyClick(KeyCode.V)) {
-                    GameObject copy = Window.get().getImGuiLayer().getInspectorWindow().getCopyBuffer();
-                    copy.name += " (copy)";
-                    Window.get().getScene().addGameObjectToScene(copy);
-                    Window.get().getImGuiLayer().getInspectorWindow().setActiveGameObject(copy);
-                    Window.get().getImGuiLayer().showModalPopup("Paste", ConsoleMessage.MessageType.Simple);
-                }
+                if (KeyListener.isKeyDown(InputManager.getShortcut("paste").firstKeyCode) && KeyListener.isKeyClick(InputManager.getShortcut("paste").secondKeyCode))
+                    GameObject_Manager.pasteGameObject();
             }
 
             gizmoSystem.update();

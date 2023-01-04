@@ -30,7 +30,7 @@ public class RotateGizmo extends Gizmo {
         if (use)
             return false;
 
-        if (KeyListener.isKeyDoubleClick(InputManager.getShortcut("rotate").firstKeyCode) && !KeyListener.isAnyKeyPressed(KeyCode.R)) {
+        if (KeyListener.isKeyDoubleClick(InputManager.getShortcut("rotate").firstKeyCode) && !KeyListener.isAnyKeyPressed(InputManager.getShortcut("rotate").firstKeyCode)) {
             this.isRotating = true;
             this.startRotation = new Vector3f(Window.get().getImGuiLayer().getInspectorWindow().getActiveGameObject().transform.rotation);
             this.rotationDirection.x = 1.0f;

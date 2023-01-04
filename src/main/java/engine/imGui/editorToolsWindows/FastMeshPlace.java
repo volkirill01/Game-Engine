@@ -39,6 +39,12 @@ public class FastMeshPlace {
 
         drawMeshButton(startFrameRounding, startFramePadding, DefaultMeshes.DefaultCapsule(), "Capsule", "engineFiles/defaultMeshes/icon=defaultCapsule(256x256).png");
 
+        drawMeshButton(startFrameRounding, startFramePadding, DefaultMeshes.DefaultCylinder(), "Cylinder", "engineFiles/defaultMeshes/icon=defaultCylinder(256x256).png");
+
+        drawMeshButton(startFrameRounding, startFramePadding, DefaultMeshes.DefaultPlane(), "Plane", "engineFiles/defaultMeshes/icon=defaultPlane(256x256).png");
+
+        drawMeshButton(startFrameRounding, startFramePadding, DefaultMeshes.DefaultCone(), "Cone", "engineFiles/defaultMeshes/icon=defaultCone(256x256).png");
+
         drawMeshButton(startFrameRounding, startFramePadding, DefaultMeshes.DefaultPyramid(), "Pyramid", "engineFiles/defaultMeshes/icon=defaultPyramid(256x256).png");
 
         ImGui.popStyleVar();
