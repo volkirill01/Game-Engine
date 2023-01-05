@@ -18,7 +18,7 @@ public class InputManager { // TODO CHANGE THIS FIELDS IN CUSTOM INPUT MANAGER W
             new Shortcut("cameraMove(down)", KeyCode.Left_Shift, "(L)Shift"),
 
             new Shortcut("saveScene", KeyCode.Left_Control, KeyCode.S, "Ctrl+S"),
-            new Shortcut("loadScene", KeyCode.Left_Control, KeyCode.O, "Ctrl+O"),
+            new Shortcut("openScene", KeyCode.Left_Control, KeyCode.O, "Ctrl+O"),
 
             new Shortcut("translate", KeyCode.G, "G"),
             new Shortcut("rotate", KeyCode.R, "R"),

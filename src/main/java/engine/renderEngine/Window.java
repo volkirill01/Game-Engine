@@ -7,6 +7,7 @@ import engine.eventSystem.Observer;
 import engine.imGui.ConsoleMessage;
 import engine.imGui.ImGuiLayer;
 import engine.scene.*;
+import engine.toolbox.Time;
 import engine.toolbox.input.KeyListener;
 import engine.toolbox.input.MouseListener;
 import org.joml.Vector2f;
@@ -29,9 +30,6 @@ public class Window implements Observer {
 
     private static int WIDTH;
     private static int HEIGHT;
-
-    private static long lastFrameTime;
-    private static float delta;
 
     private static int screenImage;
     private static int uiImage;
@@ -196,7 +194,7 @@ public class Window implements Observer {
 
     public static void createDisplay() {
         get().init();
-        lastFrameTime = getCurrentTime();
+        Time.init();
     }
 
     public void updateDisplay() {
@@ -208,13 +206,9 @@ public class Window implements Observer {
         windowPosition.y = tmpWindowPosY[0];
 
         glfwSwapBuffers(get().glfwWindow);
-        long currentFrameTime = getCurrentTime();
 
-        delta = (currentFrameTime - lastFrameTime) / 1000f;
-        lastFrameTime = currentFrameTime;
+        Time.update();
     }
-
-    public static float getDelta() { return delta;}
 
     public static void closeDisplay() {
         glfwDestroyWindow(get().glfwWindow);
@@ -227,8 +221,6 @@ public class Window implements Observer {
     public static float getWidth() { return WIDTH; }
 
     public static float getHeight() { return HEIGHT; }
-
-    private static long getCurrentTime() { return (long) (glfwGetTime() * 1000); }
 
     public boolean isLockControl() { return get().lockControl; }
 

@@ -67,8 +67,8 @@ public class Transform extends Component {
 
     @Override
     public void imgui() {
-//        EditorImGui.inputText("Parent", parent != null ? parent.name : "null", "");
-//        EditorImGui.inputText("Main Parent", mainParent != null ? mainParent.name : "null", "");
+//        EditorImGui.field_Text("Parent", parent != null ? parent.name : "null", "");
+//        EditorImGui.field_Text("Main Parent", mainParent != null ? mainParent.name : "null", "");
 
         this.position = EditorImGui.field_Vector3f("Position", this.position);
         this.rotation = EditorImGui.field_Vector3f("Rotation", this.rotation);
@@ -91,44 +91,6 @@ public class Transform extends Component {
 
 //        for (GameObject child : to.childs)
 //            child.getComponent(SpriteRenderer.class).setDirty(); // TODO пофиксить баг с чёрными комиями
-    }
-
-    @Override
-    public void update() { // TODO закончить изменение позиции на локальную и размера
-//        if (parent != null) {
-//            position = new Vector3f(
-//                    (localPosition.x + mainParent.transform.localPosition.x) + parent.transform.localScale.x,
-//                    (localPosition.y + mainParent.transform.localPosition.y) + parent.transform.localScale.y,
-//                    (localPosition.z + mainParent.transform.localPosition.z) + parent.transform.localScale.z);
-//            scale = new Vector3f(
-//                    localScale.x * mainParent.transform.localScale.x,
-//                    localScale.y * mainParent.transform.localScale.y,
-//                    localScale.z * mainParent.transform.localScale.z);
-//            localRotation = parent.transform.rotation.add(this.rotation);
-//        } else {
-//            position = localPosition;
-//            scale = localScale;
-//            localRotation = rotation;
-//        }
-    }
-
-    @Override
-    public void editorUpdate() {
-//        if (parent != null) {
-//            position = new Vector3f(
-//                    (localPosition.x + parent.transform.localPosition.x + mainParent.transform.localPosition.x),
-//                    (localPosition.y + parent.transform.localPosition.y + mainParent.transform.localPosition.y),
-//                    (localPosition.z + parent.transform.localPosition.z + mainParent.transform.localPosition.z));
-//            scale = new Vector3f(
-//                    localScale.x * mainParent.transform.localScale.x,
-//                    localScale.y * mainParent.transform.localScale.y,
-//                    localScale.z * mainParent.transform.localScale.z);
-//            localRotation = parent.transform.rotation.add(this.rotation);
-//        } else {
-//            position = localPosition;
-//            scale = localScale;
-//            localRotation = rotation;
-//        }
     }
 
     @Override
@@ -156,20 +118,19 @@ public class Transform extends Component {
         this.childs.add(child);
 
 //        Vector3f oldScale = child.transform.scale;
-//
-//        child.transform.parent = this.gameObject;
-//
-//        if (this.mainParent != null) {
-//            child.transform.mainParent = this.mainParent;
-//            if (child.transform.childs != null)
-//                gameObject.setMainParentInChilds(this.mainParent);
-//        }
-//        else {
-//            child.transform.mainParent = this.gameObject;
-//            if (child.transform.childs != null)
-//                gameObject.setMainParentInChilds(this.gameObject);
-//        }
-//
+
+        child.transform.parent = this.gameObject;
+
+        if (this.mainParent != null) {
+            child.transform.mainParent = this.mainParent;
+            if (child.transform.childs != null)
+                child.transform.setMainParentInChilds(this.mainParent);
+        } else {
+            child.transform.mainParent = this.gameObject;
+            if (child.transform.childs != null)
+                child.transform.setMainParentInChilds(this.gameObject);
+        }
+
 //        child.transform.position = new Vector3f(child.transform.position.sub(this.gameObject.transform.position));
 //        child.transform.scale = new Vector3f(oldScale); // TODO пофиксить баг с изменением размера
     }
@@ -181,6 +142,29 @@ public class Transform extends Component {
     }
 
     public int getChildCount() { return this.childs.size(); }
+
+    public void setMainParentInChilds(GameObject mainParent) {
+        for (GameObject child : this.childs)
+            child.transform.mainParent = mainParent;
+    }
+
+    public void addChildsToScene() {
+        for (GameObject child : this.childs) {
+            Window.get().getScene().addGameObjectToScene(child);
+            child.transform.addChildsToScene();
+            child.transform.parent = this.gameObject;
+
+            if (this.mainParent != null) {
+                child.transform.mainParent = this.mainParent;
+                if (child.transform.childs != null)
+                    child.transform.setMainParentInChilds(this.mainParent);
+            } else {
+                child.transform.mainParent = this.gameObject;
+                if (child.transform.childs != null)
+                    child.transform.setMainParentInChilds(this.gameObject);
+            }
+        }
+    }
 
     public void drawInSceneHierarchy(int level) {
         float startX = ImGui.getCursorStartPosX() - 2.0f;

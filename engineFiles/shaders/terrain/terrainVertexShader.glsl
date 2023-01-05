@@ -6,7 +6,7 @@ in vec3 normal;
 
 out vec2 pass_textureCoords;
 out vec3 surfaceNormal;
-out vec3 toLightVector[4]; // MAXIMUM COUNT OF LIGHTS PER ENTITY
+out vec3 toLightVector[9]; // MAXIMUM COUNT OF LIGHTS PER ENTITY
 out vec3 toCameraVector;
 out float visibility;
 out vec4 shadowCoords;
@@ -23,9 +23,7 @@ uniform float fogGradient;
 uniform float shadowDistance;
 const float transitionDistance = 10.0; // TODO LOAD SHMOOTHNESS OF TRANSITION UNIFORM
 
-uniform vec3 lightPosition[4]; // MAXIMUM COUNT OF LIGHTS PER ENTITY
-uniform vec3 attenuation[4]; // MAXIMUM COUNT OF LIGHTS PER ENTITY
-uniform vec3 lightRotation[4]; // MAXIMUM COUNT OF LIGHTS PER ENTITY
+uniform vec3 lightPosition[9]; // MAXIMUM COUNT OF LIGHTS PER ENTITY
 
 void main() {
 
@@ -37,12 +35,9 @@ void main() {
     shadowCoords = toShadowMapSpace * worldPosition;
 
     surfaceNormal = (transformationMatrix * vec4(normal, 0.0)).xyz;
-    for (int i = 0; i < 4; i++) {
-        if (attenuation[i] == vec3(1, 0, 0))
-        toLightVector[i] = lightRotation[i];
-        else
+    for (int i = 0; i < 9; i++)
         toLightVector[i] = lightPosition[i] - worldPosition.xyz;
-    }
+
     toCameraVector = (inverse(viewMatrix) * vec4(0.0, 0.0, 0.0, 1.0)).xyz - worldPosition.xyz;
 
     float distance = length(positionRealitiveToCamera.xyz);

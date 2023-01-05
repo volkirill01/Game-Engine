@@ -1,21 +1,19 @@
 package engine.renderEngine.shaders;
 
-import engine.entities.Light;
-import engine.renderEngine.renderer.RenderCullSide;
+import engine.components.Light;
 import engine.toolbox.customVariables.Color;
 import org.joml.Vector3f;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class StaticShader extends ShaderProgram {
 
-    private static final int MAX_LIGHTS_COUNT = 4;
+    private static final int MAX_LIGHTS_COUNT = 99;
     public ShaderVariable[] lightPositionVariables;
     public ShaderVariable[] lightRotationVariables;
     public ShaderVariable[] lightColorVariables;
     public ShaderVariable[] lightIntensityVariables;
-    public ShaderVariable[] lightAttenuationVariables;
+    public ShaderVariable[] lightTypeVariables;
     public ShaderVariable[] lightRangeVariables;
 
     public StaticShader(String VERTEX_FILE, String FRAGMENT_FILE) {
@@ -35,7 +33,7 @@ public class StaticShader extends ShaderProgram {
         lightRotationVariables = new ShaderVariable[MAX_LIGHTS_COUNT];
         lightColorVariables = new ShaderVariable[MAX_LIGHTS_COUNT];
         lightIntensityVariables = new ShaderVariable[MAX_LIGHTS_COUNT];
-        lightAttenuationVariables = new ShaderVariable[MAX_LIGHTS_COUNT];
+        lightTypeVariables = new ShaderVariable[MAX_LIGHTS_COUNT];
         lightRangeVariables = new ShaderVariable[MAX_LIGHTS_COUNT];
         for (int i = 0; i < MAX_LIGHTS_COUNT; i++) {
             lightPositionVariables[i] = new ShaderVariable(
@@ -54,9 +52,9 @@ public class StaticShader extends ShaderProgram {
                     "lightIntensity[" + i + "]",
                     super.getUniformLocation("lightIntensity[" + i + "]"));
 
-            lightAttenuationVariables[i] = new ShaderVariable(
-                    "attenuation[" + i + "]",
-                    super.getUniformLocation("attenuation[" + i + "]"));
+            lightTypeVariables[i] = new ShaderVariable(
+                    "lightType[" + i + "]",
+                    super.getUniformLocation("lightType[" + i + "]"));
 
             lightRangeVariables[i] = new ShaderVariable(
                     "lightRange[" + i + "]",
@@ -70,7 +68,7 @@ public class StaticShader extends ShaderProgram {
             super.loadVector(lightRotationVariables[i].location, new Vector3f(0.0f));
             super.loadColor(lightColorVariables[i].location, Color.Black);
             super.loadFloat(lightIntensityVariables[i].location, 0.0f);
-            super.loadVector(lightAttenuationVariables[i].location, new Vector3f(1.0f, 0.0f, 0.0f));
+            super.loadInt(lightTypeVariables[i].location, 0);
 
             try {
                 if (i < lights.size() && lights.get(i).isActive()) {
@@ -78,15 +76,15 @@ public class StaticShader extends ShaderProgram {
                     super.loadVector(lightRotationVariables[i].location, new Vector3f(lights.get(i).gameObject.transform.rotation).add(new Vector3f(0.001f)));
                     super.loadColor(lightColorVariables[i].location, lights.get(i).getColor());
                     super.loadFloat(lightIntensityVariables[i].location, lights.get(i).getIntensity());
-                    super.loadVector(lightAttenuationVariables[i].location, lights.get(i).getAttenuation());
-//                    super.loadUniformFloat(lightRangeVariables[i].location, lights.get(i).getRange());
+                    super.loadInt(lightTypeVariables[i].location, lights.get(i).getLightTypeInt());
+                    super.loadFloat(lightRangeVariables[i].location, lights.get(i).getRange());
                 } else {
                     super.loadVector(lightPositionVariables[i].location, new Vector3f(0.0f));
                     super.loadVector(lightRotationVariables[i].location, new Vector3f(0.0f));
                     super.loadColor(lightColorVariables[i].location, Color.Black);
                     super.loadFloat(lightIntensityVariables[i].location, 0.0f);
-                    super.loadVector(lightAttenuationVariables[i].location, new Vector3f(1.0f, 0.0f, 0.0f));
-//                    super.loadUniformFloat(lightRangeVariables[i].location, 0.0f);
+                    super.loadInt(lightTypeVariables[i].location, 0);
+                    super.loadFloat(lightRangeVariables[i].location, 0.0f);
                 }
             } catch (NullPointerException e) {
 //                throw new RuntimeException(e);

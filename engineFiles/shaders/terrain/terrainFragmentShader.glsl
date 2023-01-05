@@ -2,13 +2,12 @@
 
 in vec2 pass_textureCoords;
 in vec3 surfaceNormal;
-in vec3 toLightVector[4]; // MAXIMUM COUNT OF LIGHTS PER ENTITY
+in vec3 toLightVector[9]; // MAXIMUM COUNT OF LIGHTS PER ENTITY
 in vec3 toCameraVector;
 in float visibility;
 in vec4 shadowCoords;
 
-layout (location = 0) out vec4 out_Color;
-layout (location = 1) out vec4 out_BrightColor;
+out vec4 out_Color;
 
 uniform sampler2D backgroundTexture;
 uniform sampler2D rTexture;
@@ -17,11 +16,12 @@ uniform sampler2D bTexture;
 uniform sampler2D blendMap;
 uniform sampler2D shadowMap;
 
-uniform vec3 lightColor[4]; // MAXIMUM COUNT OF LIGHTS PER ENTITY
-uniform float lightIntensity[4]; // MAXIMUM COUNT OF LIGHTS PER ENTITY
-uniform vec3 attenuation[4]; // MAXIMUM COUNT OF LIGHTS PER ENTITY
-
-uniform float lightRange[4]; // MAXIMUM COUNT OF LIGHTS PER ENTITY
+uniform vec3 lightPosition[9]; // MAXIMUM COUNT OF LIGHTS PER ENTITY
+uniform vec3 lightRotation[9]; // MAXIMUM COUNT OF LIGHTS PER ENTITY
+uniform vec3 lightColor[9]; // MAXIMUM COUNT OF LIGHTS PER ENTITY
+uniform float lightIntensity[9]; // MAXIMUM COUNT OF LIGHTS PER ENTITY
+uniform int lightType[9]; // MAXIMUM COUNT OF LIGHTS PER ENTITY
+uniform float lightRange[9]; // MAXIMUM COUNT OF LIGHTS PER ENTITY
 
 uniform vec3 fogColor;
 uniform vec3 ambientLightColor;
@@ -72,26 +72,40 @@ void main() {
     vec3 totalDiffuse = vec3(0.0);
     vec3 totalSpecular = vec3(0.0);
 
-    for (int i = 0; i < 4; i++) {
-        float distance = length(toLightVector[i]);
-        float attenuationFactor = attenuation[i].x + (attenuation[i].y * distance) + (attenuation[i].z * distance * distance);
-        vec3 unitLightVector = normalize(toLightVector[i]);
-        float nDotl = dot(unitNormal, unitLightVector);
-        float brightness = max(nDotl, 0.0);
+    for (int i = 0; i < 9; i++) {
+        if (lightType[i] == 0) { // Direction light
+            vec3 unitLightVector = normalize(lightRotation[i]);
+            float nDotl = dot(unitNormal, unitLightVector);
+            float brightness = max(nDotl, 0.0);
 
-        vec3 lightDirection = -unitLightVector;
-        vec3 reflectedLightDirection = reflect(lightDirection, unitNormal);
+            vec3 lightDirection = -unitLightVector;
+            vec3 reflectedLightDirection = reflect(lightDirection, unitNormal);
 
-        float specularFactor = dot(reflectedLightDirection, unitVectorToCamera);
-        specularFactor = max(specularFactor, 0.0);
-        float dampedFactor = pow(specularFactor, shineDamper);
-        totalDiffuse = totalDiffuse + ((brightness * lightColor[i] * lightIntensity[i]) / attenuationFactor);
-        totalSpecular = totalSpecular + ((dampedFactor * reflectivity * lightColor[i] * lightIntensity[i]) / attenuationFactor);
+            float specularFactor = max(dot(reflectedLightDirection, unitVectorToCamera), 0.0);
+            float dampedFactor = pow(specularFactor, shineDamper);
+
+            totalDiffuse = totalDiffuse + ((brightness * lightColor[i] * lightIntensity[i]));
+            totalSpecular = totalSpecular + ((dampedFactor * lightColor[i] * lightIntensity[i]));
+        } else if (lightType[i] == 1) { // Point light
+            float distance = length(toLightVector[i]);
+            vec3 unitLightVector = normalize(toLightVector[i]);
+            float nDotl = dot(unitNormal, unitLightVector);
+            float brightness = max(nDotl, 0.0);
+
+            vec3 lightDirection = -unitLightVector;
+            vec3 reflectedLightDirection = reflect(lightDirection, unitNormal);
+
+            float specularFactor = dot(reflectedLightDirection, unitVectorToCamera);
+            specularFactor = max(specularFactor, 0.0);
+            float dampedFactor = pow(specularFactor, shineDamper);
+
+            totalDiffuse = totalDiffuse + ((brightness * lightColor[i] * lightIntensity[i]) / distance);
+            totalSpecular = totalSpecular + ((dampedFactor * lightColor[i] * lightIntensity[i]) / distance);
+        }
     }
     totalDiffuse = max(totalDiffuse * lightFactor, ambientLightIntensity);
 
     out_Color = vec4(totalDiffuse * ambientLightColor, 1.0) * totalColor + vec4(totalSpecular, 1.0);
 //    out_Color = vec4(ambientLightColor, 1.0) * totalColor + vec4(finalSpecular, 1.0);
     out_Color = mix(vec4(fogColor, 1.0), out_Color, visibility);
-    out_BrightColor = vec4(0.0);
 }

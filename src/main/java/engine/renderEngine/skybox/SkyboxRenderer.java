@@ -7,6 +7,7 @@ import engine.renderEngine.Loader;
 import engine.renderEngine.models.RawModel;
 import engine.renderEngine.postProcessing.PostProcessing;
 import engine.toolbox.Maths;
+import engine.toolbox.Time;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
@@ -90,7 +91,7 @@ public class SkyboxRenderer {
         viewMatrix.m30(0);
         viewMatrix.m31(0);
         viewMatrix.m32(0);
-        rotation += SKYBOX_ROTATION_SPEED * Window.getDelta();
+        rotation += SKYBOX_ROTATION_SPEED * Time.deltaTime();
         viewMatrix.rotate((float) Math.toRadians(rotation), new Vector3f(0, 1, 0));
         shader.loadUniformMatrix("viewMatrix", viewMatrix);
 

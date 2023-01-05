@@ -324,14 +324,14 @@ public class ImGuiLayer {
         ImGui.pushStyleVar(ImGuiStyleVar.IndentSpacing, 12);
     }
 
-    public void update(float deltaTime, Scene currentScene) {
-        startFrame(deltaTime);
+    public void update(Scene currentScene) {
+        startFrame();
 
         if (this.windowOnFullscreen == null) {
             setupDockspace();
             currentScene.imgui();
-            TestFieldsWindow.imgui();
-            ImGui.showDemoWindow();
+//            TestFieldsWindow.imgui();
+//            ImGui.showDemoWindow();
             sceneViewWindow.imgui();
             console.imgui();
     //        scriptGraphWindow.imgui();
@@ -372,7 +372,7 @@ public class ImGuiLayer {
 
     public EditorImGuiWindow getWindowOnFullscreen() { return this.windowOnFullscreen; }
 
-    private void startFrame(final float deltaTime) {
+    private void startFrame() {
         imGuiGlfw.newFrame();
         ImGui.newFrame();
     }

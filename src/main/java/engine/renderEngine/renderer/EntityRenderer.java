@@ -165,12 +165,50 @@ public class EntityRenderer {
     }
 
     private void prepareInstance(GameObject gameObject) {
-        Vector3f sizeMultiplayed = new Vector3f(gameObject.transform.scale);
-        sizeMultiplayed = sizeMultiplayed.mul(gameObject.getComponent(MeshRenderer.class).getModel().getMesh().getSizeMultiplayer());
+        Vector3f tmpPosition = new Vector3f(gameObject.transform.position);
+        Vector3f tmpRotation = new Vector3f(gameObject.transform.rotation);
+        Vector3f tmpScale = new Vector3f(gameObject.transform.scale).mul(gameObject.getComponent(MeshRenderer.class).getModel().getMesh().getSizeMultiplayer());
 
-        Matrix4f transformationMatrix = Maths.createTransformationMatrix(
-                gameObject.transform.position, gameObject.transform.rotation, sizeMultiplayed);
+        if (gameObject.transform.parent != null) {
+            tmpPosition.add(gameObject.transform.parent.transform.position).mul(gameObject.transform.parent.transform.scale); // TODO ADD RELATIVE TO PARENT ROTATION
+            tmpRotation.add(gameObject.transform.parent.transform.rotation);
+            tmpScale.mul(gameObject.transform.parent.transform.scale);
+        }
+
+        if (gameObject.transform.mainParent != null && gameObject.transform.parent != gameObject.transform.mainParent) {
+            tmpPosition.add(gameObject.transform.mainParent.transform.position).mul(gameObject.transform.mainParent.transform.scale);
+            tmpRotation.add(gameObject.transform.mainParent.transform.rotation);
+            tmpScale.mul(gameObject.transform.mainParent.transform.scale);
+        }
+
+        Matrix4f transformationMatrix = Maths.createTransformationMatrix(tmpPosition, tmpRotation, tmpScale);
         shader.loadUniformMatrix("transformationMatrix", transformationMatrix);
         shader.loadUniformVector2("textureOffset", gameObject.getComponent(MeshRenderer.class).getTextureOffset());
     }
+
+//    private Vector3f tmpPosition = new Vector3f(0.0f);
+//    private Vector3f tmpRotation = new Vector3f(0.0f);
+//    private Vector3f tmpScale = new Vector3f(0.0f);
+//
+//    private void prepareInstance(GameObject gameObject) {
+//        tmpPosition.set(gameObject.transform.position);
+//        tmpRotation.set(gameObject.transform.rotation);
+//        tmpScale.set(gameObject.transform.scale).mul(gameObject.getComponent(MeshRenderer.class).getModel().getMesh().getSizeMultiplayer());
+//
+//        if (gameObject.transform.parent != null) {
+//            tmpPosition.add(gameObject.transform.parent.transform.position).mul(gameObject.transform.parent.transform.scale); // TODO ADD RELATIVE TO PARENT ROTATION
+//            tmpRotation.add(gameObject.transform.parent.transform.rotation);
+//            tmpScale.mul(gameObject.transform.parent.transform.scale);
+//        }
+//
+//        if (gameObject.transform.mainParent != null && gameObject.transform.parent != gameObject.transform.mainParent) {
+//            tmpPosition.add(gameObject.transform.mainParent.transform.position).mul(gameObject.transform.mainParent.transform.scale);
+//            tmpRotation.add(gameObject.transform.mainParent.transform.rotation);
+//            tmpScale.mul(gameObject.transform.mainParent.transform.scale);
+//        }
+//
+//        Matrix4f transformationMatrix = Maths.createTransformationMatrix(tmpPosition, tmpRotation, tmpScale);
+//        shader.loadUniformMatrix("transformationMatrix", transformationMatrix);
+//        shader.loadUniformVector2("textureOffset", gameObject.getComponent(MeshRenderer.class).getTextureOffset());
+//    }
 }

@@ -1,16 +1,11 @@
 package engine.components;
 
 import engine.entities.GameObject;
-import engine.entities.Light;
 import engine.imGui.EditorImGui;
 import engine.renderEngine.Loader;
 import engine.renderEngine.components.MeshRenderer;
-import engine.renderEngine.font.fontMeshCreator.FontType;
-import engine.renderEngine.font.fontMeshCreator.UIText;
-import engine.renderEngine.font.fontRendering.TextMaster;
 import engine.renderEngine.guis.UIImage;
 import engine.renderEngine.particles.ParticleSystem;
-import engine.renderEngine.particles.ParticleTexture;
 import engine.renderEngine.textures.Texture;
 import engine.toolbox.customVariables.Color;
 import imgui.ImGui;
@@ -20,7 +15,6 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
-import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.*;

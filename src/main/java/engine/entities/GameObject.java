@@ -320,8 +320,6 @@ public class GameObject {
 
     private void swapTwoComponents(int firstIndex, int secondIndex) { Collections.swap(components, firstIndex, secondIndex); }
 
-
-
     public void destroy() {
         if (Window.get().getImGuiLayer().getInspectorWindow().getActiveGameObject() == this)
             Window.get().getImGuiLayer().getInspectorWindow().clearSelected();
@@ -371,17 +369,4 @@ public class GameObject {
     public boolean doSerialization() { return this.doSerialization; }
 
     public void generateUid() { this.uid = ID_COUNTER++; }
-
-    public void addChildsToScene() {
-        for (GameObject child : transform.childs) {
-//            Window.getScene().addGameObjectToScene(child);
-            child.addChildsToScene();
-            child.transform.parent = this;
-
-            if (transform.mainParent != null)
-                child.transform.mainParent = transform.mainParent;
-            else
-                child.transform.mainParent = this;
-        }
-    }
 }

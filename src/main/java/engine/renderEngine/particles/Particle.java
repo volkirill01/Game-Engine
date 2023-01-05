@@ -4,6 +4,7 @@ import engine.Settings;
 import engine.entities.Camera;
 import engine.renderEngine.Window;
 import engine.renderEngine.textures.Texture;
+import engine.toolbox.Time;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
@@ -63,14 +64,14 @@ public class Particle {
 
     protected boolean update(Camera camera) {
         if (this.velocity != null) {
-            velocity.y += Settings.GRAVITY * (gravityEffect * 0.1f) * Window.getDelta();
+            velocity.y += Settings.GRAVITY * (gravityEffect * 0.1f) * Time.deltaTime();
             change.set(velocity);
         }
-        change.mul(Window.getDelta());
+        change.mul(Time.deltaTime());
         position.add(change);
         distanceFromCamera = new Vector3f(camera.getPosition()).sub(position).lengthSquared();
         updateTextureCoordsInfo();
-        elapsedTime += Window.getDelta();
+        elapsedTime += Time.deltaTime();
         return elapsedTime < lifeLength;
     }
 

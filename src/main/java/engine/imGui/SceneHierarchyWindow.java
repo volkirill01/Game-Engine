@@ -1,7 +1,11 @@
 package engine.imGui;
 
 import engine.entities.GameObject;
+import engine.components.Light;
 import engine.renderEngine.Window;
+import engine.renderEngine.components.MeshRenderer;
+import engine.renderEngine.guis.UIImage;
+import engine.renderEngine.particles.ParticleSystem;
 import engine.toolbox.GameObject_Manager;
 import engine.toolbox.input.InputManager;
 import imgui.ImGui;
@@ -100,11 +104,11 @@ public class SceneHierarchyWindow extends EditorImGuiWindow {
 
         if (Window.get().getImGuiLayer().getInspectorWindow().getActiveGameObject() != null && Window.get().getImGuiLayer().getInspectorWindow().getActiveGameObject().equals(obj)) {
             ImGui.popStyleColor(3);
-            ImGui.pushStyleColor(0,
-                    ImGui.getStyle().getColor(50).x,
-                    ImGui.getStyle().getColor(50).y,
-                    ImGui.getStyle().getColor(50).z,
-                    255);
+            ImGui.pushStyleColor(ImGuiCol.Text,
+                    ImGui.getStyle().getColor(ImGuiCol.DragDropTarget).x,
+                    ImGui.getStyle().getColor(ImGuiCol.DragDropTarget).y,
+                    ImGui.getStyle().getColor(ImGuiCol.DragDropTarget).z,
+                    1);
 
             ImGui.pushStyleColor(ImGuiCol.Header, 255, 255, 255, 30);
             ImGui.pushStyleColor(ImGuiCol.HeaderHovered, 255, 255, 255, 45);
@@ -116,28 +120,42 @@ public class SceneHierarchyWindow extends EditorImGuiWindow {
         ImGui.setItemAllowOverlap();
         ImGui.popStyleColor(3);
 
-        ImGui.setCursorPos((selectablePos.x * 0.856f) + 20.0f, selectablePos.y);
-        if (obj.transform.childs.size() == 0 && obj.transform.parent != null) {
-            ImGui.setCursorPosX(ImGui.getCursorPosX() + 5.4f);
-            level++;
-        }
-        if (obj.transform.parent == null && obj.transform.childs.size() == 0)
-            ImGui.setCursorPosX(ImGui.getCursorPosX() - 19.2f);
-        else
-            ImGui.setCursorPosX(ImGui.getCursorPosX() - 4.8f);
+        ImVec2 treeNodePos = new ImVec2(selectablePos.x + 3.0f, selectablePos.y);
+        if (obj.transform.getChildCount() > 0 && obj.transform.parent == null)
+            treeNodePos.x += 14.0f;
 
         ImGui.pushStyleColor(ImGuiCol.Header, 0, 0, 0, 0);
         ImGui.pushStyleColor(ImGuiCol.HeaderHovered, 0, 0, 0, 0);
         ImGui.pushStyleColor(ImGuiCol.HeaderActive, 0, 0, 0, 0);
         ImGui.pushStyleVar(ImGuiStyleVar.FramePadding, 0, ImGui.getStyle().getFramePaddingY());
 
+        String treeNodeIcon = "\uF017"; // Transparent icon
+
+//        "\uEC94" // Sound icon
+//        "\uEECF" // Camera icon
+
+        if (obj.hasComponent(MeshRenderer.class))
+            treeNodeIcon = "\uEEF7"; // Cube icon
+        else if (obj.hasComponent(Light.class))
+            treeNodeIcon = "\uEF6B";  // Light icon
+        else if (obj.hasComponent(ParticleSystem.class))
+            treeNodeIcon = "\uEFBE"; // ParticleSystem icon
+        else if (obj.hasComponent(UIImage.class))
+            treeNodeIcon = "\uEF5D"; // UI icon
+
         ImGui.pushID(obj.getUid());
+        ImGui.setCursorPos(selectablePos.x + 18.0f, selectablePos.y + 4.5f);
+        if (obj.transform.getChildCount() > 0 && obj.transform.parent == null)
+            ImGui.setCursorPos(ImGui.getCursorPosX() + 15.0f, ImGui.getCursorPosY());
+        ImGui.text(treeNodeIcon);
+
+        ImGui.setCursorPos(treeNodePos.x - 1.0f, treeNodePos.y);
         boolean treeNodeOpen = ImGui.treeNodeEx(
                 obj.name, // (obj == Window.getImGuiLayer().getInspectorWindow().getActiveGameObject() ? ImGuiTreeNodeFlags.Selected : ImGuiTreeNodeFlags.FramePadding) |
                         ImGuiTreeNodeFlags.Selected |
                         (obj.transform.getChildCount() > 0 ? ImGuiTreeNodeFlags.OpenOnArrow : ImGuiTreeNodeFlags.Leaf) |
                         ImGuiTreeNodeFlags.FramePadding | ImGuiTreeNodeFlags.SpanAvailWidth,
-                "\uEEF7 " + obj.name
+                "\t" + obj.name
         );
         ImGui.popStyleColor(3);
         ImGui.popStyleVar();

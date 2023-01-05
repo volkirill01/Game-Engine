@@ -15,12 +15,12 @@ vec3 rgb2hsv(vec3 c) {
 
 in vec2 pass_textureCoords;
 in vec3 surfaceNormal;
-in vec3 toLightVector[4]; // MAXIMUM COUNT OF LIGHTS PER ENTITY
+in vec3 toLightVector[9]; // MAXIMUM COUNT OF LIGHTS PER ENTITY
 in vec3 toCameraVector;
 in vec3 reflectionVector;
 in float visibility;
 
-layout (location = 0) out vec4 out_Color;
+out vec4 out_Color;
 
 uniform sampler2D textureSampler;
 uniform samplerCube enviromentMap;
@@ -32,9 +32,12 @@ uniform sampler2D emissionMap;
 uniform float emissionIntensity;
 uniform float useAlbedoEmission;
 
-uniform vec3 lightColor[4]; // MAXIMUM COUNT OF LIGHTS PER ENTITY
-uniform float lightIntensity[4]; // MAXIMUM COUNT OF LIGHTS PER ENTITY
-uniform vec3 attenuation[4]; // MAXIMUM COUNT OF LIGHTS PER ENTITY
+uniform vec3 lightPosition[9]; // MAXIMUM COUNT OF LIGHTS PER ENTITY
+uniform vec3 lightRotation[9]; // MAXIMUM COUNT OF LIGHTS PER ENTITY
+uniform vec3 lightColor[9]; // MAXIMUM COUNT OF LIGHTS PER ENTITY
+uniform float lightIntensity[9]; // MAXIMUM COUNT OF LIGHTS PER ENTITY
+uniform int lightType[9]; // MAXIMUM COUNT OF LIGHTS PER ENTITY
+uniform float lightRange[9]; // MAXIMUM COUNT OF LIGHTS PER ENTITY
 
 uniform vec3 color;
 
@@ -54,21 +57,36 @@ void main() {
     vec3 totalDiffuse = vec3(0.0);
     vec3 totalSpecular = vec3(0.0);
 
-    for (int i = 0; i < 4; i++) {
-        float distance = length(toLightVector[i]);
-        float attenuationFactor = attenuation[i].x + (attenuation[i].y * distance) + (attenuation[i].z * distance * distance);
-        vec3 unitLightVector = normalize(toLightVector[i]);
-        float nDotl = dot(unitNormal, unitLightVector);
-        float brightness = max(nDotl, 0.0);
+    for (int i = 0; i < 9; i++) {
+        if (lightType[i] == 0) { // Direction light
+            vec3 unitLightVector = normalize(lightRotation[i]);
+            float nDotl = dot(unitNormal, unitLightVector);
+            float brightness = max(nDotl, 0.0);
 
-        vec3 lightDirection = -unitLightVector;
-        vec3 reflectedLightDirection = reflect(lightDirection, unitNormal);
+            vec3 lightDirection = -unitLightVector;
+            vec3 reflectedLightDirection = reflect(lightDirection, unitNormal);
 
-        float specularFactor = dot(reflectedLightDirection, unitVectorToCamera);
-        specularFactor = max(specularFactor, 0.0);
-        float dampedFactor = pow(specularFactor, shineDamper);
-        totalDiffuse = totalDiffuse + ((brightness * lightColor[i] * lightIntensity[i]) / attenuationFactor);
-        totalSpecular = totalSpecular + ((dampedFactor * specularIntensity * lightColor[i] * lightIntensity[i]) / attenuationFactor);
+            float specularFactor = max(dot(reflectedLightDirection, unitVectorToCamera), 0.0);
+            float dampedFactor = pow(specularFactor, shineDamper);
+
+            totalDiffuse = totalDiffuse + ((brightness * lightColor[i] * lightIntensity[i]));
+            totalSpecular = totalSpecular + ((dampedFactor * specularIntensity * lightColor[i] * lightIntensity[i]));
+        } else if (lightType[i] == 1) { // Point light
+            float distance = length(toLightVector[i]);
+            vec3 unitLightVector = normalize(toLightVector[i]);
+            float nDotl = dot(unitNormal, unitLightVector);
+            float brightness = max(nDotl, 0.0);
+
+            vec3 lightDirection = -unitLightVector;
+            vec3 reflectedLightDirection = reflect(lightDirection, unitNormal);
+
+            float specularFactor = dot(reflectedLightDirection, unitVectorToCamera);
+            specularFactor = max(specularFactor, 0.0);
+            float dampedFactor = pow(specularFactor, shineDamper);
+
+            totalDiffuse = totalDiffuse + ((brightness * lightColor[i] * lightIntensity[i]) / distance);
+            totalSpecular = totalSpecular + ((dampedFactor * specularIntensity * lightColor[i] * lightIntensity[i]) / distance);
+        }
     }
     totalDiffuse = max(totalDiffuse, ambientLightIntensity);
 

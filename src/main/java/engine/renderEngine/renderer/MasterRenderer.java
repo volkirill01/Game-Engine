@@ -2,7 +2,7 @@ package engine.renderEngine.renderer;
 
 import engine.entities.Camera;
 import engine.entities.GameObject;
-import engine.entities.Light;
+import engine.components.Light;
 import engine.renderEngine.PickingShader;
 import engine.renderEngine.Window;
 import engine.renderEngine.components.MeshRenderer;

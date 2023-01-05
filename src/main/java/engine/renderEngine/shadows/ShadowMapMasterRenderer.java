@@ -2,8 +2,7 @@ package engine.renderEngine.shadows;
 
 import engine.entities.Camera;
 import engine.entities.GameObject;
-import engine.entities.Light;
-import engine.renderEngine.Window;
+import engine.components.Light;
 import engine.renderEngine.models.TexturedModel;
 import engine.renderEngine.postProcessing.Fbo;
 import org.joml.Matrix4f;

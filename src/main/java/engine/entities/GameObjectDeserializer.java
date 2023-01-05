@@ -3,8 +3,11 @@ package engine.entities;
 import com.google.gson.*;
 import engine.components.Component;
 import engine.components.Transform;
+import engine.imGui.Console;
+import engine.imGui.ConsoleMessage;
 import engine.renderEngine.Loader;
 import engine.renderEngine.OBJLoader;
+import engine.renderEngine.Window;
 import engine.renderEngine.components.MeshRenderer;
 import engine.renderEngine.models.TexturedModel;
 import engine.renderEngine.textures.Material;
@@ -19,7 +22,6 @@ public class GameObjectDeserializer implements JsonDeserializer<GameObject> {
         JsonObject jsonObject = json.getAsJsonObject();
         String name = jsonObject.get("name").getAsString();
         JsonArray components = jsonObject.getAsJsonArray("components");
-        JsonArray childs = jsonObject.getAsJsonArray("childs");
         JsonArray tags = jsonObject.getAsJsonArray("tags");
 
         GameObject go = new GameObject(name);
@@ -27,22 +29,12 @@ public class GameObjectDeserializer implements JsonDeserializer<GameObject> {
             Component c = context.deserialize(e, Component.class);
             go.addComponent(c);
         }
-        if (childs != null)
-            for (JsonElement e: childs) {
-                GameObject child = context.deserialize(e, GameObject.class);
-                go.transform.addChild(child);
-                child.transform.parent = go;
+        go.transform = go.getComponent(Transform.class);
 
-                if (go.transform.mainParent != null)
-                    child.transform.mainParent = go.transform.mainParent;
-                else
-                    child.transform.mainParent = go;
-            }
         for (JsonElement e: tags) {
             GameObjectTag tag = context.deserialize(e, GameObjectTag.class);
             go.addTag(tag);
         }
-        go.transform = go.getComponent(Transform.class);
         return go;
     }
 }

@@ -93,7 +93,7 @@ public class AssetsStructureWindow extends EditorImGuiWindow {
                 }
 
             boolean isEmpty = folders.size() == 0;
-            startX = ImGui.getCursorStartPosX() - 0.1f + TestFieldsWindow.getFloats[0];
+            startX = ImGui.getCursorStartPosX() - 0.1f;
             ImGui.setCursorPosX(ImGui.getCursorPosX() - 12.0f);
             Vector2f iconPos = new Vector2f(0.0f);
             boolean treeNodeOpen = doTreeNode(Window.get().getImGuiLayer().getAssetsWindow().assetsDirectory, "", 0, iconPos, isEmpty, true, false, itemSpacing);
@@ -170,18 +170,17 @@ public class AssetsStructureWindow extends EditorImGuiWindow {
         ImGui.setItemAllowOverlap();
         ImGui.popStyleColor(3);
 
-        ImGui.setCursorPos((selectablePos.x * 0.856f) + 23.3f, selectablePos.y);
-        if (isEmpty) {
-            ImGui.setCursorPosX(ImGui.getCursorPosX() - 2.9f);
-            level++;
-        } else {
-            ImGui.setCursorPosX(ImGui.getCursorPosX() - 2.0f);
-        }
+        ImGui.setCursorPos(selectablePos.x + 21.0f, selectablePos.y);
+//        if (isEmpty) {
+//            ImGui.setCursorPosX(ImGui.getCursorPosX() + TestFieldsWindow.getFloats[1]);
+//            level++;
+//        } else
+//            ImGui.setCursorPosX(ImGui.getCursorPosX() + TestFieldsWindow.getFloats[2]);
 
-        iconPos.x = ImGui.getCursorPosX() + 10.0f + TestFieldsWindow.getFloats[1];
+        iconPos.x = ImGui.getCursorPosX() + 10.0f;
         iconPos.y = ImGui.getCursorPosY() + 5.0f;
 
-        ImGui.setCursorPos((selectablePos.x * 0.856f) + 6.5f + TestFieldsWindow.getFloats[1], selectablePos.y);
+        ImGui.setCursorPos((selectablePos.x * 0.856f) + 6.5f, selectablePos.y);
 
         ImGui.pushStyleColor(ImGuiCol.Header, 0, 0, 0, 0);
         ImGui.pushStyleColor(ImGuiCol.HeaderHovered, 0, 0, 0, 0);

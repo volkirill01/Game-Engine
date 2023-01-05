@@ -2,11 +2,9 @@ package engine.renderEngine.normalMappingRenderer;
 
 import engine.entities.Camera;
 import engine.entities.GameObject;
-import engine.entities.Light;
+import engine.components.Light;
 import engine.renderEngine.components.MeshRenderer;
-import engine.renderEngine.models.RawModel;
 import engine.renderEngine.models.TexturedModel;
-import engine.renderEngine.textures.Material;
 import engine.toolbox.Maths;
 import org.joml.Matrix4f;
 import static org.lwjgl.opengl.GL30.*;

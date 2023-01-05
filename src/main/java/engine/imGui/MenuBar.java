@@ -16,60 +16,60 @@ public class MenuBar {
 //        ImGui.pushStyleVar(ImGuiStyleVar.WindowPadding, 8.0f, 4.0f);
         ImGui.pushStyleVar(ImGuiStyleVar.ItemSpacing, 15f, ImGui.getStyle().getItemSpacingY());
 
-        Shortcut saveShortcut = InputManager.getShortcut("saveScene");
-        Shortcut loadShortcut = InputManager.getShortcut("loadScene");
+        Shortcut saveSceneShortcut = InputManager.getShortcut("saveScene");
+        Shortcut openSceneShortcut = InputManager.getShortcut("openScene");
 
-        if (KeyListener.isKeyDown(saveShortcut.firstKeyCode) && KeyListener.isKeyClick(saveShortcut.secondKeyCode))
+        if (KeyListener.isKeyDown(saveSceneShortcut.firstKeyCode) && KeyListener.isKeyClick(saveSceneShortcut.secondKeyCode))
             EventSystem.notify(null, new Event(EventType.SaveLevel));
 
-        if (KeyListener.isKeyDown(loadShortcut.firstKeyCode) && KeyListener.isKeyClick(loadShortcut.secondKeyCode))
+        if (KeyListener.isKeyDown(openSceneShortcut.firstKeyCode) && KeyListener.isKeyClick(openSceneShortcut.secondKeyCode))
             EventSystem.notify(null, new Event(EventType.LoadLevel));
 
         if (ImGui.beginMenu("File")) {
-            if (ImGui.menuItem("Save", saveShortcut.shortcutDisplayKeys))
+            if (ImGui.menuItem("Save Scene", saveSceneShortcut.shortcutDisplayKeys))
                 EventSystem.notify(null, new Event(EventType.SaveLevel));
 
-            if (ImGui.menuItem("Load", loadShortcut.shortcutDisplayKeys))
+            if (ImGui.menuItem("Open Scene", openSceneShortcut.shortcutDisplayKeys))
                 EventSystem.notify(null, new Event(EventType.LoadLevel));
 
             ImGui.endMenu();
         }
 
         if (ImGui.beginMenu("Edit")) {
-            if (ImGui.menuItem("Test1", saveShortcut.shortcutDisplayKeys)) {
+            if (ImGui.menuItem("Test1", saveSceneShortcut.shortcutDisplayKeys)) {
             }
 
-            if (ImGui.menuItem("Test2", loadShortcut.shortcutDisplayKeys)) {
+            if (ImGui.menuItem("Test2", openSceneShortcut.shortcutDisplayKeys)) {
             }
 
             ImGui.endMenu();
         }
 
         if (ImGui.beginMenu("Assets")) {
-            if (ImGui.menuItem("Test1", saveShortcut.shortcutDisplayKeys)) {
+            if (ImGui.menuItem("Test1", saveSceneShortcut.shortcutDisplayKeys)) {
             }
 
-            if (ImGui.menuItem("Test2", loadShortcut.shortcutDisplayKeys)) {
+            if (ImGui.menuItem("Test2", openSceneShortcut.shortcutDisplayKeys)) {
             }
 
             ImGui.endMenu();
         }
 
         if (ImGui.beginMenu("Window")) {
-            if (ImGui.menuItem("Test1", saveShortcut.shortcutDisplayKeys)) {
+            if (ImGui.menuItem("Test1", saveSceneShortcut.shortcutDisplayKeys)) {
             }
 
-            if (ImGui.menuItem("Test2", loadShortcut.shortcutDisplayKeys)) {
+            if (ImGui.menuItem("Test2", openSceneShortcut.shortcutDisplayKeys)) {
             }
 
             ImGui.endMenu();
         }
 
         if (ImGui.beginMenu("Help")) {
-            if (ImGui.menuItem("Test1", saveShortcut.shortcutDisplayKeys)) {
+            if (ImGui.menuItem("Test1", saveSceneShortcut.shortcutDisplayKeys)) {
             }
 
-            if (ImGui.menuItem("Test2", loadShortcut.shortcutDisplayKeys)) {
+            if (ImGui.menuItem("Test2", openSceneShortcut.shortcutDisplayKeys)) {
             }
 
             ImGui.endMenu();

@@ -15,6 +15,7 @@ import engine.renderEngine.models.TexturedModel;
 import engine.renderEngine.particles.particleSystemComponents_PSC.ParticleSystemComponent;
 import engine.renderEngine.textures.Material;
 import engine.renderEngine.textures.Texture;
+import engine.toolbox.Time;
 import imgui.ImGui;
 import imgui.ImVec2;
 import imgui.ImVec4;
@@ -131,8 +132,7 @@ public class ParticleSystem extends Component {
     }
 
     private void generateParticles() {
-        float delta = Window.getDelta();
-        float particlesToCreate = particlesPerSecond * delta;
+        float particlesToCreate = particlesPerSecond * Time.deltaTime();
         int count = (int) Math.floor(particlesToCreate);
         float partialParticle = particlesToCreate % 1;
 

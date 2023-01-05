@@ -1,3 +1,4 @@
+import engine.Settings;
 import engine.entities.Camera;
 import engine.entities.GameObject;
 import engine.gizmo.GizmoSystem;
@@ -12,6 +13,7 @@ import engine.renderEngine.postProcessing.PostProcessing;
 import engine.renderEngine.renderer.MasterRenderer;
 import engine.terrain.Terrain;
 import engine.toolbox.GameObject_Manager;
+import engine.toolbox.Time;
 import engine.toolbox.input.InputManager;
 import engine.toolbox.input.KeyListener;
 import engine.toolbox.input.MouseListener;
@@ -180,8 +182,8 @@ public class Main {
             uiFbo.unbindFrameBuffer();
 
             multisampleSceneFbo.resolveToFbo(GL_COLOR_ATTACHMENT0, outputFbo);
-            if (false)
-                Window.setScreenImage(outputFbo.getColourTexture()); // Not PostProcessing at all
+            if (false) // Not PostProcessing at all
+                Window.setScreenImage(outputFbo.getColourTexture());
             else {
                 PostProcessing.doPostProcessing(outputFbo.getColourTexture());
                 Window.setScreenImage(PostProcessing.getFinalImage());
@@ -191,7 +193,7 @@ public class Main {
 //            Window.setScreenImage(Window.get().getImGuiLayer().getInspectorWindow().getPickingTexture().getPickingTextureId()); // Picking Texture Test
 //            Window.setScreenImage(renderer.getShadowMapTexture()); // Shadow Map Test
 
-            Window.get().getImGuiLayer().update(Window.getDelta(), Window.get().getScene());
+            Window.get().getImGuiLayer().update(Window.get().getScene());
 
             Window.get().updateDisplay();
 

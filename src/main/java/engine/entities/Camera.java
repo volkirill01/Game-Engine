@@ -1,6 +1,8 @@
 package engine.entities;
 
+import engine.Settings;
 import engine.renderEngine.Window;
+import engine.toolbox.Time;
 import engine.toolbox.input.InputManager;
 import engine.toolbox.input.KeyCode;
 import engine.toolbox.input.KeyListener;
@@ -94,19 +96,19 @@ public class Camera {
 
         if (!Window.get().isLockControl() && !KeyListener.isAnyKeyPressed(ignoredKeys)) {
             if (KeyListener.isKeyDown(InputManager.getShortcut("cameraMove(front)").firstKeyCode))
-                direction.z += actualMoveSpeed * Window.getDelta();
+                direction.z += actualMoveSpeed * Time.deltaTime();
             else if (KeyListener.isKeyDown(InputManager.getShortcut("cameraMove(back)").firstKeyCode))
-                direction.z -= actualMoveSpeed * Window.getDelta();
+                direction.z -= actualMoveSpeed * Time.deltaTime();
 
             if (KeyListener.isKeyDown(InputManager.getShortcut("cameraMove(left)").firstKeyCode))
-                direction.x += actualMoveSpeed * Window.getDelta();
+                direction.x += actualMoveSpeed * Time.deltaTime();
             else if (KeyListener.isKeyDown(InputManager.getShortcut("cameraMove(right)").firstKeyCode))
-                direction.x -= actualMoveSpeed * Window.getDelta();
+                direction.x -= actualMoveSpeed * Time.deltaTime();
 
             if (KeyListener.isKeyDown(InputManager.getShortcut("cameraMove(up)").firstKeyCode))
-                direction.y += actualMoveSpeed * Window.getDelta();
+                direction.y += actualMoveSpeed * Time.deltaTime();
             else if (KeyListener.isKeyDown(InputManager.getShortcut("cameraMove(down)").firstKeyCode))
-                direction.y -= actualMoveSpeed * Window.getDelta();
+                direction.y -= actualMoveSpeed * Time.deltaTime();
         }
     }
 

@@ -64,23 +64,18 @@ public class Scene {
             GameObject go = gameObjects.get(i);
             go.start();
 //            this.renderer.add(go);
-
-//            for (GameObject child : go.transform.childs) no uncomment
-//                child.start(); no uncomment
-
 //            this.physics2D.add(go);
         }
         isRunning = true;
     }
 
     public void addGameObjectToScene(GameObject go) {
-        if (!isRunning) {
+        if (!isRunning)
             gameObjects.add(go);
-            go.addChildsToScene();
-        } else {
+        else
             pendingObjects.add(go);
-            go.addChildsToScene();
-        }
+
+        go.transform.addChildsToScene();
     }
 
     public void destroy() {
@@ -137,9 +132,6 @@ public class Scene {
             GameObject go = gameObjects.get(i);
             go.editorUpdate();
 
-//            for (GameObject child : go.transform.childs)
-//                child.editorUpdate(deltaTime);
-
             if (go.isDeath()) {
                 gameObjects.remove(i);
 //                this.renderer.destroyGameObject(go);
@@ -164,9 +156,6 @@ public class Scene {
         for (int i = 0; i < gameObjects.size(); i++) {
             GameObject go = gameObjects.get(i);
             go.update();
-
-//            for (GameObject child : go.transform.childs)
-//                child.update(deltaTime);
 
             if (go.isDeath()) {
                 gameObjects.remove(i);
