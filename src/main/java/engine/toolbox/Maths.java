@@ -1,6 +1,6 @@
 package engine.toolbox;
 
-import engine.entities.Camera;
+import engine.entities.EditorCamera;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -36,12 +36,12 @@ public class Maths {
         return transformationMatrix;
     }
 
-    public static Matrix4f createViewMatrix(Camera camera) {
+    public static Matrix4f createViewMatrix(EditorCamera editorCamera) {
         Matrix4f viewMatrix = new Matrix4f().identity();
 
-        viewMatrix.rotate((float)Math.toRadians(camera.getPitch()), new Vector3f(1, 0, 0));
-        viewMatrix.rotate((float)Math.toRadians(camera.getYaw()), new Vector3f(0, 1, 0));
-        Vector3f cameraPosition = camera.getPosition();
+        viewMatrix.rotate((float)Math.toRadians(editorCamera.getPitch()), new Vector3f(1, 0, 0));
+        viewMatrix.rotate((float)Math.toRadians(editorCamera.getYaw()), new Vector3f(0, 1, 0));
+        Vector3f cameraPosition = editorCamera.getPosition();
         Vector3f negativeCameraPosition = new Vector3f(-cameraPosition.x, -cameraPosition.y, -cameraPosition.z);
         viewMatrix.translate(negativeCameraPosition.x, negativeCameraPosition.y, negativeCameraPosition.z);
 

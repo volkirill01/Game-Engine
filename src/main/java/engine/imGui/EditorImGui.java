@@ -1,6 +1,5 @@
 package engine.imGui;
 
-import engine.TestFieldsWindow;
 import engine.assets.Asset;
 import engine.renderEngine.Loader;
 import engine.renderEngine.OBJLoader;
@@ -445,7 +444,7 @@ public class EditorImGui {
         return Maths.clamp(val.get(), min, max);
     }
 
-    public static boolean filed_Color(String label, Color color) {
+    public static boolean field_Color(String label, Color color) {
         boolean isColorChange = false;
         ImGui.pushID("ColorPicker3-" + label);
 
@@ -968,7 +967,7 @@ public class EditorImGui {
                         field = Loader.get().loadMaterial(payload[1]);
                     }
                 }
-                System.out.println("Asset Field-" + payload[1]);
+//                System.out.println("Asset Field-" + payload[1]);
             }
             ImGui.endDragDropTarget();
         }
@@ -1075,7 +1074,7 @@ public class EditorImGui {
 
             if (payload[0].equals(Asset.AssetType.Texture.name()) && ImGui.acceptDragDropPayload("ASSETS_WINDOW_PAYLOAD") != null) {
                 field = Loader.get().loadTexture(payload[1]);
-                System.out.println("Texture Field-" + payload[1]);
+//                System.out.println("Texture Field-" + payload[1]);
             }
             ImGui.endDragDropTarget();
         }

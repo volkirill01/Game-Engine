@@ -32,6 +32,8 @@ public class PostProcessing {
 	private static Color fogColor = new Color(128, 128, 128);
 	private static float fogSmoothness = 1.5f;
 
+	private static Color backgroundColor = new Color(0, 0, 0);
+
 	private static List<PostProcessLayer> allPostProcessLayers = new ArrayList<>(){{
 		add(new PostProcessLayer(new PowerShader((int) Window.getWidth(), (int) Window.getHeight())));
 		add(new GaussianBlurLayer((int) Window.getWidth(), (int) Window.getHeight()));
@@ -113,7 +115,10 @@ public class PostProcessing {
 
 	public static List<PostProcessLayer> getLayers() { return postProcessLayers; }
 
-	public static void addLayer(PostProcessLayer layer) { postProcessLayers.add(layer); }
+	public static void addLayer(PostProcessLayer layer) {
+		usePostProcessing = true;
+		postProcessLayers.add(layer);
+	}
 
 	public static void removeLayer(PostProcessLayer layer) { postProcessLayers.remove(layer); }
 
@@ -152,4 +157,8 @@ public class PostProcessing {
 	public static float getFogSmoothness() { return fogSmoothness; }
 
 	public static void setFogSmoothness(float smoothness) { fogSmoothness = smoothness; }
+
+	public static Color getBackgroundColor() { return PostProcessing.backgroundColor; }
+
+	public static void setBackgroundColor(Color backgroundColor) { PostProcessing.backgroundColor = backgroundColor; }
 }

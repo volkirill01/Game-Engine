@@ -73,6 +73,8 @@ public class AssetsWindow extends EditorImGuiWindow {
                     assets.add(Loader.get().loadAsset_Model(filepath));
                 else if (filepath.endsWith(".material"))
                     assets.add(Loader.get().loadAsset_Material(filepath));
+                else if (filepath.endsWith(".mtl"))
+                    continue;
                 else if (filepath.endsWith(".meta"))
                     continue;
                 else // Other

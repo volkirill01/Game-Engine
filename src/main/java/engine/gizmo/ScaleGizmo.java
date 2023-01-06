@@ -32,7 +32,7 @@ public class ScaleGizmo extends Gizmo {
 
         if (KeyListener.isKeyDoubleClick(InputManager.getShortcut("scale").firstKeyCode) && !KeyListener.isAnyKeyPressed(InputManager.getShortcut("scale").firstKeyCode)) {
             this.isScaling = true;
-            this.startScale = new Vector3f(Window.get().getImGuiLayer().getInspectorWindow().getActiveGameObject().transform.scale);
+            this.startScale = new Vector3f(Window.get().getImGuiLayer().getInspectorWindow().getActiveGameObject().transform.localScale);
             this.scaleDirection.x = 1.0f;
             this.scaleDirection.y = 1.0f;
             this.scaleDirection.z = 1.0f;
@@ -43,8 +43,6 @@ public class ScaleGizmo extends Gizmo {
         if (this.isScaling) {
             Window.get().getImGuiLayer().getGameViewWindow().setWantCaptureMouse(false);
             Window.get().setLockControl(true);
-
-            Window.get().getImGuiLayer().getInspectorWindow().setLocked(true);
 
             if (KeyListener.isKeyDown(KeyCode.Left_Shift) || KeyListener.isKeyDown(KeyCode.Right_Shift))
                 this.currentScalingSpeed = this.slowScalingSpeed;
@@ -94,12 +92,11 @@ public class ScaleGizmo extends Gizmo {
                 ImGui.isMouseClicked(ImGuiMouseButton.Right) ||
                 ImGui.isMouseClicked(ImGuiMouseButton.Left)) {
             this.isScaling = false;
-            Window.get().getImGuiLayer().getInspectorWindow().setLocked(false);
             Window.get().setLockControl(false);
         }
 
         return this.isScaling;
     }
 
-    private void resetScale() { Window.get().getImGuiLayer().getInspectorWindow().getActiveGameObject().transform.scale = new Vector3f(this.startScale); }
+    private void resetScale() { Window.get().getImGuiLayer().getInspectorWindow().getActiveGameObject().transform.localScale = new Vector3f(this.startScale); }
 }

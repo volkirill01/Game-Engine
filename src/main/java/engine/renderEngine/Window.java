@@ -236,16 +236,16 @@ public class Window implements Observer {
                 this.runtimePlaying = true;
                 get().getImGuiLayer().getInspectorWindow().clearSelected();
                 currentScene.save();
-                get().changeScene(new LevelSceneInitializer(SceneManager.getCurrentScene()));
+                get().changeScene(new RuntimeSceneInitializer(SceneManager.getCurrentScene()));
             }
             case GameEngineStopPlay -> {
                 this.runtimePlaying = false;
                 get().getImGuiLayer().getGameViewWindow().setNotPlaying();
-                get().changeScene(new LevelEditorSceneInitializer(SceneManager.getCurrentScene()));
+                get().changeScene(new EditorSceneInitializer(SceneManager.getCurrentScene()));
             }
             case LoadLevel -> {
                 get().getImGuiLayer().showModalPopup("Open Scene", ConsoleMessage.MessageType.Info);
-                get().changeScene(new LevelEditorSceneInitializer(SceneManager.getCurrentScene()));
+                get().changeScene(new EditorSceneInitializer(SceneManager.getCurrentScene()));
             }
             case SaveLevel -> {
                 get().getImGuiLayer().showModalPopup("Scene Saved", ConsoleMessage.MessageType.Info);

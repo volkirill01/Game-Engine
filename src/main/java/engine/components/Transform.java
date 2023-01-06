@@ -13,8 +13,11 @@ import java.util.List;
 public class Transform extends Component {
 
     public Vector3f position;
+    public Vector3f localPosition;
     public Vector3f rotation;
+    public Vector3f localRotation;
     public Vector3f scale;
+    public Vector3f localScale;
 
     public transient GameObject parent = null;
     public transient GameObject mainParent = null;
@@ -22,22 +25,25 @@ public class Transform extends Component {
 
     public Transform() { init(new Vector3f(0.0f), new Vector3f(0.0f), new Vector3f(1.0f), new ArrayList<>()); }
 
-    public Transform(Vector3f position) { init(position, new Vector3f(0.0f), new Vector3f(1.0f), new ArrayList<>()); }
+    public Transform(Vector3f localPosition) { init(localPosition, new Vector3f(0.0f), new Vector3f(1.0f), new ArrayList<>()); }
 
-    public Transform(Vector3f position, Vector3f scale) { init(position, new Vector3f(0.0f), scale, new ArrayList<>()); }
+    public Transform(Vector3f localPosition, Vector3f localScale) { init(localPosition, new Vector3f(0.0f), localScale, new ArrayList<>()); }
 
-    public Transform(Vector3f position, Vector3f scale, ArrayList<GameObject> childs) { init(position, new Vector3f(0.0f), scale, childs); }
+    public Transform(Vector3f localPosition, Vector3f localScale, ArrayList<GameObject> childs) { init(localPosition, new Vector3f(0.0f), localScale, childs); }
 
-    public Transform(Vector3f position, Vector3f rotation, Vector3f scale, ArrayList<GameObject> childs) { init(position, rotation, scale, childs); }
+    public Transform(Vector3f localPosition, Vector3f localRotation, Vector3f localScale, ArrayList<GameObject> childs) { init(localPosition, localRotation, localScale, childs); }
 
-    public Transform(Vector3f position, Vector3f rotation, Vector3f scale) { init(position, rotation, scale, new ArrayList<>()); }
+    public Transform(Vector3f localPosition, Vector3f localRotation, Vector3f localScale) { init(localPosition, localRotation, localScale, new ArrayList<>()); }
 
-    public Transform(Vector3f position, ArrayList<GameObject> childs) { init(position, new Vector3f(0.0f), new Vector3f(1.0f), childs); }
+    public Transform(Vector3f localPosition, ArrayList<GameObject> childs) { init(localPosition, new Vector3f(0.0f), new Vector3f(1.0f), childs); }
 
     public void init(Vector3f position, Vector3f rotation, Vector3f scale, ArrayList<GameObject> childs) {
         this.position = position;
+        this.localPosition = position;
         this.scale = scale;
+        this.localScale = scale;
         this.rotation = rotation;
+        this.localRotation = rotation;
         this.childs = childs;
     }
 
@@ -47,32 +53,50 @@ public class Transform extends Component {
         this.scale = scale;
     }
 
-    public void increasePosition(Vector3f position) { this.position.add(position); }
+    @Override
+    public void editorUpdate() {
+        if (this.parent != null) { // TODO ADD RELATIVE TO PARENT ROTATION
+            this.position.set(this.localPosition).add(parent.transform.position);
+            this.rotation.set(this.localRotation).add(parent.transform.rotation);
+            this.scale.set(this.localScale).mul(parent.transform.scale);
+        } else {
+            this.position.set(this.localPosition);
+            this.rotation.set(this.localRotation);
+            this.scale.set(this.localScale);
+        }
+    }
 
-    public void increasePosition(float x, float y, float z) { this.position.add(x, y, z); }
+    public void increasePosition(Vector3f position) { this.localPosition.add(position); }
 
-    public void increasePosition(float position) { this.position.add(position, position, position); }
+    public void increasePosition(float x, float y, float z) { this.localPosition.add(x, y, z); }
 
-    public void increaseRotation(Vector3f rotation) { this.rotation.add(rotation); }
+    public void increasePosition(float position) { this.localPosition.add(position, position, position); }
 
-    public void increaseRotation(float x, float y, float z) { this.rotation.add(x, y, z); }
+    public void increaseRotation(Vector3f rotation) { this.localRotation.add(rotation); }
 
-    public void increaseRotation(float rotation) { this.rotation.add(rotation, rotation, rotation); }
+    public void increaseRotation(float x, float y, float z) { this.localRotation.add(x, y, z); }
 
-    public void increaseScale(Vector3f scale) { this.scale.add(scale); }
+    public void increaseRotation(float rotation) { this.localRotation.add(rotation, rotation, rotation); }
 
-    public void increaseScale(float x, float y, float z) { this.scale.add(x, y, z); }
+    public void increaseScale(Vector3f scale) { this.localScale.add(scale); }
 
-    public void increaseScale(float scale) { this.scale.add(scale, scale, scale); }
+    public void increaseScale(float x, float y, float z) { this.localScale.add(x, y, z); }
+
+    public void increaseScale(float scale) { this.localScale.add(scale, scale, scale); }
 
     @Override
     public void imgui() {
 //        EditorImGui.field_Text("Parent", parent != null ? parent.name : "null", "");
 //        EditorImGui.field_Text("Main Parent", mainParent != null ? mainParent.name : "null", "");
 
-        this.position = EditorImGui.field_Vector3f("Position", this.position);
-        this.rotation = EditorImGui.field_Vector3f("Rotation", this.rotation);
-        this.scale = EditorImGui.field_Vector3f("Scale", this.scale, new Vector3f(1.0f));
+//        this.position = EditorImGui.field_Vector3f("World Position", this.position);
+//        this.rotation = EditorImGui.field_Vector3f("World Rotation", this.rotation);
+//        this.scale = EditorImGui.field_Vector3f("World Scale", this.scale, new Vector3f(1.0f));
+
+        this.localPosition = EditorImGui.field_Vector3f("Position", this.localPosition);
+        this.localRotation = EditorImGui.field_Vector3f("Rotation", this.localRotation);
+        this.localScale = EditorImGui.field_Vector3f("Scale", this.localScale, new Vector3f(1.0f));
+//        }
     }
 
     public Transform copy() {
@@ -95,9 +119,9 @@ public class Transform extends Component {
 
     @Override
     public void reset() {
-        this.position = new Vector3f(0.0f);
-        this.rotation = new Vector3f(0.0f);
-        this.scale = new Vector3f(1.0f);
+        this.localPosition = new Vector3f(0.0f);
+        this.localRotation = new Vector3f(0.0f);
+        this.localScale = new Vector3f(1.0f);
     }
 
     @Override
@@ -115,11 +139,14 @@ public class Transform extends Component {
     }
 
     public void addChild(GameObject child) {
+        if (child.transform.parent != null) {
+            child.transform.parent.transform.removeChild(child);
+        }
+
         this.childs.add(child);
+        child.transform.parent = this.gameObject;
 
 //        Vector3f oldScale = child.transform.scale;
-
-        child.transform.parent = this.gameObject;
 
         if (this.mainParent != null) {
             child.transform.mainParent = this.mainParent;
@@ -131,8 +158,9 @@ public class Transform extends Component {
                 child.transform.setMainParentInChilds(this.gameObject);
         }
 
-//        child.transform.position = new Vector3f(child.transform.position.sub(this.gameObject.transform.position));
-//        child.transform.scale = new Vector3f(oldScale); // TODO пофиксить баг с изменением размера
+//        child.transform.localPosition.sub(this.position);
+//        child.transform.localRotation.sub(this.rotation);
+//        child.transform.localScale.div(this.scale); // TODO пофиксить баг с изменением размера
     }
 
     public void removeChild(GameObject child) {
@@ -174,10 +202,10 @@ public class Transform extends Component {
         if (treeNodeOpen) {
             if (getChildCount() > 0) {
                 level++;
-                for (GameObject child : this.childs) {
+                for (int i = 0; i < this.childs.size(); i++) {
                     Window.get().getImGuiLayer().getSceneHierarchy().globalGameObjectIndex++;
-                    if (child != null)
-                        child.transform.drawInSceneHierarchy(level);
+                    if (this.childs.get(i) != null)
+                        this.childs.get(i).transform.drawInSceneHierarchy(level);
                 }
             }
             ImGui.treePop();

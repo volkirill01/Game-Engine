@@ -1,6 +1,6 @@
 package engine.renderEngine.renderer;
 
-import engine.entities.Camera;
+import engine.entities.EditorCamera;
 import engine.entities.GameObject;
 import engine.components.Light;
 import engine.renderEngine.PickingShader;
@@ -60,78 +60,105 @@ public class MasterRenderer {
 
     private List<Light> lights = new ArrayList<>();
 
-    public MasterRenderer(Camera camera) {
+    public MasterRenderer(EditorCamera editorCamera) {
         createProjectionMatrix();
         skyboxRenderer = new SkyboxRenderer(projectionMatrix);
-        entityRenderer = new EntityRenderer(shader, projectionMatrix, new CubeMap(skyboxRenderer.getTexture()));
+        entityRenderer = new EntityRenderer(shader, pickingShader, projectionMatrix, new CubeMap(skyboxRenderer.getTexture()));
         terrainRenderer = new TerrainRenderer(terrainShader, projectionMatrix);
         normalMappingRenderer = new NormalMappingRenderer(projectionMatrix);
-        shadowMapRenderer = new ShadowMapMasterRenderer(camera);
+        shadowMapRenderer = new ShadowMapMasterRenderer(editorCamera);
     }
 
-    private void render(Camera camera) {
+    private void render(EditorCamera editorCamera, boolean renderOnPickingTexture) {
         prepare();
 
-        Color fogColor = PostProcessing.getFogColor().toPercentColor();
-        glClearColor(fogColor.r, fogColor.g, fogColor.b, 1);
+        if (!renderOnPickingTexture) {
+//        Color fogColor = PostProcessing.getFogColor().toPercentColor();
+//        glClearColor(fogColor.r, fogColor.g, fogColor.b, 1);
 
-        shader.start();
+            shader.start();
 
-        shader.loadLights(lights);
-        shader.loadUniformFloat("ambientLightIntensity", PostProcessing.getAmbientLightIntensity());
-        shader.loadUniformColor("ambientLightColor", PostProcessing.getAmbientLightColor());
+            shader.loadLights(lights);
+            shader.loadUniformFloat("ambientLightIntensity", PostProcessing.getAmbientLightIntensity());
+            shader.loadUniformColor("ambientLightColor", PostProcessing.getAmbientLightColor());
 
-        if (PostProcessing.isUseFog()) {
-            shader.loadUniformColor("fogColor", PostProcessing.getFogColor());
-            shader.loadUniformFloat("fogDensity", PostProcessing.getFogDensity());
-            shader.loadUniformFloat("fogGradient", PostProcessing.getFogSmoothness());
+            if (PostProcessing.isUseFog()) {
+                shader.loadUniformColor("fogColor", PostProcessing.getFogColor());
+                shader.loadUniformFloat("fogDensity", PostProcessing.getFogDensity());
+                shader.loadUniformFloat("fogGradient", PostProcessing.getFogSmoothness());
+            } else {
+                shader.loadUniformColor("fogColor", Color.Black);
+                shader.loadUniformFloat("fogDensity", 0.0f);
+                shader.loadUniformFloat("fogGradient", 0.0f);
+            }
+
+            Matrix4f viewMatrix = Maths.createViewMatrix(editorCamera);
+            shader.loadUniformMatrix("viewMatrix", viewMatrix);
+
+            entityRenderer.render(entities);
+
+            shader.stop();
+            entities.clear();
+
+            // NormalMap entities
+            normalMappingRenderer.render(normalMapEntities, lights, editorCamera);
+            normalMapEntities.clear();
+            // NormalMap entities
+
+            // TERRAIN
+            terrainShader.start();
+
+            terrainShader.loadLights(lights);
+
+            terrainShader.loadUniformColor("ambientLightColor", PostProcessing.getAmbientLightColor());
+            terrainShader.loadUniformFloat("ambientLightIntensity", PostProcessing.getAmbientLightIntensity());
+
+            if (PostProcessing.isUseFog()) {
+                terrainShader.loadUniformColor("fogColor", PostProcessing.getFogColor());
+                terrainShader.loadUniformFloat("fogDensity", PostProcessing.getFogDensity());
+                terrainShader.loadUniformFloat("fogGradient", PostProcessing.getFogSmoothness());
+            } else {
+                terrainShader.loadUniformColor("fogColor", Color.Black);
+                terrainShader.loadUniformFloat("fogDensity", 0.0f);
+                terrainShader.loadUniformFloat("fogGradient", 0.0f);
+            }
+
+            terrainShader.loadUniformMatrix("viewMatrix", viewMatrix);
+
+            terrainRenderer.render(terrains, shadowMapRenderer.getToShadowMapSpaceMatrix());
+
+            terrainShader.stop();
+            terrains.clear();
+            // TERRAIN
+
+            skyboxRenderer.render(editorCamera);
         } else {
-            shader.loadUniformColor("fogColor", Color.Black);
-            shader.loadUniformFloat("fogDensity", 0.0f);
-            shader.loadUniformFloat("fogGradient", 0.0f);
+            pickingShader.start();
+
+            Matrix4f viewMatrix = Maths.createViewMatrix(editorCamera);
+            pickingShader.loadUniformMatrix("viewMatrix", viewMatrix);
+
+            entityRenderer.render(entities);
+
+            pickingShader.stop();
+            entities.clear();
+
+            // NormalMap entities
+            normalMappingRenderer.render(normalMapEntities, lights, editorCamera);
+            normalMapEntities.clear();
+            // NormalMap entities
+
+            // TERRAIN
+            pickingShader.start();
+
+            pickingShader.loadUniformMatrix("viewMatrix", viewMatrix);
+
+            terrainRenderer.render(terrains, shadowMapRenderer.getToShadowMapSpaceMatrix());
+
+            pickingShader.stop();
+            terrains.clear();
+            // TERRAIN
         }
-
-        Matrix4f viewMatrix = Maths.createViewMatrix(camera);
-        shader.loadUniformMatrix("viewMatrix", viewMatrix);
-
-        entityRenderer.render(entities);
-
-        shader.stop();
-        entities.clear();
-
-        // NormalMap entities
-        normalMappingRenderer.render(normalMapEntities, lights, camera);
-        // NormalMap entities
-
-        // TERRAIN
-        terrainShader.start();
-
-        terrainShader.loadLights(lights);
-
-        terrainShader.loadUniformColor("ambientLightColor", PostProcessing.getAmbientLightColor());
-        terrainShader.loadUniformFloat("ambientLightIntensity", PostProcessing.getAmbientLightIntensity());
-
-        if (PostProcessing.isUseFog()) {
-            terrainShader.loadUniformColor("fogColor", PostProcessing.getFogColor());
-            terrainShader.loadUniformFloat("fogDensity", PostProcessing.getFogDensity());
-            terrainShader.loadUniformFloat("fogGradient", PostProcessing.getFogSmoothness());
-        } else {
-            terrainShader.loadUniformColor("fogColor", Color.Black);
-            terrainShader.loadUniformFloat("fogDensity", 0.0f);
-            terrainShader.loadUniformFloat("fogGradient", 0.0f);
-        }
-
-        terrainShader.loadUniformMatrix("viewMatrix", viewMatrix);
-
-        terrainRenderer.render(terrains, shadowMapRenderer.getToShadowMapSpaceMatrix());
-
-        terrainShader.stop();
-        terrains.clear();
-        // TERRAIN
-
-        normalMapEntities.clear();
-
-        skyboxRenderer.render(camera);
     }
 
     private void processEntity(GameObject gameObject) {
@@ -174,25 +201,34 @@ public class MasterRenderer {
         glBindTexture(GL_TEXTURE_2D, getShadowMapTexture());
     }
 
-    public void renderScene(List<GameObject> entities, List<GameObject> normalMapEntities, List<Terrain> terrains, Camera camera) {
+    public void renderScene(List<GameObject> entities, List<GameObject> normalMapEntities, List<Terrain> terrains, EditorCamera editorCamera, boolean renderOnPickingTexture) {
         lights.clear();
 
         for (Terrain terrain : terrains)
             processTerrain(terrain);
 
         for (GameObject gameObject : entities) {
+            if (!Window.get().runtimePlaying) {
+                if (!gameObject.isVisible())
+                    continue;
+
+                if (gameObject.transform.mainParent != null && !gameObject.transform.mainParent.isVisible())
+                    continue;
+                if (gameObject.transform.parent != null && !gameObject.transform.parent.isVisible())
+                    continue;
+            }
 
             if (gameObject.hasComponent(Light.class))
                 lights.add(gameObject.getComponent(Light.class));
 
-            if (gameObject.getComponent(ObjectRenderer.class) != null)
+            if (gameObject.hasComponent(MeshRenderer.class))
                 processEntity(gameObject);
         }
 
         for (GameObject normalMapGameObject : normalMapEntities)
             processNormalMapEntity(normalMapGameObject);
 
-        render(camera);
+        render(editorCamera, renderOnPickingTexture);
     }
 
 //    public void renderShadowMap(List<GameObject> gameObjectList) {

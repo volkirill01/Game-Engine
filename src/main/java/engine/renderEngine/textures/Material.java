@@ -1,7 +1,6 @@
 package engine.renderEngine.textures;
 
 import engine.imGui.EditorImGui;
-import engine.imGui.ImGuiLayer;
 import engine.renderEngine.Loader;
 import engine.renderEngine.renderer.RenderCullSide;
 import engine.toolbox.customVariables.Color;
@@ -158,7 +157,7 @@ public class Material {
 
     public void imgui(float xOffset) {
         if (EditorImGui.collapsingHeader("Albedo", xOffset, true)) {
-            EditorImGui.filed_Color("Color", color);
+            EditorImGui.field_Color("Color", color);
             this.texture = EditorImGui.field_Texture("Albedo", this.texture, this.tiling, new Vector2f());
 
             ImGui.separator();

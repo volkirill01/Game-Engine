@@ -1,7 +1,6 @@
 package engine.renderEngine.particles;
 
-import engine.entities.Camera;
-import engine.renderEngine.Loader;
+import engine.entities.EditorCamera;
 import engine.renderEngine.textures.Texture;
 import org.joml.Matrix4f;
 
@@ -14,7 +13,7 @@ public class ParticleMaster {
 
     public static void init(Matrix4f projectionMatrix) { renderer = new ParticleRenderer(projectionMatrix); }
 
-    public static void update(Camera camera) {
+    public static void update(EditorCamera editorCamera) {
         Iterator<Map.Entry<Texture, List<Particle>>> mapIterator = particles.entrySet().iterator();
         while (mapIterator.hasNext()) {
             Map.Entry<Texture, List<Particle>> entry = mapIterator.next();
@@ -23,7 +22,7 @@ public class ParticleMaster {
             Iterator<Particle> iterator = batch.iterator();
             while (iterator.hasNext()) {
                 Particle p = iterator.next();
-                boolean stillAlive = p.update(camera);
+                boolean stillAlive = p.update(editorCamera);
                 if (!stillAlive) {
                     iterator.remove();
 
@@ -36,7 +35,7 @@ public class ParticleMaster {
         }
     }
 
-    public static void renderParticles(Camera camera) { renderer.render(particles, camera); }
+    public static void renderParticles(EditorCamera editorCamera) { renderer.render(particles, editorCamera); }
 
     public static void cleanUp() { renderer.cleanUp(); }
 

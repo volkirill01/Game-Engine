@@ -21,6 +21,7 @@ import engine.renderEngine.models.TexturedModel;
 import engine.renderEngine.particles.particleSystemComponents_PSC.PSComponentDeserializer;
 import engine.renderEngine.particles.particleSystemComponents_PSC.ParticleSystemComponent;
 import engine.renderEngine.textures.Material;
+import engine.toolbox.MousePicking;
 import engine.toolbox.customVariables.Color;
 import engine.toolbox.customVariables.GameObjectTag;
 import imgui.ImGui;
@@ -46,6 +47,8 @@ public class GameObject {
     private boolean doSerialization = true;
 
     private transient boolean isDeath = false;
+
+    private boolean isVisible = true;
 
     private transient List<Class> addComponentBlackList = new ArrayList<>(){{
         add(Transform.class);
@@ -174,7 +177,7 @@ public class GameObject {
 //                for (float gameObjectId : gameObjectIds) {
 //                    if (gameObjectId >= 0) {
 ////                        GameObject pickedObj = Window.getScene().getGameObject((int) gameObjectId);
-////                        if (!pickedObj.hasTag("-ENonPickable"))
+////                        if (!pickedObj.hasTag(MousePicking.nonPickableTag))
 //                              return true;
 //                    }
 //                }
@@ -369,4 +372,17 @@ public class GameObject {
     public boolean doSerialization() { return this.doSerialization; }
 
     public void generateUid() { this.uid = ID_COUNTER++; }
+
+    public void setVisible(boolean visible) { this.isVisible = visible; }
+
+    public boolean isVisible() { return this.isVisible; }
+
+    public void setPickable(boolean pickable) {
+        if (pickable)
+            addTag(MousePicking.nonPickableTag);
+        else
+            removeTag(MousePicking.nonPickableTag);
+    }
+
+    public boolean isPickable() { return hasTag(MousePicking.nonPickableTag); }
 }

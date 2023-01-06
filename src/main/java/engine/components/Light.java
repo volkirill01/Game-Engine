@@ -1,10 +1,7 @@
 package engine.components;
 
-import engine.components.Component;
 import engine.imGui.EditorImGui;
 import engine.toolbox.customVariables.Color;
-import imgui.ImGui;
-import org.joml.Vector3f;
 
 public class Light extends Component {
 
@@ -50,7 +47,7 @@ public class Light extends Component {
 
     @Override
     public void imgui() {
-        EditorImGui.filed_Color("Color", this.color);
+        EditorImGui.field_Color("Color", this.color);
         this.intensity = EditorImGui.field_Float("Intensity", this.intensity, 0.02f, 0.0f);
         this.lightType = (LightType) EditorImGui.field_Enum("Light Type", this.lightType);
 

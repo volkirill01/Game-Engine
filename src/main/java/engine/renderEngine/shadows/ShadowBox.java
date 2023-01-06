@@ -1,6 +1,6 @@
 package engine.renderEngine.shadows;
 
-import engine.entities.Camera;
+import engine.entities.EditorCamera;
 import engine.renderEngine.Window;
 import engine.renderEngine.renderer.MasterRenderer;
 import org.joml.Matrix4f;
@@ -31,7 +31,7 @@ public class ShadowBox {
 	private float minY, maxY;
 	private float minZ, maxZ;
 	private Matrix4f lightViewMatrix;
-	private Camera cam;
+	private EditorCamera cam;
 
 	private float farHeight, farWidth, nearHeight, nearWidth;
 
@@ -45,12 +45,12 @@ public class ShadowBox {
 	 *            transform a point from world space into "light" space (i.e.
 	 *            changes a point's coordinates from being in relation to the
 	 *            world's axis to being in terms of the light's local axis).
-	 * @param camera
+	 * @param editorCamera
 	 *            - the in-game camera.
 	 */
-	protected ShadowBox(Matrix4f lightViewMatrix, Camera camera) {
+	protected ShadowBox(Matrix4f lightViewMatrix, EditorCamera editorCamera) {
 		this.lightViewMatrix = lightViewMatrix;
-		this.cam = camera;
+		this.cam = editorCamera;
 		calculateWidthsAndHeights();
 	}
 

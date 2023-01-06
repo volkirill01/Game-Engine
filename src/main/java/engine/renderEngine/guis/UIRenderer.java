@@ -30,7 +30,16 @@ public class UIRenderer {
 
         for (GameObject go : Window.get().getScene().getGameObjects())
             if (go.doSerialization() && go.getComponent(UIImage.class) != null && go.getComponent(UIImage.class).isActive())
-                UIs.add(go.getComponent(UIImage.class));
+                if (!Window.get().runtimePlaying) {
+                    if (!go.isVisible())
+                        continue;
+                    if (go.transform.mainParent != null && !go.transform.mainParent.isVisible())
+                        continue;
+                    if (go.transform.parent != null && !go.transform.parent.isVisible())
+                        continue;
+
+                    UIs.add(go.getComponent(UIImage.class));
+                }
 
         shader.start();
         glBindVertexArray(this.quad.getVaoID());
@@ -43,7 +52,7 @@ public class UIRenderer {
             if (gui.gameObject != null && gui.isActive()) {
                 glActiveTexture(GL_TEXTURE0);
                 glBindTexture(GL_TEXTURE_2D, gui.getTexture().getTextureID());
-                Matrix4f transformationMatrix = Maths.createTransformationMatrix(gui.gameObject.transform.position, gui.gameObject.transform.rotation, gui.gameObject.transform.scale);
+                Matrix4f transformationMatrix = Maths.createTransformationMatrix(gui.gameObject.transform.localPosition, gui.gameObject.transform.localRotation, gui.gameObject.transform.localScale);
                 shader.loadUniformMatrix("transformationMatrix", transformationMatrix);
                 glDrawArrays(GL_TRIANGLE_STRIP, 0, quad.getVertexCount());
             }

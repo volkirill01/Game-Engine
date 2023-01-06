@@ -1,6 +1,6 @@
 package engine.renderEngine.normalMappingRenderer;
 
-import engine.entities.Camera;
+import engine.entities.EditorCamera;
 import engine.entities.GameObject;
 import engine.components.Light;
 import engine.renderEngine.components.MeshRenderer;
@@ -24,7 +24,7 @@ public class NormalMappingRenderer {
 		shader.stop();
 	}
 
-	public void render(Map<TexturedModel, List<GameObject>> entities, List<Light> lights, Camera camera) {
+	public void render(Map<TexturedModel, List<GameObject>> entities, List<Light> lights, EditorCamera editorCamera) {
 //		shader.start();
 //		prepare(lights, camera);
 //		for (TexturedModel model : entities.keySet()) {
@@ -69,15 +69,15 @@ public class NormalMappingRenderer {
 	}
 
 	private void prepareInstance(GameObject gameObject) {
-		Matrix4f transformationMatrix = Maths.createTransformationMatrix(gameObject.transform.position, gameObject.transform.rotation, gameObject.transform.scale);
+		Matrix4f transformationMatrix = Maths.createTransformationMatrix(gameObject.transform.localPosition, gameObject.transform.localRotation, gameObject.transform.localScale);
 		shader.loadTransformationMatrix(transformationMatrix);
 		shader.loadOffset(gameObject.getComponent(MeshRenderer.class).getTextureOffset().x, gameObject.getComponent(MeshRenderer.class).getTextureOffset().y);
 	}
 
-	private void prepare(List<Light> lights, Camera camera) {
+	private void prepare(List<Light> lights, EditorCamera editorCamera) {
 		//need to be public variables in MasterRenderer
 		shader.loadSkyColour(1, 1, 1);
-		Matrix4f viewMatrix = Maths.createViewMatrix(camera);
+		Matrix4f viewMatrix = Maths.createViewMatrix(editorCamera);
 		
 		shader.loadLights(lights, viewMatrix);
 		shader.loadViewMatrix(viewMatrix);

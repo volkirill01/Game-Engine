@@ -3,6 +3,7 @@ package engine.renderEngine.renderer;
 import engine.entities.GameObject;
 import engine.renderEngine.Loader;
 import engine.renderEngine.PickingShader;
+import engine.renderEngine.Window;
 import engine.renderEngine.components.MeshRenderer;
 import engine.renderEngine.models.RawModel;
 import engine.renderEngine.models.TexturedModel;
@@ -21,14 +22,21 @@ import static org.lwjgl.opengl.GL30.*;
 public class EntityRenderer {
 
     private StaticShader shader;
+    private PickingShader pickingShader;
     private CubeMap reflectionCubeMap;
 
-    public EntityRenderer(StaticShader shader, Matrix4f projectionMatrix, CubeMap reflectionCubeMap) {
+    public EntityRenderer(StaticShader shader, PickingShader pickingShader, Matrix4f projectionMatrix, CubeMap reflectionCubeMap) {
         this.reflectionCubeMap = reflectionCubeMap;
+
         this.shader = shader;
         this.shader.start();
         this.shader.loadUniformMatrix("projectionMatrix", projectionMatrix);
         this.shader.stop();
+
+        this.pickingShader = pickingShader;
+        this.pickingShader.start();
+        this.pickingShader.loadUniformMatrix("projectionMatrix", projectionMatrix);
+        this.pickingShader.stop();
     }
 
     public void render(Map<TexturedModel, List<GameObject>> entities) {
@@ -164,51 +172,16 @@ public class EntityRenderer {
         glBindVertexArray(0);
     }
 
+    private Vector3f tmpScale = new Vector3f(0.0f);
+
     private void prepareInstance(GameObject gameObject) {
-        Vector3f tmpPosition = new Vector3f(gameObject.transform.position);
-        Vector3f tmpRotation = new Vector3f(gameObject.transform.rotation);
-        Vector3f tmpScale = new Vector3f(gameObject.transform.scale).mul(gameObject.getComponent(MeshRenderer.class).getModel().getMesh().getSizeMultiplayer());
+        tmpScale.set(gameObject.transform.scale).mul(gameObject.getComponent(MeshRenderer.class).getModel().getMesh().getSizeMultiplayer());
 
-        if (gameObject.transform.parent != null) {
-            tmpPosition.add(gameObject.transform.parent.transform.position).mul(gameObject.transform.parent.transform.scale); // TODO ADD RELATIVE TO PARENT ROTATION
-            tmpRotation.add(gameObject.transform.parent.transform.rotation);
-            tmpScale.mul(gameObject.transform.parent.transform.scale);
-        }
-
-        if (gameObject.transform.mainParent != null && gameObject.transform.parent != gameObject.transform.mainParent) {
-            tmpPosition.add(gameObject.transform.mainParent.transform.position).mul(gameObject.transform.mainParent.transform.scale);
-            tmpRotation.add(gameObject.transform.mainParent.transform.rotation);
-            tmpScale.mul(gameObject.transform.mainParent.transform.scale);
-        }
-
-        Matrix4f transformationMatrix = Maths.createTransformationMatrix(tmpPosition, tmpRotation, tmpScale);
+        Matrix4f transformationMatrix = Maths.createTransformationMatrix(gameObject.transform.position, gameObject.transform.rotation, tmpScale);
         shader.loadUniformMatrix("transformationMatrix", transformationMatrix);
         shader.loadUniformVector2("textureOffset", gameObject.getComponent(MeshRenderer.class).getTextureOffset());
-    }
 
-//    private Vector3f tmpPosition = new Vector3f(0.0f);
-//    private Vector3f tmpRotation = new Vector3f(0.0f);
-//    private Vector3f tmpScale = new Vector3f(0.0f);
-//
-//    private void prepareInstance(GameObject gameObject) {
-//        tmpPosition.set(gameObject.transform.position);
-//        tmpRotation.set(gameObject.transform.rotation);
-//        tmpScale.set(gameObject.transform.scale).mul(gameObject.getComponent(MeshRenderer.class).getModel().getMesh().getSizeMultiplayer());
-//
-//        if (gameObject.transform.parent != null) {
-//            tmpPosition.add(gameObject.transform.parent.transform.position).mul(gameObject.transform.parent.transform.scale); // TODO ADD RELATIVE TO PARENT ROTATION
-//            tmpRotation.add(gameObject.transform.parent.transform.rotation);
-//            tmpScale.mul(gameObject.transform.parent.transform.scale);
-//        }
-//
-//        if (gameObject.transform.mainParent != null && gameObject.transform.parent != gameObject.transform.mainParent) {
-//            tmpPosition.add(gameObject.transform.mainParent.transform.position).mul(gameObject.transform.mainParent.transform.scale);
-//            tmpRotation.add(gameObject.transform.mainParent.transform.rotation);
-//            tmpScale.mul(gameObject.transform.mainParent.transform.scale);
-//        }
-//
-//        Matrix4f transformationMatrix = Maths.createTransformationMatrix(tmpPosition, tmpRotation, tmpScale);
-//        shader.loadUniformMatrix("transformationMatrix", transformationMatrix);
-//        shader.loadUniformVector2("textureOffset", gameObject.getComponent(MeshRenderer.class).getTextureOffset());
-//    }
+        pickingShader.loadUniformMatrix("transformationMatrix", transformationMatrix);
+        pickingShader.loadUniformInt("entityId", gameObject.getUid() + 1);
+    }
 }

@@ -43,7 +43,7 @@ public class FontRenderer {
 		glBindVertexArray(text.getMesh());
 		glEnableVertexAttribArray(0);
 		glEnableVertexAttribArray(1);
-		shader.loadUniformVector2("translation", new Vector2f(text.gameObject.transform.position.x, text.gameObject.transform.position.y));
+		shader.loadUniformVector2("translation", new Vector2f(text.gameObject.transform.localPosition.x, text.gameObject.transform.localPosition.y));
 
 		shader.loadUniformColorWithAlpha("color", text.getFontColor());
 		shader.loadUniformFloat("width", text.getFontWidth());

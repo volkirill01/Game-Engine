@@ -4,7 +4,7 @@ import java.nio.FloatBuffer;
 import java.util.List;
 import java.util.Map;
 
-import engine.entities.Camera;
+import engine.entities.EditorCamera;
 import engine.renderEngine.Loader;
 import engine.renderEngine.models.RawModel;
 import engine.renderEngine.textures.Texture;
@@ -48,8 +48,8 @@ public class ParticleRenderer {
 		shader.stop();
 	}
 	
-	protected void render(Map<Texture, List<Particle>> particles, Camera camera) {
-		Matrix4f viewMatrix = Maths.createViewMatrix(camera);
+	protected void render(Map<Texture, List<Particle>> particles, EditorCamera editorCamera) {
+		Matrix4f viewMatrix = Maths.createViewMatrix(editorCamera);
 		prepare();
 		for (Texture texture : particles.keySet()) {
 			bindTexture(texture);

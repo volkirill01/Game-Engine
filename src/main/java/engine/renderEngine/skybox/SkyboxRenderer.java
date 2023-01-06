@@ -1,8 +1,6 @@
 package engine.renderEngine.skybox;
 
-import engine.Settings;
-import engine.entities.Camera;
-import engine.renderEngine.Window;
+import engine.entities.EditorCamera;
 import engine.renderEngine.Loader;
 import engine.renderEngine.models.RawModel;
 import engine.renderEngine.postProcessing.PostProcessing;
@@ -84,10 +82,10 @@ public class SkyboxRenderer {
 
     private float rotation = 0;
     private float SKYBOX_ROTATION_SPEED = 1.0f;
-    public void render(Camera camera) {
+    public void render(EditorCamera editorCamera) {
         shader.start();
 
-        Matrix4f viewMatrix = Maths.createViewMatrix(camera);
+        Matrix4f viewMatrix = Maths.createViewMatrix(editorCamera);
         viewMatrix.m30(0);
         viewMatrix.m31(0);
         viewMatrix.m32(0);
@@ -95,6 +93,7 @@ public class SkyboxRenderer {
         viewMatrix.rotate((float) Math.toRadians(rotation), new Vector3f(0, 1, 0));
         shader.loadUniformMatrix("viewMatrix", viewMatrix);
 
+        shader.loadUniformColor("backgroundColor", PostProcessing.getBackgroundColor());
         shader.loadUniformColor("fogColor", PostProcessing.getFogColor());
         shader.loadUniformFloat("fogDensity", PostProcessing.isUseFog() ? PostProcessing.getFogDensity() : 0);
 

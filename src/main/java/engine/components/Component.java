@@ -113,7 +113,7 @@ public abstract class Component {
                     field.set(this, EditorImGui.field_Text(name, (String) value, ""));
                 } else if (type == Color.class) {
                     Color val = (Color) value;
-                    EditorImGui.filed_Color(name, val);
+                    EditorImGui.field_Color(name, val);
                 }
 
                 if (isPrivate)

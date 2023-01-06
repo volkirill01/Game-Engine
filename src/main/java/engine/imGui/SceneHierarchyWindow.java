@@ -1,12 +1,15 @@
 package engine.imGui;
 
+import engine.TestFieldsWindow;
 import engine.entities.GameObject;
 import engine.components.Light;
+import engine.renderEngine.Loader;
 import engine.renderEngine.Window;
 import engine.renderEngine.components.MeshRenderer;
 import engine.renderEngine.guis.UIImage;
 import engine.renderEngine.particles.ParticleSystem;
 import engine.toolbox.GameObject_Manager;
+import engine.toolbox.MousePicking;
 import engine.toolbox.input.InputManager;
 import imgui.ImGui;
 import imgui.ImVec2;
@@ -120,9 +123,33 @@ public class SceneHierarchyWindow extends EditorImGuiWindow {
         ImGui.setItemAllowOverlap();
         ImGui.popStyleColor(3);
 
-        ImVec2 treeNodePos = new ImVec2(selectablePos.x + 3.0f, selectablePos.y);
-        if (obj.transform.getChildCount() > 0 && obj.transform.parent == null)
-            treeNodePos.x += 14.0f;
+        ImGui.setCursorPos(startX + 3.0f, selectablePos.y + 3.0f);
+        ImGui.pushStyleVar(ImGuiStyleVar.FramePadding, ImGui.getStyle().getFramePaddingX() - 3.0f, ImGui.getStyle().getFramePaddingY() - 5.0f);
+        ImGui.pushStyleColor(ImGuiCol.Button, 0.0f, 0.0f, 0.0f, 0.0f);
+        ImGui.pushStyleColor(ImGuiCol.ButtonActive, 0.0f, 0.0f, 0.0f, 0.0f);
+        ImGui.pushStyleColor(ImGuiCol.Border, 0.0f, 0.0f, 0.0f, 0.0f);
+
+        ImGui.pushID(obj.getUid());
+        int eyeIcon = obj.isVisible() ?
+                Loader.get().loadTexture("engineFiles/images/utils/icon=eye-solid(32x32).png").getTextureID() :
+                Loader.get().loadTexture("engineFiles/images/utils/icon=eye-slash-solid(32x32).png").getTextureID();
+        ImVec4 eyeIconColor = obj.isVisible() ? ImGui.getStyle().getColor(ImGuiCol.Text) : ImGui.getStyle().getColor(ImGuiCol.TextDisabled);
+        if (ImGui.imageButton(eyeIcon, 13.0f, 13.0f, 0, 1, 1, 0, 4, 0, 0, 0, 0, eyeIconColor.x, eyeIconColor.y, eyeIconColor.z, eyeIconColor.w))
+            obj.setVisible(!obj.isVisible());
+        ImGui.sameLine();
+
+        int cursorIcon = obj.isPickable() ?
+                Loader.get().loadTexture("engineFiles/images/utils/icon=arrow-pointer-slash-solid(32x32).png").getTextureID() :
+                Loader.get().loadTexture("engineFiles/images/utils/icon=arrow-pointer-solid(32x32).png").getTextureID();
+        ImVec4 cursorIconColor = !obj.isPickable() ? ImGui.getStyle().getColor(ImGuiCol.Text) : ImGui.getStyle().getColor(ImGuiCol.TextDisabled);
+        if (ImGui.imageButton(cursorIcon, 13.0f, 13.0f, 0, 1, 1, 0, 4, 0, 0, 0, 0, cursorIconColor.x, cursorIconColor.y, cursorIconColor.z, cursorIconColor.w))
+            obj.setPickable(!obj.isPickable());
+        ImGui.popStyleColor(3);
+        ImGui.popStyleVar();
+
+        ImVec2 treeNodePos = new ImVec2(selectablePos.x + 70.0f, selectablePos.y);
+        if (obj.transform.parent != null)
+            treeNodePos.x -= 14.0f;
 
         ImGui.pushStyleColor(ImGuiCol.Header, 0, 0, 0, 0);
         ImGui.pushStyleColor(ImGuiCol.HeaderHovered, 0, 0, 0, 0);
@@ -143,10 +170,9 @@ public class SceneHierarchyWindow extends EditorImGuiWindow {
         else if (obj.hasComponent(UIImage.class))
             treeNodeIcon = "\uEF5D"; // UI icon
 
-        ImGui.pushID(obj.getUid());
-        ImGui.setCursorPos(selectablePos.x + 18.0f, selectablePos.y + 4.5f);
-        if (obj.transform.getChildCount() > 0 && obj.transform.parent == null)
-            ImGui.setCursorPos(ImGui.getCursorPosX() + 15.0f, ImGui.getCursorPosY());
+        ImGui.setCursorPos(selectablePos.x + 85.0f, selectablePos.y + 5.5f);
+        if (obj.transform.parent != null)
+            ImGui.setCursorPosX(ImGui.getCursorPosX() - 12.0f);
         ImGui.text(treeNodeIcon);
 
         ImGui.setCursorPos(treeNodePos.x - 1.0f, treeNodePos.y);
@@ -183,8 +209,6 @@ public class SceneHierarchyWindow extends EditorImGuiWindow {
             if (payloadObj != null) {
                 if (payloadObj.getClass().isAssignableFrom(GameObject.class)) {
                     GameObject playerGameObj = (GameObject)payloadObj;
-//                    System.out.println("OnDragEnd objectName1:'" + playerGameObj.name + "'");
-//                    System.out.println("OnDragEnd objectName2:'" + obj.name + "'");
                     obj.transform.addChild(playerGameObj);
                 }
             }

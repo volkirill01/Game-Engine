@@ -1,19 +1,13 @@
 package engine.renderEngine.particles;
 
-import engine.TestFieldsWindow;
 import engine.assets.Asset;
 import engine.components.Component;
 import engine.imGui.Console;
 import engine.imGui.ConsoleMessage;
 import engine.imGui.EditorImGui;
 import engine.renderEngine.Loader;
-import engine.renderEngine.OBJLoader;
 import engine.renderEngine.Window;
-import engine.renderEngine.components.MeshRenderer;
-import engine.renderEngine.guis.UIImage;
-import engine.renderEngine.models.TexturedModel;
 import engine.renderEngine.particles.particleSystemComponents_PSC.ParticleSystemComponent;
-import engine.renderEngine.textures.Material;
 import engine.renderEngine.textures.Texture;
 import engine.toolbox.Time;
 import imgui.ImGui;
@@ -74,7 +68,9 @@ public class ParticleSystem extends Component {
     public void editorUpdate() {
         updateParticleSystem();
 
-        if (Window.get().getImGuiLayer().getInspectorWindow().getActiveGameObject() == this.gameObject)
+        if (Window.get().getImGuiLayer().getInspectorWindow().getActiveGameObject() == this.gameObject ||
+                Window.get().getImGuiLayer().getInspectorWindow().getActiveGameObject() == this.gameObject.transform.parent ||
+                Window.get().getImGuiLayer().getInspectorWindow().getActiveGameObject() == this.gameObject.transform.mainParent)
             generateParticles();
     }
 
@@ -136,6 +132,16 @@ public class ParticleSystem extends Component {
         int count = (int) Math.floor(particlesToCreate);
         float partialParticle = particlesToCreate % 1;
 
+        if (!Window.get().runtimePlaying) {
+            if (!gameObject.isVisible())
+                return;
+
+            if (gameObject.transform.mainParent != null && !gameObject.transform.mainParent.isVisible())
+                return;
+            if (gameObject.transform.parent != null && !gameObject.transform.parent.isVisible())
+                return;
+        }
+
         for (int i = 0; i < count; i++)
             emitParticle();
 
@@ -154,7 +160,7 @@ public class ParticleSystem extends Component {
 //        velocity.mul(generateValue(averageSpeed, speedError));
 //        float scale = generateValue(averageScale, scaleError);
 //        float lifeLength = generateValue(averageLifeLength, lifeError);
-        Vector3f _position = new Vector3f(gameObject.transform.position);
+        Vector3f _position = new Vector3f(gameObject.transform.localPosition);
         Vector3f _velocity = new Vector3f(velocity);
 
         new Particle(Loader.get().loadTexture(texture.getFilepath()), false, _position, _velocity, gravity.get(0), 1.0f, 0.0f, 1.0f);

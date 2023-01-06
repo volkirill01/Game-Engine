@@ -72,8 +72,8 @@ public class StaticShader extends ShaderProgram {
 
             try {
                 if (i < lights.size() && lights.get(i).isActive()) {
-                    super.loadVector(lightPositionVariables[i].location, lights.get(i).gameObject.transform.position);
-                    super.loadVector(lightRotationVariables[i].location, new Vector3f(lights.get(i).gameObject.transform.rotation).add(new Vector3f(0.001f)));
+                    super.loadVector(lightPositionVariables[i].location, lights.get(i).gameObject.transform.localPosition);
+                    super.loadVector(lightRotationVariables[i].location, new Vector3f(lights.get(i).gameObject.transform.localRotation).add(new Vector3f(0.001f)));
                     super.loadColor(lightColorVariables[i].location, lights.get(i).getColor());
                     super.loadFloat(lightIntensityVariables[i].location, lights.get(i).getIntensity());
                     super.loadInt(lightTypeVariables[i].location, lights.get(i).getLightTypeInt());

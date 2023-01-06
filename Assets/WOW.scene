@@ -1,0 +1,132 @@
+[
+  {
+    "name": "Sun",
+    "tags": [],
+    "components": [
+      {
+        "type": "engine.components.Transform",
+        "properties": {
+          "position": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "localPosition": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "rotation": {
+            "x": 1.3,
+            "y": 3.9,
+            "z": -11.7
+          },
+          "localRotation": {
+            "x": 1.3,
+            "y": 3.9,
+            "z": -11.7
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          },
+          "localScale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          },
+          "childs": [],
+          "isActive": true
+        }
+      },
+      {
+        "type": "engine.components.Light",
+        "properties": {
+          "lightType": "Directional",
+          "color": {
+            "r": 255.0,
+            "g": 255.0,
+            "b": 255.0,
+            "a": 255.0
+          },
+          "intensity": 1.68,
+          "range": 1.0,
+          "isActive": true
+        }
+      }
+    ],
+    "doSerialization": true
+  },
+  {
+    "name": "model.obj",
+    "tags": [],
+    "components": [
+      {
+        "type": "engine.components.Transform",
+        "properties": {
+          "position": {
+            "x": -0.308,
+            "y": -0.6090001,
+            "z": -0.72800004
+          },
+          "localPosition": {
+            "x": -0.308,
+            "y": -0.6090001,
+            "z": -0.72800004
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 200.40005,
+            "z": 0.0
+          },
+          "localRotation": {
+            "x": 0.0,
+            "y": 200.40005,
+            "z": 0.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          },
+          "localScale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          },
+          "childs": [],
+          "isActive": true
+        }
+      },
+      {
+        "type": "engine.renderEngine.components.MeshRenderer",
+        "properties": {
+          "model": {
+            "mesh": {
+              "filepath": "Assets\\Dranade\\model.obj",
+              "metaFilepath": "Assets\\Dranade\\model.obj"
+            },
+            "materials": [
+              {
+                "filepath": "Assets\\Dranade\\materials\\dranade1.material"
+              },
+              {
+                "filepath": "Assets\\Dranade\\materials\\dranade2.material"
+              },
+              {
+                "filepath": "Assets\\Dranade\\materials\\dranade3.material"
+              },
+              {
+                "filepath": "Assets\\Dranade\\materials\\dranade4.material"
+              }
+            ]
+          },
+          "textureIndex": 1,
+          "isActive": true
+        }
+      }
+    ],
+    "doSerialization": true
+  }
+]

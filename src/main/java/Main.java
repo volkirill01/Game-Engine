@@ -1,5 +1,4 @@
-import engine.Settings;
-import engine.entities.Camera;
+import engine.entities.EditorCamera;
 import engine.entities.GameObject;
 import engine.gizmo.GizmoSystem;
 import engine.renderEngine.Window;
@@ -13,8 +12,9 @@ import engine.renderEngine.postProcessing.PostProcessing;
 import engine.renderEngine.renderer.MasterRenderer;
 import engine.terrain.Terrain;
 import engine.toolbox.GameObject_Manager;
-import engine.toolbox.Time;
+import engine.toolbox.MousePicking;
 import engine.toolbox.input.InputManager;
+import engine.toolbox.input.KeyCode;
 import engine.toolbox.input.KeyListener;
 import engine.toolbox.input.MouseListener;
 
@@ -32,10 +32,10 @@ public class Main {
         Window.createDisplay();
         TextMaster.init();
 
-        Camera camera = new Camera();
-        Window.get().getScene().setCamera(camera);
+        EditorCamera editorCamera = new EditorCamera();
+        Window.get().getScene().setCamera(editorCamera);
 
-        MasterRenderer renderer = new MasterRenderer(camera);
+        MasterRenderer renderer = new MasterRenderer(editorCamera);
         ParticleMaster.init(renderer.getProjectionMatrix());
 
         FontType font = new FontType(Loader.get().loadTexture("Assets/fonts/candara.png", false).getTextureID(), new File("Assets/fonts/candara.fnt"));
@@ -98,6 +98,8 @@ public class Main {
         GizmoSystem gizmoSystem = new GizmoSystem();
         Window.get().getImGuiLayer().getGameViewWindow().setGizmoSystem(gizmoSystem);
 
+        MousePicking mousePicking = new MousePicking();
+
         while (!Window.isClosed()) {
             // Poll events
             glfwPollEvents();
@@ -120,23 +122,19 @@ public class Main {
 
             // Put update logic before rendering
 //            player.move(terrains.get(0));
-            camera.move();
+            editorCamera.move();
 //            picker.update();
 
             // Render pass 1. Render to picking texture
-//            glDisable(GL_BLEND);
-//            Window.get().pickingTexture.enableWriting();
-//
-//            glViewport(0, 0, (int) Window.getWidth(), (int) Window.getHeight());
-//            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-//
-//            renderer.renderScene(Window.get().getScene().getGameObjects(), normalMapEntities, terrains, camera);
-////            Window.get().getScene().render();
-//
-//            Window.get().pickingTexture.disableWriting();
-//            glEnable(GL_BLEND);
+            Window.get().pickingTexture.enableWriting();
+            glViewport(0, 0, (int) Window.getWidth(), (int) Window.getHeight());
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            renderer.renderScene(Window.get().getScene().getGameObjects(), normalMapEntities, terrains, editorCamera, true);
+            Window.get().pickingTexture.disableWriting();
 
-            ParticleMaster.update(camera);
+            mousePicking.update();
+
+            ParticleMaster.update(editorCamera);
 
 //            renderer.renderShadowMap(Window.get().getScene().getGameObjects());
 
@@ -163,8 +161,8 @@ public class Main {
 
             multisampleSceneFbo.bindFrameBuffer(); // all inside this affected by postProcessing
 
-            renderer.renderScene(Window.get().getScene().getGameObjects(), normalMapEntities, terrains, camera);
-            ParticleMaster.renderParticles(camera);
+            renderer.renderScene(Window.get().getScene().getGameObjects(), normalMapEntities, terrains, editorCamera, false);
+            ParticleMaster.renderParticles(editorCamera);
 
 //            cameraOutputGui.setTexture(PostProcessing.getFinalImage());
 
@@ -193,7 +191,12 @@ public class Main {
 //            Window.setScreenImage(Window.get().getImGuiLayer().getInspectorWindow().getPickingTexture().getPickingTextureId()); // Picking Texture Test
 //            Window.setScreenImage(renderer.getShadowMapTexture()); // Shadow Map Test
 
-            Window.get().getImGuiLayer().update(Window.get().getScene());
+            if (false) { // Render only scene
+                outputFbo.resolveToScreen();
+            } else {
+//                Window.setScreenImage(Window.get().pickingTexture.getPickingTextureId());
+                Window.get().getImGuiLayer().update();
+            }
 
             Window.get().updateDisplay();
 

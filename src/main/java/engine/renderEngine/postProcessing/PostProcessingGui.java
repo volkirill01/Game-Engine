@@ -1,7 +1,5 @@
 package engine.renderEngine.postProcessing;
 
-import engine.TestFieldsWindow;
-import engine.components.Transform;
 import engine.imGui.EditorImGui;
 import engine.imGui.EditorImGuiWindow;
 import engine.renderEngine.Loader;
@@ -10,7 +8,6 @@ import imgui.ImVec2;
 import imgui.ImVec4;
 import imgui.flag.ImGuiCol;
 import imgui.flag.ImGuiStyleVar;
-import imgui.flag.ImGuiTreeNodeFlags;
 
 import java.util.List;
 
@@ -19,8 +16,10 @@ public class PostProcessingGui extends EditorImGuiWindow {
     public void imgui() {
         ImGui.begin(" \uEC5F Post Processing ");
 
+        EditorImGui.field_Color("Background Color", PostProcessing.getBackgroundColor());
+
         EditorImGui.header("Ambient");
-        EditorImGui.field_Color_WithAlpha("Ambient Light Color", PostProcessing.getAmbientLightColor());
+        EditorImGui.field_Color("Ambient Light Color", PostProcessing.getAmbientLightColor());
         PostProcessing.setAmbientLightIntensity(EditorImGui.field_Float("Ambient Light Intensity", PostProcessing.getAmbientLightIntensity(), 0.02f, 0));
 
         ImGui.separator();
@@ -30,7 +29,7 @@ public class PostProcessingGui extends EditorImGuiWindow {
         if (!PostProcessing.isUseFog())
             EditorImGui.pushDisabled();
 
-        EditorImGui.filed_Color("Fog Color", PostProcessing.getFogColor());
+        EditorImGui.field_Color("Fog Color", PostProcessing.getFogColor());
         PostProcessing.setFogDensity(EditorImGui.field_Float("Fog Density", PostProcessing.getFogDensity() * 10, 0.02f, 0, 1) / 10);
         PostProcessing.setFogSmoothness(EditorImGui.field_Float("Fog Smoothness", PostProcessing.getFogSmoothness() / 10, 0.02f, 0.001f) * 10);
 

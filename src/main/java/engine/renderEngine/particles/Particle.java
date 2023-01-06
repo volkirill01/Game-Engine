@@ -1,8 +1,7 @@
 package engine.renderEngine.particles;
 
 import engine.Settings;
-import engine.entities.Camera;
-import engine.renderEngine.Window;
+import engine.entities.EditorCamera;
 import engine.renderEngine.textures.Texture;
 import engine.toolbox.Time;
 import org.joml.Vector2f;
@@ -62,14 +61,14 @@ public class Particle {
 
     public float getDistanceFromCamera() { return this.distanceFromCamera; }
 
-    protected boolean update(Camera camera) {
+    protected boolean update(EditorCamera editorCamera) {
         if (this.velocity != null) {
             velocity.y += Settings.GRAVITY * (gravityEffect * 0.1f) * Time.deltaTime();
             change.set(velocity);
         }
         change.mul(Time.deltaTime());
         position.add(change);
-        distanceFromCamera = new Vector3f(camera.getPosition()).sub(position).lengthSquared();
+        distanceFromCamera = new Vector3f(editorCamera.getPosition()).sub(position).lengthSquared();
         updateTextureCoordsInfo();
         elapsedTime += Time.deltaTime();
         return elapsedTime < lifeLength;

@@ -7,7 +7,7 @@ public class SceneManager {
     private static String currentScene;
 
     public static void loadScene(String scenePath) {
-        Window.get().changeScene(new LevelEditorSceneInitializer(scenePath));
+        Window.get().changeScene(new EditorSceneInitializer(scenePath));
         currentScene = scenePath;
     }
 

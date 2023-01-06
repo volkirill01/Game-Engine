@@ -32,7 +32,7 @@ public class TranslateGizmo extends Gizmo {
 
         if (KeyListener.isKeyDoubleClick(InputManager.getShortcut("translate").firstKeyCode) && !KeyListener.isAnyKeyPressed(InputManager.getShortcut("translate").firstKeyCode)) {
             this.isTranslating = true;
-            this.startTranslation = new Vector3f(Window.get().getImGuiLayer().getInspectorWindow().getActiveGameObject().transform.position);
+            this.startTranslation = new Vector3f(Window.get().getImGuiLayer().getInspectorWindow().getActiveGameObject().transform.localPosition);
             this.translationDirection.x = 1.0f;
             this.translationDirection.y = 1.0f;
             this.translationDirection.z = 1.0f;
@@ -43,8 +43,6 @@ public class TranslateGizmo extends Gizmo {
         if (this.isTranslating) {
             Window.get().getImGuiLayer().getGameViewWindow().setWantCaptureMouse(false);
             Window.get().setLockControl(true);
-
-            Window.get().getImGuiLayer().getInspectorWindow().setLocked(true);
 
             if (KeyListener.isKeyDown(KeyCode.Left_Shift) || KeyListener.isKeyDown(KeyCode.Right_Shift))
                 this.currentTranslationSpeed = this.slowTranslateSpeed;
@@ -94,12 +92,11 @@ public class TranslateGizmo extends Gizmo {
                 ImGui.isMouseClicked(ImGuiMouseButton.Right) ||
                 ImGui.isMouseClicked(ImGuiMouseButton.Left)) {
             this.isTranslating = false;
-            Window.get().getImGuiLayer().getInspectorWindow().setLocked(false);
             Window.get().setLockControl(false);
         }
 
         return this.isTranslating;
     }
 
-    private void resetTranslation() { Window.get().getImGuiLayer().getInspectorWindow().getActiveGameObject().transform.position = new Vector3f(this.startTranslation); }
+    private void resetTranslation() { Window.get().getImGuiLayer().getInspectorWindow().getActiveGameObject().transform.localPosition = new Vector3f(this.startTranslation); }
 }

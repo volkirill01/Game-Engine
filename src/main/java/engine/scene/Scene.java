@@ -5,18 +5,12 @@ import com.google.gson.GsonBuilder;
 import engine.components.Component;
 import engine.components.ComponentDeserializer;
 import engine.components.Transform;
-import engine.entities.Camera;
+import engine.entities.EditorCamera;
 import engine.entities.GameObject;
 import engine.entities.GameObjectDeserializer;
-import engine.renderEngine.Loader;
-import engine.renderEngine.OBJLoader;
 import engine.renderEngine.Window;
-import engine.renderEngine.components.MeshRenderer;
-import engine.renderEngine.models.TexturedModel;
 import engine.renderEngine.particles.particleSystemComponents_PSC.PSComponentDeserializer;
 import engine.renderEngine.particles.particleSystemComponents_PSC.ParticleSystemComponent;
-import engine.renderEngine.textures.Material;
-import org.joml.Vector3f;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -31,7 +25,7 @@ public class Scene {
     private String scenePath;
     public String sceneName;
 //    private Renderer renderer;
-    private Camera camera;
+    private EditorCamera editorCamera;
     private boolean isRunning;
     private List<GameObject> gameObjects;
     private List<GameObject> pendingObjects;
@@ -52,10 +46,9 @@ public class Scene {
 
 //    public Physics2D getPhysics() { return this.physics2D; }
 
-    public void setCamera(Camera camera) { this.camera = camera; }
+    public void setCamera(EditorCamera editorCamera) { this.editorCamera = editorCamera; }
 
     public void init() {
-        this.sceneInitializer.loadResources(this);
         this.sceneInitializer.init(this);
     }
 
@@ -174,9 +167,7 @@ public class Scene {
         pendingObjects.clear();
     }
 
-    public Camera camera() { return this.camera; }
-
-    public void imgui() { this.sceneInitializer.imgui(); }
+    public EditorCamera camera() { return this.editorCamera; }
 
     public GameObject createGameObject(String name) {
         GameObject go = new GameObject(name);

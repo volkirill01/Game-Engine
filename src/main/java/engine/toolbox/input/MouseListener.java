@@ -97,9 +97,9 @@ public class MouseListener {
         get().scrollY = yOffset;
     }
 
-    public static float getX() { return (float)get().xPos; }
+    public static float getX() { return (float) get().xPos; }
 
-    public static float getY() { return (float)get().yPos; }
+    public static float getY() { return (float) get().yPos; }
 
     public static float getDx() { return (float) (get().lastX - get().xPos); }
 
@@ -135,4 +135,16 @@ public class MouseListener {
     public static void setGameViewportPos(Vector2f gameViewportPos) { get().gameViewportPos.set(gameViewportPos); }
 
     public static void setGameViewportSize(Vector2f gameViewportSize) { get().gameViewportSize.set(gameViewportSize); }
+
+    public static Vector2f getWorld() {
+        return new Vector2f((float) get().worldX, (float) get().worldY);
+    }
+
+    public static Vector2f worldToScreen(Vector2f worldPos) {
+        return worldPos;
+    }
+
+    public static Vector2f screenToWorld(Vector2f screenPos) {
+        return screenPos;
+    }
 }

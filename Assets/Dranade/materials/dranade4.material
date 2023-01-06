@@ -1,0 +1,14 @@
+renderCullSide = Front
+metallicIntensity = 0.0
+color = 255.0, 255.0, 255.0, 255.0
+tiling = 1.0, 1.0
+useFakeLighting = false
+emissionIntensity = 1.0
+specularIntensity = 0.633
+shineDumper = 39.96
+metallicMap = engineFiles/images/utils/whitePixel.png
+emissionMap = Assets\Dranade\textures\paintmesh_body_Emissive.png
+alphaClip = 1.0
+specularMap = Assets\Dranade\textures\paintmesh_body_Specular.png
+albedo = Assets\Dranade\textures\paintmesh_body_Diffuse.png
+useAlbedoEmission = false

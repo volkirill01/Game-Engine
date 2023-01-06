@@ -16,8 +16,8 @@ public class BloomLayer extends PostProcessLayer {
 
     boolean showBloomMask = false;
 
-    private int startTexture;
-    int previewLayer = 8;
+//    private int startTexture;
+//    int previewLayer = 8;
 
     List<DownsampleShader> downsampleShaders = new ArrayList<>();
     List<UpsampleShader> upsampleShaders = new ArrayList<>();
@@ -80,7 +80,7 @@ public class BloomLayer extends PostProcessLayer {
 
     @Override
     public void render(int texture) {
-        this.startTexture = texture;
+//        this.startTexture = texture;
 
         this.shader.start();
         glActiveTexture(GL_TEXTURE0);
@@ -163,24 +163,24 @@ public class BloomLayer extends PostProcessLayer {
         if (showBloomMask)
             return this.renderer.getOutputTexture();  // Prefilter
 
-        return switch (previewLayer) {
-            case 0 -> this.startTexture;                                    // Start texture
-            case 1 -> this.renderer.getOutputTexture();                     // Prefilter
+//        return switch (previewLayer) {
+//            case 0 -> this.startTexture;                                    // Start texture
+//            case 1 -> this.renderer.getOutputTexture();                     // Prefilter
+//
+//            case 2 -> this.downsampleRenderers.get(0).getOutputTexture();   // Blur
+//            case 3 -> this.downsampleRenderers.get(1).getOutputTexture();   // Blur
+//            case 4 -> this.downsampleRenderers.get(2).getOutputTexture();   // Blur
+////            case 5 -> this.downsampleRenderers.get(3).getOutputTexture();   // Blur
+//            case 5 -> this.upsampleRenderers.get(0).getOutputTexture();     // Blur
+//            case 6 -> this.upsampleRenderers.get(1).getOutputTexture();     // Blur
+//            case 7 -> this.upsampleRenderers.get(2).getOutputTexture();     // Blur
+////            case 9 -> this.upsampleRenderers.get(3).getOutputTexture();    // Blur
+//
+//            case 8 -> this.compositingRenderer.getOutputTexture();         // Compositing
+//            default -> throw new IllegalStateException("Unexpected value: " + previewLayer);
+//        };
 
-            case 2 -> this.downsampleRenderers.get(0).getOutputTexture();   // Blur
-            case 3 -> this.downsampleRenderers.get(1).getOutputTexture();   // Blur
-            case 4 -> this.downsampleRenderers.get(2).getOutputTexture();   // Blur
-//            case 5 -> this.downsampleRenderers.get(3).getOutputTexture();   // Blur
-            case 5 -> this.upsampleRenderers.get(0).getOutputTexture();     // Blur
-            case 6 -> this.upsampleRenderers.get(1).getOutputTexture();     // Blur
-            case 7 -> this.upsampleRenderers.get(2).getOutputTexture();     // Blur
-//            case 9 -> this.upsampleRenderers.get(3).getOutputTexture();    // Blur
-
-            case 8 -> this.compositingRenderer.getOutputTexture();         // Compositing
-            default -> throw new IllegalStateException("Unexpected value: " + previewLayer);
-        };
-
-//        return this.compositingRenderer.getOutputTexture();
+        return this.compositingRenderer.getOutputTexture();
     }
 
     @Override
@@ -212,7 +212,7 @@ public class BloomLayer extends PostProcessLayer {
         public void imgui(boolean isActive, String additionToId) {
             this.showBloomMask = EditorImGui.field_Boolean("Show Bloom Mask", this.showBloomMask);
 
-            this.previewLayer = EditorImGui.field_Int_WithButtons("Preview Layer Index", this.previewLayer, 1, 0, 2 + downsampleShaders.size() + upsampleShaders.size());
+//            this.previewLayer = EditorImGui.field_Int_WithButtons("Preview Layer Index", this.previewLayer, 1, 0, 2 + downsampleShaders.size() + upsampleShaders.size());
 
             this.shader.imgui(isActive, additionToId);
 

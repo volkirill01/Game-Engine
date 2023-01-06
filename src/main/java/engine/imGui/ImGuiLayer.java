@@ -324,12 +324,11 @@ public class ImGuiLayer {
         ImGui.pushStyleVar(ImGuiStyleVar.IndentSpacing, 12);
     }
 
-    public void update(Scene currentScene) {
+    public void update() {
         startFrame();
 
         if (this.windowOnFullscreen == null) {
             setupDockspace();
-            currentScene.imgui();
 //            TestFieldsWindow.imgui();
 //            ImGui.showDemoWindow();
             sceneViewWindow.imgui();

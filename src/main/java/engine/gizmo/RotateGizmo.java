@@ -32,7 +32,7 @@ public class RotateGizmo extends Gizmo {
 
         if (KeyListener.isKeyDoubleClick(InputManager.getShortcut("rotate").firstKeyCode) && !KeyListener.isAnyKeyPressed(InputManager.getShortcut("rotate").firstKeyCode)) {
             this.isRotating = true;
-            this.startRotation = new Vector3f(Window.get().getImGuiLayer().getInspectorWindow().getActiveGameObject().transform.rotation);
+            this.startRotation = new Vector3f(Window.get().getImGuiLayer().getInspectorWindow().getActiveGameObject().transform.localRotation);
             this.rotationDirection.x = 1.0f;
             this.rotationDirection.y = 1.0f;
             this.rotationDirection.z = 1.0f;
@@ -43,8 +43,6 @@ public class RotateGizmo extends Gizmo {
         if (this.isRotating) {
             Window.get().getImGuiLayer().getGameViewWindow().setWantCaptureMouse(false);
             Window.get().setLockControl(true);
-
-            Window.get().getImGuiLayer().getInspectorWindow().setLocked(true);
 
             if (KeyListener.isKeyDown(KeyCode.Left_Shift) || KeyListener.isKeyDown(KeyCode.Right_Shift))
                 this.currentRotatingSpeed = this.slowRotatingSpeed;
@@ -94,12 +92,11 @@ public class RotateGizmo extends Gizmo {
                 ImGui.isMouseClicked(ImGuiMouseButton.Right) ||
                 ImGui.isMouseClicked(ImGuiMouseButton.Left)) {
             this.isRotating = false;
-            Window.get().getImGuiLayer().getInspectorWindow().setLocked(false);
             Window.get().setLockControl(false);
         }
 
         return this.isRotating;
     }
 
-    private void resetRotation() { Window.get().getImGuiLayer().getInspectorWindow().getActiveGameObject().transform.rotation = new Vector3f(this.startRotation); }
+    private void resetRotation() { Window.get().getImGuiLayer().getInspectorWindow().getActiveGameObject().transform.localRotation = new Vector3f(this.startRotation); }
 }

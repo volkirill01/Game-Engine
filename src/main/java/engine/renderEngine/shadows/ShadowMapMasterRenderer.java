@@ -1,6 +1,6 @@
 package engine.renderEngine.shadows;
 
-import engine.entities.Camera;
+import engine.entities.EditorCamera;
 import engine.entities.GameObject;
 import engine.components.Light;
 import engine.renderEngine.models.TexturedModel;
@@ -46,12 +46,12 @@ public class ShadowMapMasterRenderer {
 	 * {@link Fbo} to which the scene is rendered. The size of the
 	 * shadow map is determined here.
 	 * 
-	 * @param camera
+	 * @param editorCamera
 	 *            - the camera being used in the scene.
 	 */
-	public ShadowMapMasterRenderer(Camera camera) {
+	public ShadowMapMasterRenderer(EditorCamera editorCamera) {
 		shader = new ShadowShader();
-		shadowBox = new ShadowBox(lightViewMatrix, camera);
+		shadowBox = new ShadowBox(lightViewMatrix, editorCamera);
 //		shadowFbo = new ShadowFrameBuffer(SHADOW_MAP_SIZE, SHADOW_MAP_SIZE);
 		fbo = new Fbo(SHADOW_MAP_SIZE, SHADOW_MAP_SIZE, Fbo.DEPTH_TEXTURE);
 		entityRenderer = new ShadowMapEntityRenderer(shader, projectionViewMatrix);
@@ -74,8 +74,8 @@ public class ShadowMapMasterRenderer {
 	 */
 	public void render(Map<TexturedModel, List<GameObject>> entities, Light sun) {
 		shadowBox.update();
-		Vector3f sunPosition = sun.gameObject.transform.position;
-		Vector3f lightDirection = sun.gameObject.transform.rotation;
+		Vector3f sunPosition = sun.gameObject.transform.localPosition;
+		Vector3f lightDirection = sun.gameObject.transform.localRotation;
 //		Vector3f lightDirection = new Vector3f(-sunPosition.x, -sunPosition.y, -sunPosition.z);
 		prepare(lightDirection, shadowBox);
 		entityRenderer.render(entities);
