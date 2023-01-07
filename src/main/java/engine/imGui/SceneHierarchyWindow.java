@@ -1,6 +1,5 @@
 package engine.imGui;
 
-import engine.TestFieldsWindow;
 import engine.entities.GameObject;
 import engine.components.Light;
 import engine.renderEngine.Loader;
@@ -9,7 +8,6 @@ import engine.renderEngine.components.MeshRenderer;
 import engine.renderEngine.guis.UIImage;
 import engine.renderEngine.particles.ParticleSystem;
 import engine.toolbox.GameObject_Manager;
-import engine.toolbox.MousePicking;
 import engine.toolbox.input.InputManager;
 import imgui.ImGui;
 import imgui.ImVec2;

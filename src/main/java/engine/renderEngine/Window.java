@@ -26,7 +26,7 @@ public class Window implements Observer {
     private static Window window = null;
     private long glfwWindow;
 
-    private String originalTitle = "New Game Engine (0.4)";
+    private String originalTitle = "Tethys";
 
     private static int WIDTH;
     private static int HEIGHT;
@@ -126,7 +126,7 @@ public class Window implements Observer {
         imGuiLayer.initImGui();
 
         sceneManager = new SceneManager();
-        SceneManager.loadScene("Assets/testScene.scene");
+        SceneManager.loadScene("Assets/defaultScene.scene", false);
     }
 
     public Vector4f getWorkArea() {

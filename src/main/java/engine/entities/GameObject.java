@@ -2,33 +2,28 @@ package engine.entities;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import engine.TestFieldsWindow;
 import engine.components.Component;
 import engine.components.ComponentDeserializer;
 import engine.components.Transform;
 import engine.imGui.Console;
 import engine.imGui.ConsoleMessage;
 import engine.imGui.EditorImGui;
-import engine.imGui.InspectorWindow;
 import engine.renderEngine.Loader;
 import engine.renderEngine.OBJLoader;
 import engine.renderEngine.Window;
 import engine.renderEngine.components.MeshRenderer;
 import engine.renderEngine.components.ObjectRenderer;
-import engine.renderEngine.guis.UIRenderer;
 import engine.renderEngine.guis.UIImage;
 import engine.renderEngine.models.TexturedModel;
 import engine.renderEngine.particles.particleSystemComponents_PSC.PSComponentDeserializer;
 import engine.renderEngine.particles.particleSystemComponents_PSC.ParticleSystemComponent;
 import engine.renderEngine.textures.Material;
-import engine.toolbox.MousePicking;
-import engine.toolbox.customVariables.Color;
+import engine.toolbox.Mouse_EditorActions;
 import engine.toolbox.customVariables.GameObjectTag;
 import imgui.ImGui;
 import imgui.ImVec2;
 import imgui.ImVec4;
 import imgui.flag.*;
-import imgui.type.ImString;
 import org.joml.Vector3f;
 
 import java.util.ArrayList;
@@ -379,10 +374,10 @@ public class GameObject {
 
     public void setPickable(boolean pickable) {
         if (pickable)
-            addTag(MousePicking.nonPickableTag);
+            addTag(Mouse_EditorActions.nonPickableTag);
         else
-            removeTag(MousePicking.nonPickableTag);
+            removeTag(Mouse_EditorActions.nonPickableTag);
     }
 
-    public boolean isPickable() { return hasTag(MousePicking.nonPickableTag); }
+    public boolean isPickable() { return hasTag(Mouse_EditorActions.nonPickableTag); }
 }

@@ -3,7 +3,6 @@ import engine.entities.GameObject;
 import engine.gizmo.GizmoSystem;
 import engine.renderEngine.Window;
 import engine.renderEngine.Loader;
-import engine.renderEngine.font.fontMeshCreator.FontType;
 import engine.renderEngine.font.fontRendering.TextMaster;
 import engine.renderEngine.guis.UIRenderer;
 import engine.renderEngine.particles.*;
@@ -12,13 +11,12 @@ import engine.renderEngine.postProcessing.PostProcessing;
 import engine.renderEngine.renderer.MasterRenderer;
 import engine.terrain.Terrain;
 import engine.toolbox.GameObject_Manager;
-import engine.toolbox.MousePicking;
+import engine.toolbox.Keyboard_EditorActions;
+import engine.toolbox.Mouse_EditorActions;
 import engine.toolbox.input.InputManager;
-import engine.toolbox.input.KeyCode;
 import engine.toolbox.input.KeyListener;
 import engine.toolbox.input.MouseListener;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,7 +36,7 @@ public class Main {
         MasterRenderer renderer = new MasterRenderer(editorCamera);
         ParticleMaster.init(renderer.getProjectionMatrix());
 
-        FontType font = new FontType(Loader.get().loadTexture("Assets/fonts/candara.png", false).getTextureID(), new File("Assets/fonts/candara.fnt"));
+//        FontType font = new FontType(Loader.get().loadTexture("Assets/fonts/candara.png", false).getTextureID(), new File("Assets/fonts/candara.fnt"));
 //        GUIText text = new GUIText("Text", 5, font, new Vector2f(0.6f, 0.5f), 0.4f, true); // maxLineLength is horizontal size of text rect (1 - all screen width, 0.5 half of the screen)
 //        text.setFontParams(new Color(20, 20, 20), 7, 0.5f, 0.1f);
 //        text.setDropShadow(new Color(0, 0, 0, 60), new Vector2f(-0.001f, -0.001f), 0.04f, 0.2f);
@@ -98,32 +96,16 @@ public class Main {
         GizmoSystem gizmoSystem = new GizmoSystem();
         Window.get().getImGuiLayer().getGameViewWindow().setGizmoSystem(gizmoSystem);
 
-        MousePicking mousePicking = new MousePicking();
+        Keyboard_EditorActions keyboardEditorActions = new Keyboard_EditorActions();
+        Mouse_EditorActions mouseEditorActions = new Mouse_EditorActions();
 
         while (!Window.isClosed()) {
-            // Poll events
             glfwPollEvents();
-
-            if (Window.get().getImGuiLayer().getInspectorWindow().getActiveGameObject() != null) {
-                if (KeyListener.isKeyDown(InputManager.getShortcut("delete").firstKeyCode))
-                    GameObject_Manager.deleteGameObject(Window.get().getImGuiLayer().getInspectorWindow().getActiveGameObject());
-
-                if (KeyListener.isKeyDown(InputManager.getShortcut("duplicate").firstKeyCode) && KeyListener.isKeyClick(InputManager.getShortcut("duplicate").secondKeyCode))
-                    GameObject_Manager.duplicateGameObject(Window.get().getImGuiLayer().getInspectorWindow().getActiveGameObject());
-
-                if (KeyListener.isKeyDown(InputManager.getShortcut("copy").firstKeyCode) && KeyListener.isKeyClick(InputManager.getShortcut("copy").secondKeyCode))
-                    GameObject_Manager.copyGameObject(Window.get().getImGuiLayer().getInspectorWindow().getActiveGameObject());
-
-                if (KeyListener.isKeyDown(InputManager.getShortcut("paste").firstKeyCode) && KeyListener.isKeyClick(InputManager.getShortcut("paste").secondKeyCode))
-                    GameObject_Manager.pasteGameObject();
-            }
 
             gizmoSystem.update();
 
             // Put update logic before rendering
-//            player.move(terrains.get(0));
             editorCamera.move();
-//            picker.update();
 
             // Render pass 1. Render to picking texture
             Window.get().pickingTexture.enableWriting();
@@ -132,7 +114,8 @@ public class Main {
             renderer.renderScene(Window.get().getScene().getGameObjects(), normalMapEntities, terrains, editorCamera, true);
             Window.get().pickingTexture.disableWriting();
 
-            mousePicking.update();
+            keyboardEditorActions.update();
+            mouseEditorActions.update();
 
             ParticleMaster.update(editorCamera);
 

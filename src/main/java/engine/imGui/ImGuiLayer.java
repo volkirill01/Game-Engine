@@ -329,8 +329,8 @@ public class ImGuiLayer {
 
         if (this.windowOnFullscreen == null) {
             setupDockspace();
-//            TestFieldsWindow.imgui();
-//            ImGui.showDemoWindow();
+            TestFieldsWindow.imgui(); // TODO Comment this
+            ImGui.showDemoWindow();
             sceneViewWindow.imgui();
             console.imgui();
     //        scriptGraphWindow.imgui();
@@ -509,11 +509,11 @@ public class ImGuiLayer {
         ImGui.pushStyleVar(ImGuiStyleVar.WindowPadding, ImGui.getStyle().getWindowPaddingX(), ImGui.getStyle().getWindowPaddingY() - 1.0f);
         ImGui.pushStyleVar(ImGuiStyleVar.WindowRounding, 10.0f);
         ImVec4 color = ConsoleMessage.getMessageColor(currentModalPopupType);
-        ImGui.pushStyleColor(ImGuiCol.WindowBg, Math.abs(color.x / 255.0f / 2.5f), Math.abs(color.y / 255.0f / 2.5f), Math.abs(color.z / 255.0f / 2.5f), color.w / 255.0f);
+        ImGui.pushStyleColor(ImGuiCol.WindowBg, color.x / 255.0f - 0.5f, color.y / 255.0f - 0.5f, color.z / 255.0f - 0.5f, color.w / 255.0f - 0.4f);
         ImGui.begin(currentModalPopupText, ImGuiWindowFlags.NoDocking | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoNav | ImGuiWindowFlags.NoNavFocus | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoScrollWithMouse | ImGuiWindowFlags.NoDecoration | ImGuiWindowFlags.NoFocusOnAppearing);
 
         ImGui.pushFont(modalPopupFont);
-        ImGui.pushStyleColor(ImGuiCol.Text, color.x / 255 ,color.y / 255, color.z / 255, color.w / 255);
+        ImGui.pushStyleColor(ImGuiCol.Text, color.x / 255.0f ,color.y / 255.0f, color.z / 255.0f, color.w / 255.0f);
         EditorImGui.horizontalCenteredText(currentModalPopupText);
         ImGui.popStyleColor();
 

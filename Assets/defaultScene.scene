@@ -1,0 +1,779 @@
+[
+  {
+    "name": "Sun",
+    "tags": [],
+    "components": [
+      {
+        "type": "engine.components.Transform",
+        "properties": {
+          "position": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "localPosition": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "rotation": {
+            "x": -2.5,
+            "y": 3.0,
+            "z": -2.0
+          },
+          "localRotation": {
+            "x": -2.5,
+            "y": 3.0,
+            "z": -2.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          },
+          "localScale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          },
+          "childs": [],
+          "isActive": true
+        }
+      },
+      {
+        "type": "engine.components.Light",
+        "properties": {
+          "lightType": "Directional",
+          "color": {
+            "r": 9.375578,
+            "g": 29.597992,
+            "b": 59.63026,
+            "a": 255.0
+          },
+          "intensity": 1.0,
+          "range": 1.0,
+          "isActive": true
+        }
+      }
+    ],
+    "doSerialization": true,
+    "isVisible": true
+  },
+  {
+    "name": "Test ParticleSystem",
+    "tags": [],
+    "components": [
+      {
+        "type": "engine.components.Transform",
+        "properties": {
+          "position": {
+            "x": -2.6,
+            "y": 0.3,
+            "z": 0.0
+          },
+          "localPosition": {
+            "x": -2.6,
+            "y": 0.3,
+            "z": 0.0
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "localRotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          },
+          "localScale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          },
+          "childs": [],
+          "isActive": true
+        }
+      },
+      {
+        "type": "engine.renderEngine.particles.ParticleSystem",
+        "properties": {
+          "texture": {
+            "filepath": "Assets/fireParticles.png",
+            "metaFilepath": "Assets/fireParticles.png"
+          },
+          "particlesPerSecond": 20,
+          "components": [
+            {
+              "type": "engine.renderEngine.particles.particleSystemComponents_PSC.PSC_RandomVelocity",
+              "properties": {
+                "speed": 1.0
+              }
+            },
+            {
+              "type": "engine.renderEngine.particles.particleSystemComponents_PSC.PSC_GravityModifier",
+              "properties": {
+                "gravity": 0.5
+              }
+            }
+          ],
+          "isActive": true
+        }
+      }
+    ],
+    "doSerialization": true,
+    "isVisible": true
+  },
+  {
+    "name": "Sphere",
+    "tags": [],
+    "components": [
+      {
+        "type": "engine.components.Transform",
+        "properties": {
+          "position": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "localPosition": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "localRotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          },
+          "localScale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          },
+          "childs": [],
+          "isActive": true
+        }
+      },
+      {
+        "type": "engine.renderEngine.components.MeshRenderer",
+        "properties": {
+          "model": {
+            "mesh": {
+              "filepath": "engineFiles/defaultMeshes/defaultSphere.obj",
+              "metaFilepath": "engineFiles/defaultMeshes/defaultSphere.obj"
+            },
+            "materials": [
+              {
+                "filepath": "Assets\\mramorMaterial.material"
+              }
+            ]
+          },
+          "textureIndex": 1,
+          "isActive": true
+        }
+      }
+    ],
+    "doSerialization": true,
+    "isVisible": true
+  },
+  {
+    "name": "Cube 1",
+    "tags": [],
+    "components": [
+      {
+        "type": "engine.components.Transform",
+        "properties": {
+          "position": {
+            "x": 1.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "localPosition": {
+            "x": 1.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "localRotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          },
+          "localScale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          },
+          "childs": [
+            {
+              "name": "Cube 2",
+              "tags": [],
+              "components": [
+                {
+                  "type": "engine.components.Transform",
+                  "properties": {
+                    "position": {
+                      "x": 2.0,
+                      "y": 1.0,
+                      "z": 0.0
+                    },
+                    "localPosition": {
+                      "x": 1.0,
+                      "y": 1.0,
+                      "z": 0.0
+                    },
+                    "rotation": {
+                      "x": 0.0,
+                      "y": 0.0,
+                      "z": 0.0
+                    },
+                    "localRotation": {
+                      "x": 0.0,
+                      "y": 0.0,
+                      "z": 0.0
+                    },
+                    "scale": {
+                      "x": 1.0,
+                      "y": 1.0,
+                      "z": 1.0
+                    },
+                    "localScale": {
+                      "x": 1.0,
+                      "y": 1.0,
+                      "z": 1.0
+                    },
+                    "childs": [
+                      {
+                        "name": "Cube 3",
+                        "tags": [],
+                        "components": [
+                          {
+                            "type": "engine.components.Transform",
+                            "properties": {
+                              "position": {
+                                "x": 1.0,
+                                "y": 2.0,
+                                "z": 0.0
+                              },
+                              "localPosition": {
+                                "x": -1.0,
+                                "y": 1.0,
+                                "z": 0.0
+                              },
+                              "rotation": {
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                              },
+                              "localRotation": {
+                                "x": 0.0,
+                                "y": 0.0,
+                                "z": 0.0
+                              },
+                              "scale": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                              },
+                              "localScale": {
+                                "x": 1.0,
+                                "y": 1.0,
+                                "z": 1.0
+                              },
+                              "childs": [],
+                              "isActive": true
+                            }
+                          },
+                          {
+                            "type": "engine.renderEngine.components.MeshRenderer",
+                            "properties": {
+                              "model": {
+                                "mesh": {
+                                  "filepath": "engineFiles/defaultMeshes/defaultCube.obj",
+                                  "metaFilepath": "engineFiles/defaultMeshes/defaultCube.obj"
+                                },
+                                "materials": [
+                                  {
+                                    "filepath": "Assets\\bunnyMaterial.material"
+                                  }
+                                ]
+                              },
+                              "textureIndex": 1,
+                              "isActive": true
+                            }
+                          }
+                        ],
+                        "doSerialization": true,
+                        "isVisible": true
+                      }
+                    ],
+                    "isActive": true
+                  }
+                },
+                {
+                  "type": "engine.renderEngine.components.MeshRenderer",
+                  "properties": {
+                    "model": {
+                      "mesh": {
+                        "filepath": "engineFiles/defaultMeshes/defaultCube.obj",
+                        "metaFilepath": "engineFiles/defaultMeshes/defaultCube.obj"
+                      },
+                      "materials": [
+                        {
+                          "filepath": "Assets\\bunnyMaterial.material"
+                        }
+                      ]
+                    },
+                    "textureIndex": 1,
+                    "isActive": true
+                  }
+                }
+              ],
+              "doSerialization": true,
+              "isVisible": true
+            }
+          ],
+          "isActive": true
+        }
+      },
+      {
+        "type": "engine.renderEngine.components.MeshRenderer",
+        "properties": {
+          "model": {
+            "mesh": {
+              "filepath": "engineFiles/defaultMeshes/defaultCube.obj",
+              "metaFilepath": "engineFiles/defaultMeshes/defaultCube.obj"
+            },
+            "materials": [
+              {
+                "filepath": "Assets\\bunnyMaterial.material"
+              }
+            ]
+          },
+          "textureIndex": 1,
+          "isActive": true
+        }
+      }
+    ],
+    "doSerialization": true,
+    "isVisible": true
+  },
+  {
+    "name": "Floor",
+    "tags": [],
+    "components": [
+      {
+        "type": "engine.components.Transform",
+        "properties": {
+          "position": {
+            "x": 0.0,
+            "y": -0.5,
+            "z": 0.0
+          },
+          "localPosition": {
+            "x": 0.0,
+            "y": -0.5,
+            "z": 0.0
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "localRotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "scale": {
+            "x": 6.0,
+            "y": 6.0,
+            "z": 6.0
+          },
+          "localScale": {
+            "x": 6.0,
+            "y": 6.0,
+            "z": 6.0
+          },
+          "childs": [],
+          "isActive": true
+        }
+      },
+      {
+        "type": "engine.renderEngine.components.MeshRenderer",
+        "properties": {
+          "model": {
+            "mesh": {
+              "filepath": "engineFiles/defaultMeshes/defaultPlane.obj",
+              "metaFilepath": "engineFiles/defaultMeshes/defaultPlane.obj"
+            },
+            "materials": [
+              {
+                "filepath": "engineFiles/defaultAssets/defaultMaterial.material"
+              }
+            ]
+          },
+          "textureIndex": 1,
+          "isActive": true
+        }
+      }
+    ],
+    "doSerialization": true,
+    "isVisible": true
+  },
+  {
+    "name": "Point Light (Blue)",
+    "tags": [],
+    "components": [
+      {
+        "type": "engine.components.Transform",
+        "properties": {
+          "position": {
+            "x": -1.2,
+            "y": 1.7,
+            "z": 0.7
+          },
+          "localPosition": {
+            "x": -1.2,
+            "y": 1.7,
+            "z": 0.7
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "localRotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          },
+          "localScale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          },
+          "childs": [],
+          "isActive": true
+        }
+      },
+      {
+        "type": "engine.components.Light",
+        "properties": {
+          "lightType": "Point",
+          "color": {
+            "r": 0.0,
+            "g": 214.73694,
+            "b": 255.0,
+            "a": 255.0
+          },
+          "intensity": 1.0,
+          "range": 1.0,
+          "isActive": true
+        }
+      }
+    ],
+    "doSerialization": true,
+    "isVisible": true
+  },
+  {
+    "name": "SuperMario.obj",
+    "tags": [],
+    "components": [
+      {
+        "type": "engine.components.Transform",
+        "properties": {
+          "position": {
+            "x": 0.4,
+            "y": -0.5,
+            "z": -2.0
+          },
+          "localPosition": {
+            "x": 0.4,
+            "y": -0.5,
+            "z": -2.0
+          },
+          "rotation": {
+            "x": 12.800001,
+            "y": 230.0,
+            "z": 7.4000006
+          },
+          "localRotation": {
+            "x": 12.800001,
+            "y": 230.0,
+            "z": 7.4000006
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          },
+          "localScale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          },
+          "childs": [],
+          "isActive": true
+        }
+      },
+      {
+        "type": "engine.renderEngine.components.MeshRenderer",
+        "properties": {
+          "model": {
+            "mesh": {
+              "filepath": "Assets\\Super_Mario\\SuperMario.obj",
+              "metaFilepath": "Assets\\Super_Mario\\SuperMario.obj"
+            },
+            "materials": [
+              {
+                "filepath": "Assets\\Super_Mario\\materials\\marioEye.material"
+              },
+              {
+                "filepath": "Assets\\Super_Mario\\materials\\marioHairs.material"
+              },
+              {
+                "filepath": "Assets\\Super_Mario\\materials\\marioHands.material"
+              },
+              {
+                "filepath": "Assets\\Super_Mario\\materials\\marioArms.material"
+              },
+              {
+                "filepath": "Assets\\Super_Mario\\materials\\marioBody.material"
+              },
+              {
+                "filepath": "Assets\\Super_Mario\\materials\\marioHat.material"
+              },
+              {
+                "filepath": "Assets\\Super_Mario\\materials\\marioShoes.material"
+              },
+              {
+                "filepath": "Assets\\Super_Mario\\materials\\marioFace.material"
+              }
+            ]
+          },
+          "textureIndex": 1,
+          "isActive": true
+        }
+      }
+    ],
+    "doSerialization": true,
+    "isVisible": true
+  },
+  {
+    "name": "dragon.obj",
+    "tags": [],
+    "components": [
+      {
+        "type": "engine.components.Transform",
+        "properties": {
+          "position": {
+            "x": -1.5980002,
+            "y": -0.5114998,
+            "z": -0.7905001
+          },
+          "localPosition": {
+            "x": -1.5980002,
+            "y": -0.5114998,
+            "z": -0.7905001
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": -127.31998,
+            "z": 0.0
+          },
+          "localRotation": {
+            "x": 0.0,
+            "y": -127.31998,
+            "z": 0.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          },
+          "localScale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          },
+          "childs": [],
+          "isActive": true
+        }
+      },
+      {
+        "type": "engine.renderEngine.components.MeshRenderer",
+        "properties": {
+          "model": {
+            "mesh": {
+              "filepath": "Assets\\dragon.obj",
+              "metaFilepath": "Assets\\dragon.obj"
+            },
+            "materials": [
+              {
+                "filepath": "Assets\\mramorMaterial (copy).material"
+              }
+            ]
+          },
+          "textureIndex": 1,
+          "isActive": true
+        }
+      }
+    ],
+    "doSerialization": true,
+    "isVisible": true
+  },
+  {
+    "name": "Point Light (Orange)",
+    "tags": [],
+    "components": [
+      {
+        "type": "engine.components.Transform",
+        "properties": {
+          "position": {
+            "x": -0.561,
+            "y": 1.1,
+            "z": -2.188
+          },
+          "localPosition": {
+            "x": -0.561,
+            "y": 1.1,
+            "z": -2.188
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "localRotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          },
+          "localScale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          },
+          "childs": [],
+          "isActive": true
+        }
+      },
+      {
+        "type": "engine.components.Light",
+        "properties": {
+          "lightType": "Point",
+          "color": {
+            "r": 255.0,
+            "g": 137.60825,
+            "b": 0.0,
+            "a": 255.0
+          },
+          "intensity": 0.38,
+          "range": 1.0,
+          "isActive": true
+        }
+      }
+    ],
+    "doSerialization": true,
+    "isVisible": true
+  },
+  {
+    "name": "Cone",
+    "tags": [],
+    "components": [
+      {
+        "type": "engine.components.Transform",
+        "properties": {
+          "position": {
+            "x": -2.5970004,
+            "y": -0.224,
+            "z": -0.21000004
+          },
+          "localPosition": {
+            "x": -2.5970004,
+            "y": -0.224,
+            "z": -0.21000004
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "localRotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "scale": {
+            "x": 0.69999987,
+            "y": 1.0699999,
+            "z": 0.69999987
+          },
+          "localScale": {
+            "x": 0.69999987,
+            "y": 1.0699999,
+            "z": 0.69999987
+          },
+          "childs": [],
+          "isActive": true
+        }
+      },
+      {
+        "type": "engine.renderEngine.components.MeshRenderer",
+        "properties": {
+          "model": {
+            "mesh": {
+              "filepath": "engineFiles/defaultMeshes/defaultCone.obj",
+              "metaFilepath": "engineFiles/defaultMeshes/defaultCone.obj"
+            },
+            "materials": [
+              {
+                "filepath": "Assets\\mramorMaterial (copy).material"
+              }
+            ]
+          },
+          "textureIndex": 1,
+          "isActive": true
+        }
+      }
+    ],
+    "doSerialization": true,
+    "isVisible": true
+  }
+]

@@ -69,8 +69,10 @@ public class ParticleSystem extends Component {
         updateParticleSystem();
 
         if (Window.get().getImGuiLayer().getInspectorWindow().getActiveGameObject() == this.gameObject ||
-                Window.get().getImGuiLayer().getInspectorWindow().getActiveGameObject() == this.gameObject.transform.parent ||
-                Window.get().getImGuiLayer().getInspectorWindow().getActiveGameObject() == this.gameObject.transform.mainParent)
+                (this.gameObject.transform.parent != null &&
+                        Window.get().getImGuiLayer().getInspectorWindow().getActiveGameObject() == this.gameObject.transform.parent) ||
+                (this.gameObject.transform.mainParent != null &&
+                        Window.get().getImGuiLayer().getInspectorWindow().getActiveGameObject() == this.gameObject.transform.mainParent))
             generateParticles();
     }
 

@@ -31,7 +31,7 @@ public abstract class Component {
         add(new MeshRenderer(null));
         add(new Light(Color.White, 1.0f)); // rotation -40, 45, -30
 
-        Texture particleTexture = Loader.get().loadTexture("Assets/fireParticles.png");
+        Texture particleTexture = Loader.get().loadTexture("engineFiles/images/particles/dotParticle.png");
         add(new ParticleSystem(particleTexture));
 
         add(new UIImage(Loader.get().loadTexture("engineFiles/images/utils/whitePixel.png")));

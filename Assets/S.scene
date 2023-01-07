@@ -1,0 +1,248 @@
+[
+  {
+    "name": "Sun",
+    "tags": [],
+    "components": [
+      {
+        "type": "engine.components.Transform",
+        "properties": {
+          "position": {
+            "x": 0.9,
+            "y": 0.3,
+            "z": 0.0
+          },
+          "localPosition": {
+            "x": 0.9,
+            "y": 0.3,
+            "z": 0.0
+          },
+          "rotation": {
+            "x": -10.8,
+            "y": 6.5,
+            "z": -3.5
+          },
+          "localRotation": {
+            "x": -10.8,
+            "y": 6.5,
+            "z": -3.5
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          },
+          "localScale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          },
+          "childs": [],
+          "isActive": true
+        }
+      },
+      {
+        "type": "engine.components.Light",
+        "properties": {
+          "lightType": "Directional",
+          "color": {
+            "r": 255.0,
+            "g": 255.0,
+            "b": 255.0,
+            "a": 255.0
+          },
+          "intensity": 1.0,
+          "range": 1.0,
+          "isActive": true
+        }
+      }
+    ],
+    "doSerialization": true,
+    "isVisible": true
+  },
+  {
+    "name": "dragon.obj",
+    "tags": [],
+    "components": [
+      {
+        "type": "engine.components.Transform",
+        "properties": {
+          "position": {
+            "x": 0.0,
+            "y": 0.376,
+            "z": 0.0
+          },
+          "localPosition": {
+            "x": 0.0,
+            "y": 0.376,
+            "z": 0.0
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "localRotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          },
+          "localScale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          },
+          "childs": [],
+          "isActive": true
+        }
+      },
+      {
+        "type": "engine.renderEngine.components.MeshRenderer",
+        "properties": {
+          "model": {
+            "mesh": {
+              "filepath": "Assets\\dragon.obj",
+              "metaFilepath": "Assets\\dragon.obj"
+            },
+            "materials": [
+              {
+                "filepath": "Assets\\mramorMaterial.material"
+              }
+            ]
+          },
+          "textureIndex": 1,
+          "isActive": true
+        }
+      }
+    ],
+    "doSerialization": true,
+    "isVisible": true
+  },
+  {
+    "name": "Light",
+    "tags": [],
+    "components": [
+      {
+        "type": "engine.components.Transform",
+        "properties": {
+          "position": {
+            "x": -0.6,
+            "y": 0.2,
+            "z": 1.3
+          },
+          "localPosition": {
+            "x": -0.6,
+            "y": 0.2,
+            "z": 1.3
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "localRotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          },
+          "localScale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          },
+          "childs": [],
+          "isActive": true
+        }
+      },
+      {
+        "type": "engine.components.Light",
+        "properties": {
+          "lightType": "Point",
+          "color": {
+            "r": 0.0,
+            "g": 255.0,
+            "b": 4.756798,
+            "a": 255.0
+          },
+          "intensity": 1.0,
+          "range": 1.0,
+          "isActive": true
+        }
+      }
+    ],
+    "doSerialization": true,
+    "isVisible": true
+  },
+  {
+    "name": "Plane",
+    "tags": [],
+    "components": [
+      {
+        "type": "engine.components.Transform",
+        "properties": {
+          "position": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "localPosition": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "localRotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "scale": {
+            "x": 6.0,
+            "y": 6.0,
+            "z": 6.0
+          },
+          "localScale": {
+            "x": 6.0,
+            "y": 6.0,
+            "z": 6.0
+          },
+          "childs": [],
+          "isActive": true
+        }
+      },
+      {
+        "type": "engine.renderEngine.components.MeshRenderer",
+        "properties": {
+          "model": {
+            "mesh": {
+              "filepath": "engineFiles/defaultMeshes/defaultPlane.obj",
+              "metaFilepath": "engineFiles/defaultMeshes/defaultPlane.obj"
+            },
+            "materials": [
+              {
+                "filepath": "engineFiles/defaultAssets/defaultMaterial.material"
+              }
+            ]
+          },
+          "textureIndex": 1,
+          "isActive": true
+        }
+      }
+    ],
+    "doSerialization": true,
+    "isVisible": true
+  }
+]

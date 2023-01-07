@@ -56,7 +56,8 @@
         }
       }
     ],
-    "doSerialization": true
+    "doSerialization": true,
+    "isVisible": true
   },
   {
     "name": "model.obj",
@@ -127,6 +128,7 @@
         }
       }
     ],
-    "doSerialization": true
+    "doSerialization": true,
+    "isVisible": true
   }
 ]

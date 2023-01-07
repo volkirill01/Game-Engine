@@ -102,9 +102,9 @@ public class SceneViewWindow extends EditorImGuiWindow {
                     }
                     default -> System.out.println("Error- This AssetType not implemented");
                 }
-
+ // TODO ADD MATERIAL DRAG AND DROP USING PICKING TEXTURE
                 ImGui.endDragDropTarget();
-                System.out.println("GameViewWindow-" + payload[1]);
+//                System.out.println("SceneViewWindow-" + payload[1]);
             } else
                 ImGui.endDragDropTarget();
         }
