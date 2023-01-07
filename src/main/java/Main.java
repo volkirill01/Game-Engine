@@ -178,6 +178,7 @@ public class Main {
                 outputFbo.resolveToScreen();
             } else {
 //                Window.setScreenImage(Window.get().pickingTexture.getPickingTextureId());
+//                Window.setScreenImage(renderer.getShadowMapTexture());
                 Window.get().getImGuiLayer().update();
             }
 

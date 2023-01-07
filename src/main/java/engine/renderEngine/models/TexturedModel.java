@@ -35,6 +35,14 @@ public class TexturedModel {
 
     public void setMaterial(Material material, int index) { this.materials.set(index, material); }
 
+    public void setMaterial(Material material, boolean inAllSlots) {
+        if (inAllSlots) {
+            for (int i = 0; i < materials.size(); i++)
+                this.materials.set(i, material);
+        } else
+            System.out.println("Error setMaterial inAllSlots not available to be false");
+    }
+
     public List<Material> getMaterials() { return materials; }
 
     public TexturedModel copy() { return new TexturedModel(this.mesh, this.materials); }

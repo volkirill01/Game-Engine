@@ -16,6 +16,7 @@ import engine.renderEngine.models.TexturedModel;
 import engine.renderEngine.textures.Material;
 import engine.scene.SceneManager;
 import engine.toolbox.DefaultMeshes;
+import engine.toolbox.Mouse_EditorActions;
 import engine.toolbox.input.MouseListener;
 import imgui.ImGui;
 import imgui.ImVec2;
@@ -100,9 +101,16 @@ public class SceneViewWindow extends EditorImGuiWindow {
                         Window.get().getImGuiLayer().getInspectorWindow().setActiveAsset(null);
                         Window.get().getImGuiLayer().getInspectorWindow().setActiveGameObject(go);
                     }
+                    case Material -> {
+                        Material material = Loader.get().loadMaterial(payload[1]);
+
+                        GameObject objectOnMouse = Mouse_EditorActions.getObjectOnMousePosition();
+                        if (objectOnMouse != null && objectOnMouse.hasComponent(MeshRenderer.class))
+                            objectOnMouse.getComponent(MeshRenderer.class).getModel().setMaterial(material, true);
+                    }
                     default -> System.out.println("Error- This AssetType not implemented");
                 }
- // TODO ADD MATERIAL DRAG AND DROP USING PICKING TEXTURE
+
                 ImGui.endDragDropTarget();
 //                System.out.println("SceneViewWindow-" + payload[1]);
             } else

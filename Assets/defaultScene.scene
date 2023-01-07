@@ -764,7 +764,7 @@
             },
             "materials": [
               {
-                "filepath": "Assets\\mramorMaterial (copy).material"
+                "filepath": "Assets\\mramorMaterial.material"
               }
             ]
           },

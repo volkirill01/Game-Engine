@@ -76,13 +76,10 @@ public class Mouse_EditorActions {
             }
         } else {
             if (!MouseListener.isDragging(KeyCode.Mouse_Button_Left) && MouseListener.mouseButtonDown(KeyCode.Mouse_Button_Left) && debounce < 0) {
-                int x = (int) MouseListener.getScreenX();
-                int y = (int) MouseListener.getScreenY();
-                int gameObjectId = pickingTexture.readPixel(x, y);
-                GameObject pickedObj = currentScene.getGameObject(gameObjectId);
+                GameObject pickedObj = getObjectOnMousePosition();
                 if (pickedObj != null && !pickedObj.hasTag(nonPickableTag))
                     Window.get().getImGuiLayer().getInspectorWindow().setActiveGameObject(pickedObj);
-                else if (pickedObj == null && !MouseListener.isDragging(KeyCode.Mouse_Button_Left))
+                else if (pickedObj == null)
                     Window.get().getImGuiLayer().getInspectorWindow().clearSelected();
 
                 this.debounce = 0.2f;
@@ -164,5 +161,12 @@ public class Mouse_EditorActions {
             }
         }
         return false;
+    }
+
+    public static GameObject getObjectOnMousePosition() {
+        int x = (int) MouseListener.getScreenX();
+        int y = (int) MouseListener.getScreenY();
+        int gameObjectId = Window.get().pickingTexture.readPixel(x, y);
+        return Window.get().getScene().getGameObject(gameObjectId);
     }
 }
