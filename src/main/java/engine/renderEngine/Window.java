@@ -83,7 +83,7 @@ public class Window implements Observer {
         HEIGHT = (int) workArea.w;
 
         // Create the window
-        glfwWindow = glfwCreateWindow(WIDTH, HEIGHT, "3D Render Engine", NULL, NULL);
+        glfwWindow = glfwCreateWindow(WIDTH, HEIGHT, originalTitle, NULL, NULL);
         if (glfwWindow == NULL)
             throw new IllegalStateException("Failed to create the GLFW window.");
 

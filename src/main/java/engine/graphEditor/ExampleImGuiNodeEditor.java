@@ -1,5 +1,6 @@
 package engine.graphEditor;
 
+import engine.graphEditor.graphNodes.GraphNode_Multiply;
 import imgui.ImVec4;
 import imgui.extension.nodeditor.NodeEditor;
 import imgui.extension.nodeditor.NodeEditorConfig;
@@ -41,7 +42,7 @@ public class ExampleImGuiNodeEditor {
             NodeEditor.begin("Node Editor");
 
             for (int i = 0; i < currentGraph.nodes.values().size(); i++) {
-                Graph.GraphNode node = (Graph.GraphNode) currentGraph.nodes.values().toArray()[i];
+                GraphNode node = (GraphNode) currentGraph.nodes.values().toArray()[i];
 
                 NodeEditor.pushStyleVar(NodeEditorStyleVar.NodePadding, 1.0f, 1.0f, 1.0f, 8.0f);
                 NodeEditor.beginNode(node.nodeId);
@@ -70,15 +71,7 @@ public class ExampleImGuiNodeEditor {
                 ImGui.setCursorPos(startX + ImGui.getStyle().getFramePaddingX(), startY + ImGui.getStyle().getFramePaddingY() - 0.5f);
                 ImGui.text(node.getName());
 
-                NodeEditor.beginPin(node.getInputPinId(), NodeEditorPinKind.Input);
-                ImGui.text("-> In");
-                NodeEditor.endPin();
-
-                ImGui.sameLine();
-
-                NodeEditor.beginPin(node.getOutputPinId(), NodeEditorPinKind.Output);
-                ImGui.text("Out ->");
-                NodeEditor.endPin();
+                node.imgui();
 
                 NodeEditor.endNode();
                 NodeEditor.popStyleVar(1);
@@ -88,8 +81,8 @@ public class ExampleImGuiNodeEditor {
                 final ImLong a = new ImLong();
                 final ImLong b = new ImLong();
                 if (NodeEditor.queryNewLink(a, b)) {
-                    final Graph.GraphNode source = currentGraph.findByOutput(a.get());
-                    final Graph.GraphNode target = currentGraph.findByInput(b.get());
+                    final GraphNode source = currentGraph.findByOutput(a.get());
+                    final GraphNode target = currentGraph.findByInput(b.get());
                     if (source != null && target != null && source.outputNodeId != target.nodeId && NodeEditor.acceptNewItem()) {
                         source.outputNodeId = target.nodeId;
                     }
@@ -98,7 +91,7 @@ public class ExampleImGuiNodeEditor {
             NodeEditor.endCreate();
 
             int uniqueLinkId = 1;
-            for (Graph.GraphNode node : currentGraph.nodes.values()) {
+            for (GraphNode node : currentGraph.nodes.values()) {
                 if (currentGraph.nodes.containsKey(node.outputNodeId)) {
                     NodeEditor.link(uniqueLinkId++, node.getOutputPinId(), currentGraph.nodes.get(node.outputNodeId).getInputPinId());
                 }
@@ -128,8 +121,8 @@ public class ExampleImGuiNodeEditor {
             }
 
             if (ImGui.beginPopup("node_editor_context")) {
-                if (ImGui.button("Create New Node")) {
-                    final Graph.GraphNode node = currentGraph.createGraphNode();
+                if (ImGui.button("Multiply")) {
+                    final GraphNode node = currentGraph.createGraphNode(new GraphNode_Multiply());
                     final float canvasX = NodeEditor.toCanvasX(ImGui.getMousePosX());
                     final float canvasY = NodeEditor.toCanvasY(ImGui.getMousePosY());
                     NodeEditor.setNodePosition(node.nodeId, canvasX, canvasY);

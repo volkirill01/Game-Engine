@@ -19,6 +19,7 @@ in vec3 toLightVector[9]; // MAXIMUM COUNT OF LIGHTS PER ENTITY
 in vec3 toCameraVector;
 in vec3 reflectionVector;
 in float visibility;
+in vec4 shadowCoords;
 
 out vec4 out_Color;
 
@@ -49,7 +50,27 @@ uniform float shineDamper;
 
 uniform float alphaClip;
 
+const int pcfCount = 2; // Percentage Closer Filtering (Size of area of sample shadow)
+const float totalTexels = (pcfCount * 2.0 + 1.0) * (pcfCount * 2.0 + 1.0);
+uniform sampler2D shadowMap;
+uniform float shadowMapSize;
+const float shadowBias = 0.002;
+
 void main() {
+
+    float texelSize = 1.0 / shadowMapSize;
+    float total = 0.0;
+
+    for (int x = -pcfCount; x <= pcfCount; x++) {
+        for (int y = -pcfCount; y <= pcfCount; y++) {
+            float objectNearestLight = texture(shadowMap, shadowCoords.xy + vec2(x, y) * texelSize).r;
+            if (shadowCoords.z > objectNearestLight + shadowBias)
+                total += 1.0;
+        }
+    }
+
+    total /= totalTexels;
+    float lightFactor = 1.0 - (total * shadowCoords.w);
 
     vec3 unitNormal = normalize(surfaceNormal);
     vec3 unitVectorToCamera = normalize(toCameraVector);
@@ -90,6 +111,8 @@ void main() {
     }
     totalDiffuse = max(totalDiffuse, ambientLightIntensity);
 
+//    totalDiffuse = max(totalDiffuse * lightFactor, ambientLightIntensity);
+
     vec4 textureColor = texture(textureSampler, pass_textureCoords);
     if (textureColor.a < alphaClip) {
         discard;
@@ -120,6 +143,8 @@ void main() {
 
 //    out_Color = vec4(diffuse, 1.0) * texture(textureSampler, pass_textureCoords) + vec4(finalSpecular, 1.0);
     out_Color = mix(vec4(fogColor, 1.0), out_Color, visibility);
+
+//    out_Color = texture(shadowMap, pass_textureCoords);
 
 //    vec4 reflectedColor = texture(enviromentMap, reflectionVector);
 //    out_Color = mix(out_Color, reflectedColor, length(totalSpecular) * reflectivity);

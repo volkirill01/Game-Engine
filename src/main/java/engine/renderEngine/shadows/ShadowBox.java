@@ -48,7 +48,7 @@ public class ShadowBox {
 	 * @param editorCamera
 	 *            - the in-game camera.
 	 */
-	protected ShadowBox(Matrix4f lightViewMatrix, EditorCamera editorCamera) {
+	public ShadowBox(Matrix4f lightViewMatrix, EditorCamera editorCamera) {
 		this.lightViewMatrix = lightViewMatrix;
 		this.cam = editorCamera;
 		calculateWidthsAndHeights();
@@ -60,7 +60,7 @@ public class ShadowBox {
 	 * possible while still ensuring that everything inside the camera's view
 	 * (within a certain range) will cast shadows.
 	 */
-	protected void update() {
+	public void update() {
 		Matrix4f rotation = calculateCameraRotationMatrix();
 		Vector4f tmp = new Vector4f(rotation.transform(FORWARD));
 		Vector3f forwardVector = new Vector3f(tmp.x, tmp.y, tmp.z);
@@ -110,7 +110,7 @@ public class ShadowBox {
 	 * 
 	 * @return The center of the "view cuboid" in world space.
 	 */
-	protected Vector3f getCenter() {
+	public Vector3f getCenter() {
 		float x = (minX + maxX) / 2f;
 		float y = (minY + maxY) / 2f;
 		float z = (minZ + maxZ) / 2f;
@@ -123,21 +123,21 @@ public class ShadowBox {
 	/**
 	 * @return The width of the "view cuboid" (orthographic projection area).
 	 */
-	protected float getWidth() {
+	public float getWidth() {
 		return maxX - minX;
 	}
 
 	/**
 	 * @return The height of the "view cuboid" (orthographic projection area).
 	 */
-	protected float getHeight() {
+	public float getHeight() {
 		return maxY - minY;
 	}
 
 	/**
 	 * @return The length of the "view cuboid" (orthographic projection area).
 	 */
-	protected float getLength() {
+	public float getLength() {
 		return maxZ - minZ;
 	}
 

@@ -1,5 +1,6 @@
 package engine.imGui;
 
+import engine.TestFieldsWindow;
 import engine.entities.GameObject;
 import engine.components.Light;
 import engine.renderEngine.Loader;
@@ -168,9 +169,9 @@ public class SceneHierarchyWindow extends EditorImGuiWindow {
         else if (obj.hasComponent(UIImage.class))
             treeNodeIcon = "\uEF5D"; // UI icon
 
-        ImGui.setCursorPos(selectablePos.x + 85.0f, selectablePos.y + 5.5f);
+        ImGui.setCursorPos(selectablePos.x + 83.0f, selectablePos.y + 5.5f);
         if (obj.transform.parent != null)
-            ImGui.setCursorPosX(ImGui.getCursorPosX() - 12.0f);
+            ImGui.setCursorPosX(ImGui.getCursorPosX() - 14.0f);
         ImGui.text(treeNodeIcon);
 
         ImGui.setCursorPos(treeNodePos.x - 1.0f, treeNodePos.y);

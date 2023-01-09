@@ -10,6 +10,7 @@ out vec3 toLightVector[9]; // MAXIMUM COUNT OF LIGHTS PER ENTITY
 out vec3 toCameraVector;
 out vec3 reflectionVector; // TODO FIX REFLECTIONS
 out float visibility;
+out vec4 shadowCoords;
 
 uniform vec2 tiling;
 
@@ -28,12 +29,18 @@ uniform float numberOfRows;
 uniform float numberOfColumns;
 uniform vec2 textureOffset;
 
+uniform mat4 toShadowMapSpace;
+uniform float shadowDistance;
+const float transitionDistance = 10.0; // TODO LOAD SHMOOTHNESS OF TRANSITION UNIFORM
+
 void main() {
 
     vec4 worldPosition = transformationMatrix * vec4(position, 1.0);
     vec4 positionRealitiveToCamera = viewMatrix * worldPosition;
     gl_Position = projectionMatrix * positionRealitiveToCamera;
     pass_textureCoords = ((textureCoordinates * tiling) / vec2(numberOfRows, numberOfColumns) + textureOffset);
+
+    shadowCoords = toShadowMapSpace * worldPosition;
 
     vec3 actualNormal = normal;
     if (useFakeLighting > 0.5) {
@@ -52,10 +59,15 @@ void main() {
     // reflectionVector
 
     float distance = length(positionRealitiveToCamera.xyz);
+
     if (fogDensity > 0) {
         visibility = exp(-pow((distance * fogDensity), fogGradient));
         visibility = clamp(visibility, 0.0, 1.0);
     } else {
         visibility = 1.0;
     }
+
+    distance = distance - (shadowDistance - transitionDistance);
+    distance = distance / transitionDistance;
+    shadowCoords.w = clamp(1.0 - distance, 0.0, 1.0);
 }

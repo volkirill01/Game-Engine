@@ -1,5 +1,7 @@
 package engine.graphEditor;
 
+import engine.graphEditor.graphNodes.GraphNode_Multiply;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,13 +13,16 @@ public final class Graph {
     public final Map<Integer, GraphNode> nodes = new HashMap<>();
 
     public Graph() {
-        final GraphNode first = createGraphNode();
-        final GraphNode second = createGraphNode();
+        final GraphNode first = createGraphNode(new GraphNode_Multiply());
+        final GraphNode second = createGraphNode(new GraphNode_Multiply());
         first.outputNodeId = second.nodeId;
     }
 
-    public GraphNode createGraphNode() {
-        final GraphNode node = new GraphNode(nextNodeId++, nextPinId++, nextPinId++);
+    public GraphNode createGraphNode(GraphNode node) {
+//        final GraphNode node = new GraphNode(nextNodeId++, nextPinId++, nextPinId++);
+        node.nodeId = nextNodeId++;
+        node.inputPinId = nextPinId++;
+        node.outputPinId = nextPinId++;
         this.nodes.put(node.nodeId, node);
         return node;
     }
@@ -38,31 +43,5 @@ public final class Graph {
             }
         }
         return null;
-    }
-
-    public static final class GraphNode {
-        public final int nodeId;
-        public final int inputPinId;
-        public final int outputPinId;
-
-        public int outputNodeId = -1;
-
-        public GraphNode(final int nodeId, final int inputPinId, final int outputPintId) {
-            this.nodeId = nodeId;
-            this.inputPinId = inputPinId;
-            this.outputPinId = outputPintId;
-        }
-
-        public int getInputPinId() {
-            return inputPinId;
-        }
-
-        public int getOutputPinId() {
-            return outputPinId;
-        }
-
-        public String getName() {
-            return "Node " + (char) (64 + nodeId);
-        }
     }
 }

@@ -8,6 +8,7 @@ import engine.renderEngine.components.MeshRenderer;
 import engine.renderEngine.models.RawModel;
 import engine.renderEngine.models.TexturedModel;
 import engine.renderEngine.shaders.StaticShader;
+import engine.renderEngine.shadows.ShadowBox;
 import engine.renderEngine.skybox.CubeMap;
 import engine.renderEngine.textures.Material;
 import engine.toolbox.Maths;
@@ -39,7 +40,9 @@ public class EntityRenderer {
         this.pickingShader.stop();
     }
 
-    public void render(Map<TexturedModel, List<GameObject>> entities) {
+    public void render(Map<TexturedModel, List<GameObject>> entities, Matrix4f toShadowSpace) {
+        shader.loadUniformMatrix("toShadowMapSpace", toShadowSpace);
+        shader.loadUniformFloat("shadowDistance", ShadowBox.SHADOW_DISTANCE);
         for (TexturedModel model : entities.keySet()) {
             for (int i = 0; i < model.getMesh().getModels().size(); i++) {
                 prepareTexturedModel(model.getMesh().getModels().get(i), model.getMaterials().get(i));
@@ -147,6 +150,8 @@ public class EntityRenderer {
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, material.getTexture().getTextureID());
         Loader.get().updateTexture(material.getTexture());
+
+        shader.loadUniformInt("shadowMap", 5);
 
         switch (material.getCullSide()) {
             case Both -> glDisable(GL_CULL_FACE);

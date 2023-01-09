@@ -74,8 +74,8 @@ public class ShadowMapMasterRenderer {
 	 */
 	public void render(Map<TexturedModel, List<GameObject>> entities, Light sun) {
 		shadowBox.update();
-		Vector3f sunPosition = sun.gameObject.transform.localPosition;
-		Vector3f lightDirection = sun.gameObject.transform.localRotation;
+		Vector3f sunPosition = new Vector3f(sun.gameObject.transform.localPosition);
+		Vector3f lightDirection = new Vector3f(sun.gameObject.transform.localRotation);
 //		Vector3f lightDirection = new Vector3f(-sunPosition.x, -sunPosition.y, -sunPosition.z);
 		prepare(lightDirection, shadowBox);
 		entityRenderer.render(entities);
@@ -110,7 +110,7 @@ public class ShadowMapMasterRenderer {
 	 */
 	public int getShadowMap() {
 //		return shadowFbo.getShadowMap();
-		return fbo.getDepthTexture();
+		return fbo.getColourTexture();
 	}
 
 	/**
@@ -177,14 +177,18 @@ public class ShadowMapMasterRenderer {
 	 *            - the center of the "view cuboid" in world space.
 	 */
 	private void updateLightViewMatrix(Vector3f direction, Vector3f center) {
-		direction.normalize();
+//		direction.normalize();
 		center.negate();
 		lightViewMatrix = new Matrix4f().identity();
-		float pitch = (float) Math.acos(new Vector2f(direction.x, direction.z).length());
-		lightViewMatrix = lightViewMatrix.rotate(pitch, new Vector3f(1, 0, 0));
-		float yaw = (float) Math.toDegrees(((float) Math.atan(direction.x / direction.z)));
-		yaw = direction.z > 0 ? yaw - 180 : yaw;
-		lightViewMatrix = lightViewMatrix.rotate((float) -Math.toRadians(yaw), new Vector3f(0, 1, 0));
+		lightViewMatrix = lightViewMatrix.rotate(direction.x, new Vector3f(1, 0, 0));
+		lightViewMatrix = lightViewMatrix.rotate(direction.y, new Vector3f(0, 1, 0));
+		lightViewMatrix = lightViewMatrix.rotate(direction.z, new Vector3f(0, 0, 1));
+//		lightViewMatrix = new Matrix4f().identity();
+//		float pitch = (float) Math.acos(new Vector2f(direction.x, direction.z).length());
+//		lightViewMatrix = lightViewMatrix.rotate(pitch, new Vector3f(1, 0, 0));
+//		float yaw = (float) Math.toDegrees(((float) Math.atan(direction.x / direction.z)));
+//		yaw = direction.z > 0 ? yaw - 180 : yaw;
+//		lightViewMatrix = lightViewMatrix.rotate((float) -Math.toRadians(yaw), new Vector3f(0, 1, 0));
 		lightViewMatrix = lightViewMatrix.translate(center);
 	}
 

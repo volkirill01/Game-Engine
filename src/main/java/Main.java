@@ -9,6 +9,7 @@ import engine.renderEngine.particles.*;
 import engine.renderEngine.postProcessing.Fbo;
 import engine.renderEngine.postProcessing.PostProcessing;
 import engine.renderEngine.renderer.MasterRenderer;
+import engine.renderEngine.shadows2.ShadowMapRenderer;
 import engine.terrain.Terrain;
 import engine.toolbox.GameObject_Manager;
 import engine.toolbox.Keyboard_EditorActions;
@@ -87,6 +88,7 @@ public class Main {
         Fbo multisampleSceneFbo = new Fbo((int) Window.getWidth(), (int) Window.getHeight(), true, false);
         Fbo outputFbo = new Fbo((int) Window.getWidth(), (int) Window.getHeight(), Fbo.DEPTH_TEXTURE);
         Fbo uiFbo = new Fbo((int) Window.getWidth(), (int) Window.getHeight(), Fbo.NONE);
+        Fbo shadowFbo = new Fbo((int) Window.getWidth(), (int) Window.getHeight(), Fbo.DEPTH_TEXTURE);
 
         PostProcessing.init();
 
@@ -107,11 +109,15 @@ public class Main {
             // Put update logic before rendering
             editorCamera.move();
 
+//            shadowFbo.bindFrameBuffer();
+//            renderer.renderShadowMap(Window.get().getScene().getGameObjects(), editorCamera); // TODO FINISH THAT
+//            shadowFbo.unbindFrameBuffer();
+
             // Render pass 1. Render to picking texture
             Window.get().pickingTexture.enableWriting();
             glViewport(0, 0, (int) Window.getWidth(), (int) Window.getHeight());
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-            renderer.renderScene(Window.get().getScene().getGameObjects(), normalMapEntities, terrains, editorCamera, true);
+            renderer.renderScene(Window.get().getScene().getGameObjects(), normalMapEntities, terrains, editorCamera, true, 0);
             Window.get().pickingTexture.disableWriting();
 
             keyboardEditorActions.update();
@@ -131,12 +137,6 @@ public class Main {
 //                if (terrainPoint != null) {
 //                    hardCode_cubeGameObject.transform.position = terrainPoint.add(new Vector3f(0, 2.0f, 0));
 //            }
-
-//            dragonGameObject.transform.increaseRotation(new Vector3f(0, 1, 0));
-//            dragonGameObject2.transform.increaseRotation(new Vector3f(0, 1, 0));
-//            grassGameObject.transform.increaseRotation(new Vector3f(0, -0.3f, 0));
-//            hardCode_cubeGameObject.transform.increaseRotation(new Vector3f(1, 1, 0));
-//            barrelGameObject.transform.increaseRotation(new Vector3f(1, 1, 0));
 //
 //            gui2.getTexture().setTextureID(TestFieldsWindow.getInts[0]);
 
@@ -144,7 +144,9 @@ public class Main {
 
             multisampleSceneFbo.bindFrameBuffer(); // all inside this affected by postProcessing
 
-            renderer.renderScene(Window.get().getScene().getGameObjects(), normalMapEntities, terrains, editorCamera, false);
+//            glActiveTexture(GL_TEXTURE5);
+//            glBindTexture(GL_TEXTURE_2D, shadowFbo.getDepthTexture());
+            renderer.renderScene(Window.get().getScene().getGameObjects(), normalMapEntities, terrains, editorCamera, false, shadowFbo.getDepthTexture());
             ParticleMaster.renderParticles(editorCamera);
 
 //            cameraOutputGui.setTexture(PostProcessing.getFinalImage());
@@ -179,6 +181,7 @@ public class Main {
             } else {
 //                Window.setScreenImage(Window.get().pickingTexture.getPickingTextureId());
 //                Window.setScreenImage(renderer.getShadowMapTexture());
+//                Window.setScreenImage(shadowFbo.getColourTexture());
                 Window.get().getImGuiLayer().update();
             }
 

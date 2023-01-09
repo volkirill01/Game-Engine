@@ -29,9 +29,9 @@ public class AssetsWindow extends EditorImGuiWindow {
     private File[] oldContents;
     public String assetsDirectory = "Assets";
     private String currentDirectory = assetsDirectory;
-    private final float defaultPadding = 8.0f;
+    private final float defaultPadding = 4.0f;
     private float padding = defaultPadding;
-    private final float defaultThumbnailSize = 50.0f;
+    private final float defaultThumbnailSize = 45.0f;
     private float thumbnailSize = defaultThumbnailSize;
 
     private boolean refrashingFiles = true;

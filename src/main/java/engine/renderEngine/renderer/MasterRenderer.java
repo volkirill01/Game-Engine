@@ -12,6 +12,7 @@ import engine.renderEngine.normalMappingRenderer.NormalMappingRenderer;
 import engine.renderEngine.postProcessing.PostProcessing;
 import engine.renderEngine.shaders.StaticShader;
 import engine.renderEngine.shadows.ShadowMapMasterRenderer;
+import engine.renderEngine.shadows2.ShadowMapRenderer;
 import engine.renderEngine.skybox.CubeMap;
 import engine.renderEngine.skybox.SkyboxRenderer;
 import engine.terrain.Terrain;
@@ -58,7 +59,10 @@ public class MasterRenderer {
     private SkyboxRenderer skyboxRenderer;
     private ShadowMapMasterRenderer shadowMapRenderer;
 
+    private ShadowMapRenderer shadowMapRenderer2;
+
     private List<Light> lights = new ArrayList<>();
+//    private Light sun;
 
     public MasterRenderer(EditorCamera editorCamera) {
         createProjectionMatrix();
@@ -67,10 +71,12 @@ public class MasterRenderer {
         terrainRenderer = new TerrainRenderer(terrainShader, projectionMatrix);
         normalMappingRenderer = new NormalMappingRenderer(projectionMatrix);
         shadowMapRenderer = new ShadowMapMasterRenderer(editorCamera);
+
+        shadowMapRenderer2 = new ShadowMapRenderer(projectionMatrix, editorCamera);
     }
 
-    private void render(EditorCamera editorCamera, boolean renderOnPickingTexture) {
-        prepare();
+    private void render(EditorCamera editorCamera, boolean renderOnPickingTexture, int shadowMap) {
+        prepare(shadowMap);
 
         if (!renderOnPickingTexture) {
 //        Color fogColor = PostProcessing.getFogColor().toPercentColor();
@@ -95,7 +101,7 @@ public class MasterRenderer {
             Matrix4f viewMatrix = Maths.createViewMatrix(editorCamera);
             shader.loadUniformMatrix("viewMatrix", viewMatrix);
 
-            entityRenderer.render(entities);
+            entityRenderer.render(entities, shadowMapRenderer.getToShadowMapSpaceMatrix());
 
             shader.stop();
             entities.clear();
@@ -138,7 +144,7 @@ public class MasterRenderer {
             Matrix4f viewMatrix = Maths.createViewMatrix(editorCamera);
             pickingShader.loadUniformMatrix("viewMatrix", viewMatrix);
 
-            entityRenderer.render(entities);
+            entityRenderer.render(entities, shadowMapRenderer.getToShadowMapSpaceMatrix());
 
             pickingShader.stop();
             entities.clear();
@@ -193,15 +199,16 @@ public class MasterRenderer {
 
     private void processTerrain(Terrain terrain) { terrains.add(terrain); }
 
-    public void prepare() {
+    public void prepare(int shadowMap) {
         glEnable(GL_DEPTH_TEST);
         glClearColor(0, 0, 0, 1);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glActiveTexture(GL_TEXTURE5);
+//        glBindTexture(GL_TEXTURE_2D, shadowMap);
         glBindTexture(GL_TEXTURE_2D, getShadowMapTexture());
     }
 
-    public void renderScene(List<GameObject> entities, List<GameObject> normalMapEntities, List<Terrain> terrains, EditorCamera editorCamera, boolean renderOnPickingTexture) {
+    public void renderScene(List<GameObject> entities, List<GameObject> normalMapEntities, List<Terrain> terrains, EditorCamera editorCamera, boolean renderOnPickingTexture, int shadowMap) {
         lights.clear();
 
         for (Terrain terrain : terrains)
@@ -218,8 +225,11 @@ public class MasterRenderer {
                     continue;
             }
 
-            if (gameObject.hasComponent(Light.class))
+            if (gameObject.hasComponent(Light.class)) {
+//                if (sun == null)
+//                    sun = gameObject.getComponent(Light.class);
                 lights.add(gameObject.getComponent(Light.class));
+            }
 
             if (gameObject.hasComponent(MeshRenderer.class))
                 processEntity(gameObject);
@@ -228,7 +238,7 @@ public class MasterRenderer {
         for (GameObject normalMapGameObject : normalMapEntities)
             processNormalMapEntity(normalMapGameObject);
 
-        render(editorCamera, renderOnPickingTexture);
+        render(editorCamera, renderOnPickingTexture, shadowMap);
     }
 
 //    public void renderShadowMap(List<GameObject> gameObjectList) {
@@ -244,6 +254,10 @@ public class MasterRenderer {
 //
 //        shadowMapRenderer.render(entities, sun);
 //        entities.clear();
+//    }
+
+//    public void renderShadowMap(List<GameObject> gameObjects, EditorCamera editorCamera) {
+//        shadowMapRenderer2.render(gameObjects, editorCamera, entityRenderer, sun);
 //    }
 
     public int getShadowMapTexture() { return shadowMapRenderer.getShadowMap(); }

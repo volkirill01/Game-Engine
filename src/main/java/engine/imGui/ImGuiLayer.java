@@ -6,7 +6,7 @@ import engine.graphEditor.Graph;
 import engine.renderEngine.PickingTexture;
 import engine.renderEngine.Window;
 import engine.renderEngine.postProcessing.PostProcessingGui;
-import engine.scene.Scene;
+import engine.toolbox.Time;
 import engine.toolbox.input.JoystickListener;
 import engine.toolbox.input.KeyListener;
 import engine.toolbox.input.MouseListener;
@@ -42,22 +42,23 @@ public class ImGuiLayer {
     private InspectorWindow inspectorWindow;
     private SceneHierarchyWindow sceneHierarchyWindow;
     private AssetsWindow assetsWindow;
-    private AssetsStructureWindow assetsStructureWindow;
+    private ProjectStructureWindow projectStructureWindow;
     private PostProcessingGui postProcessingWindow;
 //    private ScriptGraph scriptGraphWindow;
 
     private ExampleImGuiNodeEditor test;
     private Graph graph;
 
-    public float fontSize = 0.89f;
+    public float fontSize = 0.81f;
+//    public float fontSize = 0.89f;
 
     public static ImFont defaultText;
     public static ImFont boldText;
 
     public static ImFont modalPopupFont;
     public float modalPopupFontSize = 1.7f;
-    private float showModalPopupTime = 10;
-    private float showModalPopupSpeed = 0.1f;
+    private float showModalPopupTime = 1.2f;
+    private float showModalPopupSpeed = 0.5f;
 
     private String currentModalPopupText = "Pupop";
     private ConsoleMessage.MessageType currentModalPopupType = ConsoleMessage.MessageType.Simple;
@@ -72,8 +73,8 @@ public class ImGuiLayer {
         this.inspectorWindow = new InspectorWindow(pickingTexture);
         this.sceneHierarchyWindow = new SceneHierarchyWindow();
         this.assetsWindow = new AssetsWindow();
-        this.assetsStructureWindow = new AssetsStructureWindow();
-        this.assetsStructureWindow.mainDir = new File(this.assetsWindow.assetsDirectory);
+        this.projectStructureWindow = new ProjectStructureWindow();
+        this.projectStructureWindow.mainDir = new File(this.assetsWindow.assetsDirectory);
         this.postProcessingWindow = new PostProcessingGui();
 //        this.scriptGraphWindow = new ScriptGraph();
 
@@ -244,6 +245,8 @@ public class ImGuiLayer {
         ImGui.pushStyleVar(ImGuiStyleVar.GrabRounding, 7.0f);
         ImGui.pushStyleVar(ImGuiStyleVar.TabRounding, 4.0f);
         ImGui.getStyle().setWindowMenuButtonPosition(1);
+        ImGui.getStyle().setCircleTessellationMaxError(0.2f);
+        ImGui.getStyle().setCurveTessellationTol(1.2f);
 
         ImGui.pushStyleColor(ImGuiCol.Text, 255, 255, 255, 255);
         ImGui.pushStyleColor(ImGuiCol.TextDisabled, 128, 128, 128, 255);
@@ -336,11 +339,11 @@ public class ImGuiLayer {
     //        scriptGraphWindow.imgui();
             sceneHierarchyWindow.imgui();
             assetsWindow.imgui();
-            assetsStructureWindow.imgui();
+            projectStructureWindow.imgui();
             postProcessingWindow.imgui();
             inspectorWindow.imgui();
 
-//            test.imgui(graph); // TODO MAKE GRAPH EDITOR
+            test.imgui(graph); // TODO MAKE GRAPH EDITOR
 
         } else {
             ImGuiViewport viewport = ImGui.getMainViewport();
@@ -353,7 +356,7 @@ public class ImGuiLayer {
 
         // TODO make window full screen on double click on tab bar
 
-        currentModalPopupShowTime -= showModalPopupSpeed;
+        currentModalPopupShowTime -= showModalPopupSpeed * Time.deltaTime();
         if (currentModalPopupShowTime > 0)
             drawModalPopup();
 
