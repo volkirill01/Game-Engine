@@ -32,8 +32,8 @@ public class ExampleImGuiNodeEditor {
     }
 
     public void imgui(Graph currentGraph) {
-        ImGui.setNextWindowSize(500, 400, ImGuiCond.Once);
-        ImGui.setNextWindowPos(ImGui.getMainViewport().getPosX() + 100, ImGui.getMainViewport().getPosY() + 200, ImGuiCond.Once);
+//        ImGui.setNextWindowSize(500, 400, ImGuiCond.Once);
+//        ImGui.setNextWindowPos(ImGui.getMainViewport().getPosX() + 100, ImGui.getMainViewport().getPosY() + 200, ImGuiCond.Once);
         if (ImGui.begin(" Test GraphEditor ")) {
             if (ImGui.button("Focus on content"))
                 NodeEditor.navigateToContent(1);
@@ -83,8 +83,9 @@ public class ExampleImGuiNodeEditor {
                 if (NodeEditor.queryNewLink(a, b)) {
                     final GraphNode source = currentGraph.findByOutput(a.get());
                     final GraphNode target = currentGraph.findByInput(b.get());
-                    if (source != null && target != null && source.outputNodeId != target.nodeId && NodeEditor.acceptNewItem()) {
-                        source.outputNodeId = target.nodeId;
+                    if (NodeEditor.acceptNewItem() && source != null && target != null) {
+                        if (target.nodeId != source.nodeId)
+                            target.outputNodeId = source.nodeId;
                     }
                 }
             }
@@ -93,8 +94,11 @@ public class ExampleImGuiNodeEditor {
             int uniqueLinkId = 1;
             for (GraphNode node : currentGraph.nodes.values()) {
                 if (currentGraph.nodes.containsKey(node.outputNodeId)) {
-                    NodeEditor.link(uniqueLinkId++, node.getOutputPinId(), currentGraph.nodes.get(node.outputNodeId).getInputPinId());
+                    NodeEditor.link(uniqueLinkId++, node.getInputPinId(), currentGraph.nodes.get(node.outputNodeId).getOutputPinId());
                 }
+//                if (currentGraph.nodes.containsKey(node.outputNodeId)) {
+//                    NodeEditor.link(uniqueLinkId++, node.getInputPinId(), currentGraph.nodes.get(node.outputNodeId).getOutputPinId());
+//                }
             }
 
             NodeEditor.suspend();
@@ -108,7 +112,7 @@ public class ExampleImGuiNodeEditor {
             if (ImGui.isPopupOpen("node_context")) {
                 final int targetNode = ImGui.getStateStorage().getInt(ImGui.getID("delete_node_id"));
                 if (ImGui.beginPopup("node_context")) {
-                    if (ImGui.button("Delete " + currentGraph.nodes.get(targetNode).getName())) {
+                    if (ImGui.button("Delete")) {
                         currentGraph.nodes.remove(targetNode);
                         ImGui.closeCurrentPopup();
                     }
@@ -122,10 +126,7 @@ public class ExampleImGuiNodeEditor {
 
             if (ImGui.beginPopup("node_editor_context")) {
                 if (ImGui.button("Multiply")) {
-                    final GraphNode node = currentGraph.createGraphNode(new GraphNode_Multiply());
-                    final float canvasX = NodeEditor.toCanvasX(ImGui.getMousePosX());
-                    final float canvasY = NodeEditor.toCanvasY(ImGui.getMousePosY());
-                    NodeEditor.setNodePosition(node.nodeId, canvasX, canvasY);
+                    positionNode(currentGraph.createGraphNode(new GraphNode_Multiply()));
                     ImGui.closeCurrentPopup();
                 }
                 ImGui.endPopup();
@@ -135,5 +136,11 @@ public class ExampleImGuiNodeEditor {
             NodeEditor.end();
         }
         ImGui.end();
+    }
+
+    private void positionNode(GraphNode node) {
+        float canvasX = NodeEditor.toCanvasX(ImGui.getMousePosX());
+        float canvasY = NodeEditor.toCanvasY(ImGui.getMousePosY());
+        NodeEditor.setNodePosition(node.nodeId, canvasX, canvasY);
     }
 }

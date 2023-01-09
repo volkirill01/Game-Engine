@@ -15,7 +15,7 @@ public final class Graph {
     public Graph() {
         final GraphNode first = createGraphNode(new GraphNode_Multiply());
         final GraphNode second = createGraphNode(new GraphNode_Multiply());
-        first.outputNodeId = second.nodeId;
+        second.outputNodeId = first.nodeId;
     }
 
     public GraphNode createGraphNode(GraphNode node) {
@@ -28,20 +28,18 @@ public final class Graph {
     }
 
     public GraphNode findByInput(final long inputPinId) {
-        for (GraphNode node : nodes.values()) {
-            if (node.getInputPinId() == inputPinId) {
+        for (GraphNode node : nodes.values())
+            if (node.getInputPinId() == inputPinId)
                 return node;
-            }
-        }
+
         return null;
     }
 
     public GraphNode findByOutput(final long outputPinId) {
-        for (GraphNode node : nodes.values()) {
-            if (node.getOutputPinId() == outputPinId) {
+        for (GraphNode node : nodes.values())
+            if (node.getOutputPinId() == outputPinId)
                 return node;
-            }
-        }
+
         return null;
     }
 }
