@@ -8,6 +8,7 @@ import static org.lwjgl.glfw.GLFW.*;
 public class KeyListener {
     private static KeyListener instance;
     private boolean keyDown[] = new boolean[350];
+    private boolean keyUp[] = new boolean[350];
     private boolean keyClicked[] = new boolean[350];
     private boolean keyDoubleClicked[] = new boolean[350];
 
@@ -16,6 +17,7 @@ public class KeyListener {
 
     public static void endFrame() {
         Arrays.fill(get().keyClicked, false);
+        Arrays.fill(get().keyUp, false);
         Arrays.fill(get().keyDoubleClicked, false);
 
         if (get().currentDoubleClickTimer > 0)
@@ -31,6 +33,7 @@ public class KeyListener {
     public static void keyCallback(long window, int key, int scancode, int action, int mods) {
         if (action == GLFW_PRESS) {
             get().keyDown[key] = true;
+            get().keyUp[key] = false;
             get().keyClicked[key] = true;
 
             if (get().currentDoubleClickTimer > 0)
@@ -39,11 +42,14 @@ public class KeyListener {
             get().currentDoubleClickTimer = get().doubleClickTimer;
         } else if (action == GLFW_RELEASE) {
             get().keyDown[key] = false;
+            get().keyUp[key] = true;
             get().keyClicked[key] = false;
         }
     }
 
     public static boolean isKeyDown(int keyCode) { return get().keyDown[keyCode]; }
+
+    public static boolean isKeyUp(int keyCode) { return get().keyUp[keyCode]; }
 
     public static boolean isKeyClick(int keyCode) { return get().keyClicked[keyCode]; }
 

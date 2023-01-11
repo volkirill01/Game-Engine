@@ -13,8 +13,8 @@ public class TestFieldsWindow {
     public static int[] getInts = { 0, 0, 0, 0 };
     public static String[] getStrings = { "", "", "" };
     public static boolean[] getBooleans = { false, false, false, false, false, false };
-    public static Vector2f[] getVectors2f = { new Vector2f(0.0f), new Vector2f(0.0f) };
-    public static Vector3f[] getVectors3f = { new Vector3f(0.0f), new Vector3f(0.0f) };
+    public static Vector2f[] getVectors2f = { new Vector2f(0.0f), new Vector2f(0.0f), new Vector2f(0.0f) };
+    public static Vector3f[] getVectors3f = { new Vector3f(0.0f), new Vector3f(0.0f), new Vector3f(0.0f) };
     public static Color[] getColors = { Color.White.copy(), Color.White.copy(), Color.White.copy() };
 
     static Texture testTexture;

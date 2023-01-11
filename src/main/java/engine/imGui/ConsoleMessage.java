@@ -12,12 +12,12 @@ public class ConsoleMessage {
     }
 
     public MessageType messageType;
-    public String messageText;
+    public Object message;
     public ImVec4 messageColor;
 
-    public ConsoleMessage(MessageType messageType, String messageText) {
+    public ConsoleMessage(Object message, MessageType messageType) {
         this.messageType = messageType;
-        this.messageText = messageText;
+        this.message = message;
 
         switch (messageType) {
             case Error -> this.messageColor = new ImVec4(236, 101, 63, 255);
@@ -28,9 +28,9 @@ public class ConsoleMessage {
         }
     }
 
-    public ConsoleMessage(MessageType messageType, String messageText, ImVec4 color) {
+    public ConsoleMessage(Object message, MessageType messageType, ImVec4 color) {
         this.messageType = messageType;
-        this.messageText = messageText;
+        this.message = message;
 
         if (messageType == MessageType.Custom)
             this.messageColor = color;

@@ -1,6 +1,8 @@
 package engine.imGui;
 
+import engine.TestFieldsWindow;
 import engine.assets.Asset;
+import engine.entities.EditorCamera;
 import engine.entities.GameObject;
 import engine.eventSystem.EventSystem;
 import engine.eventSystem.Events.Event;
@@ -13,20 +15,28 @@ import engine.renderEngine.Window;
 import engine.renderEngine.components.MeshRenderer;
 import engine.renderEngine.models.Mesh;
 import engine.renderEngine.models.TexturedModel;
+import engine.renderEngine.renderer.MasterRenderer;
 import engine.renderEngine.textures.Material;
 import engine.scene.SceneManager;
 import engine.toolbox.DefaultMeshes;
+import engine.toolbox.Maths;
 import engine.toolbox.Mouse_EditorActions;
 import engine.toolbox.input.MouseListener;
 import imgui.ImGui;
 import imgui.ImVec2;
 import imgui.ImVec4;
+import imgui.extension.imguizmo.ImGuizmo;
+import imgui.extension.imguizmo.flag.Mode;
+import imgui.extension.imguizmo.flag.Operation;
 import imgui.flag.ImGuiCol;
 import imgui.flag.ImGuiStyleVar;
 import imgui.flag.ImGuiWindowFlags;
+import org.joml.Matrix4f;
 import org.joml.Vector2f;
+import org.joml.Vector3f;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class SceneViewWindow extends EditorImGuiWindow {
@@ -117,8 +127,18 @@ public class SceneViewWindow extends EditorImGuiWindow {
                 ImGui.endDragDropTarget();
         }
 
-        topRightCornerPosition = new Vector2f(ImGui.getCursorStartPosX() + ImGui.getWindowPosX() + ImGui.getWindowSizeX(), ImGui.getCursorStartPosY() + ImGui.getWindowPosY());
+        // Gizmos
+        ImGuizmo.setOrthographic(false);
+        ImGuizmo.setDrawList();
+//        float windowWidth = ImGui.getWindowWidth();
+//        float windowHeight = ImGui.getWindowHeight();
+        ImGuizmo.setRect(topLeft.x, topLeft.y, windowSize.x, windowSize.y);
+//        ImGuizmo.setRect(topLeft.x + TestFieldsWindow.getFloats[0], topLeft.y + TestFieldsWindow.getFloats[1], windowSize.x + TestFieldsWindow.getFloats[2], windowSize.y + TestFieldsWindow.getFloats[3]);
+//        ImGuizmo.setRect(ImGui.getWindowPosX() - 5.0f + TestFieldsWindow.getFloats[0], ImGui.getWindowPosY() + 30.0f + TestFieldsWindow.getFloats[1], windowWidth + TestFieldsWindow.getFloats[2], windowHeight + TestFieldsWindow.getFloats[3]);
 
+        gizmoSystem.updateGizmo();
+
+        topRightCornerPosition = new Vector2f(ImGui.getCursorStartPosX() + ImGui.getWindowPosX() + ImGui.getWindowSizeX(), ImGui.getCursorStartPosY() + ImGui.getWindowPosY());
         captureMouse = toolsWindowsImgui();
 
         MouseListener.setGameViewportPos(new Vector2f(topLeft.x, topLeft.y - 16));

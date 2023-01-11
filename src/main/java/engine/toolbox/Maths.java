@@ -1,9 +1,12 @@
 package engine.toolbox;
 
 import engine.entities.EditorCamera;
-import org.joml.Matrix4f;
-import org.joml.Vector2f;
-import org.joml.Vector3f;
+import org.jbox2d.common.Vec2;
+import org.jbox2d.common.Vec3;
+import org.joml.*;
+
+import java.lang.Math;
+import java.util.Arrays;
 
 public class Maths {
 
@@ -35,6 +38,132 @@ public class Maths {
 
         return transformationMatrix;
     }
+
+    public static void decomposeTransformationMatrix(float[] transformationMatrixArray, Vector3f translation, Vector3f rotation, Vector3f scale) {
+        Matrix4f matrix = new Matrix4f().identity();
+        matrix.set(transformationMatrixArray);
+        decomposeTransformationMatrix(matrix, translation, rotation, scale);
+    }
+
+    public static boolean decomposeTransformationMatrix(Matrix4f transformationMatrix, Vector3f translation, Vector3f rotation, Vector3f scale) {
+        Matrix4f localMatrix = new Matrix4f(transformationMatrix);
+
+        // Normalize the matrix
+        if (localMatrix.get(3, 3) == Math.ulp(0))
+            return false;
+
+        // First, isolate perspective.  This is the messiest.
+        if (localMatrix.get(0, 3) != Math.ulp(0) || localMatrix.get(1, 3) != Math.ulp(0) || localMatrix.get(2, 3) != Math.ulp(0)) {
+            // Clear the perspective partition
+            localMatrix.set(0, 3, 0);
+            localMatrix.set(1, 3, 0);
+            localMatrix.set(2, 3, 0);
+            localMatrix.set(3, 3, 1);
+        }
+
+        // Next take care of translation (easy).
+        translation.set(localMatrix.get(3, 0), localMatrix.get(3, 1), localMatrix.get(3, 2));
+        localMatrix.set(3, 0, 0);
+        localMatrix.set(3, 1, 0);
+        localMatrix.set(3, 2, 0);
+
+        Vector3f[] row = new Vector3f[3];
+        Vector3f pdum3;
+
+        for (int i = 0; i < 3; i++)
+            row[i] = new Vector3f(0.0f);
+
+        // Now get scale and shear.
+        for (int i = 0; i < 3; i++)
+            for (int j = 0; j < 3; j++) {
+                switch (j) {
+                    case 0: row[i].x = localMatrix.get(i, j);
+                    case 1: row[i].y = localMatrix.get(i, j);
+                    case 2: row[i].z = localMatrix.get(i, j);
+                }
+            }
+
+        // Compute X scale factor and normalize first row.
+        scale.x = row[0].length();
+        row[0] = row[0].normalize();
+        scale.y = row[1].length();
+        row[1] = row[1].normalize();
+        scale.z = row[2].length();
+        row[2] = row[2].normalize();
+
+        // At this point, the matrix (in rows[]) is orthonormal.
+        // Check for a coordinate system is flip. If the determinate.
+        // Is -1, then negate the matrix and the scaling factors.
+
+        pdum3 = row[1].cross(row[2]);
+        if (row[0].dot(pdum3) < 0) {
+            for (int i = 0; i < 3; i++) {
+                switch (i) {
+                    case 0: scale.x *= 1;
+                    case 1: scale.y *= 1;
+                    case 2: scale.z *= 1;
+                }
+                row[i] = row[i].mul(-1);
+            }
+        }
+
+//        rotation.y = (float) Math.asin(-row[0].z); // TODO FIX ROTATION CALCULATION
+//        if (Math.cos(rotation.y) != 0) {
+//            rotation.x = (float) Math.atan2(row[1].z, row[2].z);
+//            rotation.z = (float) Math.atan2(row[0].y, row[0].x);
+//        } else {
+//            rotation.x = (float) Math.atan2(-row[2].x, row[1].y);
+//            rotation.z = 0.0f;
+//        }
+
+        return true;
+    }
+
+//    public static void decomposeTransformationMatrix(Matrix4f transformationMatrix, Vector3f translation, Vector3f rotation, Vector3f scale) {
+//        Matrix4f matrix = new Matrix4f(transformationMatrix);
+//        Vector3f tmpScale = new Vector3f(0.0f);
+//
+//        translation.x = matrix.get(3, 0);
+//        translation.y = matrix.get(3, 1);
+//        translation.z = matrix.get(3, 2);
+//
+//        tmpScale.set(matrix.get(0, 0), matrix.get(0, 1), matrix.get(0, 2));
+//        scale.x = tmpScale.length();
+//        tmpScale.set(matrix.get(1, 0), matrix.get(1, 1), matrix.get(1, 2));
+//        scale.y = tmpScale.length();
+//        tmpScale.set(matrix.get(2, 0), matrix.get(2, 1), matrix.get(2, 2));
+//        scale.z = tmpScale.length();
+//
+////        matrix.set(0, 0, matrix.get(0, 0) / scale.x);
+////        matrix.set(0, 1, matrix.get(0, 1) / scale.x);
+////        matrix.set(0, 2, matrix.get(0, 2) / scale.x);
+////        matrix.set(1, 0, matrix.get(1, 0) / scale.y);
+////        matrix.set(1, 1, matrix.get(1, 1) / scale.y);
+////        matrix.set(1, 2, matrix.get(1, 2) / scale.y);
+////        matrix.set(2, 0, matrix.get(2, 0) / scale.z);
+////        matrix.set(2, 1, matrix.get(2, 1) / scale.z);
+////        matrix.set(2, 2, matrix.get(2, 2) / scale.z);
+//
+//        //, matrix.get(0, 1) / scale.x, matrix.get(0, 2) / scale.x)
+////        rotation.x = tmpScale.length();
+////        tmpScale.set(matrix.get(1, 0) / scale.y, matrix.get(1, 1) / scale.y, matrix.get(1, 2) / scale.y);
+////        rotation.y = tmpScale.length();
+////        tmpScale.set(matrix.get(2, 0) / scale.z, matrix.get(2, 1) / scale.z, matrix.get(2, 2) / scale.z);
+////        rotation.z = tmpScale.length();
+//
+//        rotation.y = (float) Math.asin(-matrix.get(0, 2) * scale.y);
+//        if (Math.cos(rotation.y * scale.y) != 0) {
+//            rotation.x = (float) Math.atan2(matrix.get(1, 2) * scale.x, matrix.get(2, 2) * scale.x);
+//            rotation.z = (float) Math.atan2(matrix.get(0, 1) * scale.z, matrix.get(0, 0) * scale.z);
+//        } else {
+//            rotation.x = (float) Math.atan2(-matrix.get(2, 0) * scale.x, matrix.get(1, 1) * scale.x);
+//            rotation.z = 0.0f;
+//        }
+//
+//        System.out.println(translation.x + " " + translation.y + " " + translation.z);
+//        System.out.println(rotation.x + " " + rotation.y + " " + rotation.z);
+//        System.out.println(scale.x + " " + scale.y + " " + scale.z);
+//    }
 
     public static Matrix4f createViewMatrix(EditorCamera editorCamera) {
         Matrix4f viewMatrix = new Matrix4f().identity();

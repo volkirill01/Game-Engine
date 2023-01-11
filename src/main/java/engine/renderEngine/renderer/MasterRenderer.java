@@ -33,7 +33,7 @@ public class MasterRenderer {
     public static final float NEAR_PLANE = 0.1f;
     public static final float FAR_PLANE = 1000.0f;
 
-    private Matrix4f projectionMatrix;
+    private static Matrix4f projectionMatrix;
 
     // PBR
 //    private StaticShader shader = new StaticShader("engineFiles/shaders/entity/pbrEntityVertexShader.glsl", "engineFiles/shaders/entity/pbrEntityFragmentShader.glsl");
@@ -65,7 +65,7 @@ public class MasterRenderer {
 //    private Light sun;
 
     public MasterRenderer(EditorCamera editorCamera) {
-        createProjectionMatrix();
+        projectionMatrix = createProjectionMatrix();
         skyboxRenderer = new SkyboxRenderer(projectionMatrix);
         entityRenderer = new EntityRenderer(shader, pickingShader, projectionMatrix, new CubeMap(skyboxRenderer.getTexture()));
         terrainRenderer = new TerrainRenderer(terrainShader, projectionMatrix);
@@ -269,22 +269,24 @@ public class MasterRenderer {
         shadowMapRenderer.cleanUp();
     }
 
-    private void createProjectionMatrix() {
-        projectionMatrix = new Matrix4f();
+    public static Matrix4f getProjectionMatrix() { return projectionMatrix;}
+
+    public static Matrix4f createProjectionMatrix() {
+        Matrix4f matrix = new Matrix4f();
         float aspectRatio = Window.getWidth() / Window.getHeight();
         float y_scale = (float) ((1.0f / Math.tan(Math.toRadians(FOV / 2.0f))));
         float x_scale = y_scale / aspectRatio;
         float frustum_length = FAR_PLANE - NEAR_PLANE;
 
-        projectionMatrix.m00(x_scale);
-        projectionMatrix.m11(y_scale);
-        projectionMatrix.m22(-((FAR_PLANE + NEAR_PLANE) / frustum_length));
-        projectionMatrix.m23(-1.0f);
-        projectionMatrix.m32(-((2.0f * NEAR_PLANE * FAR_PLANE) / frustum_length));
-        projectionMatrix.m33(0.0f);
-    }
+        matrix.m00(x_scale);
+        matrix.m11(y_scale);
+        matrix.m22(-((FAR_PLANE + NEAR_PLANE) / frustum_length));
+        matrix.m23(-1.0f);
+        matrix.m32(-((2.0f * NEAR_PLANE * FAR_PLANE) / frustum_length));
+        matrix.m33(0.0f);
 
-    public Matrix4f getProjectionMatrix() { return this.projectionMatrix; }
+        return matrix;
+    }
 
     public int getReflectionsMap() { return skyboxRenderer.getTexture(); }
 }

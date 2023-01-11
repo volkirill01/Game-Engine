@@ -13,6 +13,7 @@ import engine.toolbox.input.MouseListener;
 import imgui.*;
 import imgui.callback.ImStrConsumer;
 import imgui.callback.ImStrSupplier;
+import imgui.extension.imguizmo.ImGuizmo;
 import imgui.flag.*;
 import imgui.gl3.ImGuiImplGl3;
 import imgui.glfw.ImGuiImplGlfw;
@@ -325,6 +326,8 @@ public class ImGuiLayer {
         ImGui.pushStyleColor(ImGuiCol.ModalWindowDimBg, 204, 204, 204, 89);
 
         ImGui.pushStyleVar(ImGuiStyleVar.IndentSpacing, 12);
+
+        ImGuizmo.setAllowAxisFlip(false);
     }
 
     public void update() {
@@ -343,7 +346,7 @@ public class ImGuiLayer {
             postProcessingWindow.imgui();
             inspectorWindow.imgui();
 
-            test.imgui(graph); // TODO MAKE GRAPH EDITOR
+//            test.imgui(graph); // TODO MAKE GRAPH EDITOR
 
         } else {
             ImGuiViewport viewport = ImGui.getMainViewport();
@@ -374,10 +377,16 @@ public class ImGuiLayer {
 
     public EditorImGuiWindow getWindowOnFullscreen() { return this.windowOnFullscreen; }
 
+    private boolean isGuizmoStart = false;
+
     private void startFrame() {
         imGuiGlfw.newFrame();
         ImGui.newFrame();
+        ImGuizmo.beginFrame();
+        isGuizmoStart = true;
     }
+
+    public boolean isGuizmoStart() { return isGuizmoStart; }
 
     private void endFrame() {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -445,11 +454,11 @@ public class ImGuiLayer {
         ImGui.beginChild("Last Message", Window.get().windowSize.x / 2.0f, Window.get().windowSize.y);
         ConsoleMessage lastMessage = Console.getLastMessage();
         ImGui.setCursorPosY(ImGui.getCursorPosY() + 5.0f);
-        if (!lastMessage.messageText.equals("")) {
+        if (lastMessage.message != null && !lastMessage.message.equals("")) {
             ImGui.textColored(
                     lastMessage.messageColor.x, lastMessage.messageColor.y,
                     lastMessage.messageColor.z, lastMessage.messageColor.w,
-                    "[" + lastMessage.messageType + "] " + lastMessage.messageText);
+                    "[" + lastMessage.messageType + "] " + lastMessage.message);
         }
         ImGui.endChild();
 

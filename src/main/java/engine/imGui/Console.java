@@ -52,16 +52,16 @@ public class Console extends EditorImGuiWindow implements Observer{
             messages = new ArrayList<>();
 
         if (ImGui.button("Send test messages")) {
-            log(ConsoleMessage.MessageType.Error, "Test error");
-            log(ConsoleMessage.MessageType.Error, "Test error");
-            log(ConsoleMessage.MessageType.Warning, "Test warning");
-            log(ConsoleMessage.MessageType.Warning, "Test warning");
-            log(ConsoleMessage.MessageType.Info, "Test info");
-            log(ConsoleMessage.MessageType.Info, "Test info");
-            log(ConsoleMessage.MessageType.Simple, "Test simple");
-            log(ConsoleMessage.MessageType.Simple, "Test simple");
-            log(ConsoleMessage.MessageType.Custom, "Test custom", new ImVec4(255, 0, 255, 255));
-            log(ConsoleMessage.MessageType.Custom, "Test custom", new ImVec4(255, 0, 255, 255));
+            log("Test error", ConsoleMessage.MessageType.Error);
+            log("Test error", ConsoleMessage.MessageType.Error);
+            log("Test warning", ConsoleMessage.MessageType.Warning);
+            log("Test warning", ConsoleMessage.MessageType.Warning);
+            log("Test info", ConsoleMessage.MessageType.Info);
+            log("Test info", ConsoleMessage.MessageType.Info);
+            log("Test simple", ConsoleMessage.MessageType.Simple);
+            log("Test simple", ConsoleMessage.MessageType.Simple);
+            log("Test custom", ConsoleMessage.MessageType.Custom, new ImVec4(255, 0, 255, 255));
+            log("Test custom", ConsoleMessage.MessageType.Custom, new ImVec4(255, 0, 255, 255));
         }
         clearOnPlay = EditorImGui.toggledButton("\uEE09 Clear On Play", clearOnPlay);
         pauseOnError = EditorImGui.toggledButton("\uEC72 Pause On Error", pauseOnError);
@@ -73,7 +73,7 @@ public class Console extends EditorImGuiWindow implements Observer{
 
         ImGui.setNextItemWidth(ImGui.getContentRegionAvailX() + ImGui.getStyle().getWindowPaddingX());
         for (int i = 0; i < messages.size(); i++) {
-            if (!filterText.equals("") && !messages.get(i).messageText.toLowerCase().contains(filterText.toLowerCase()))
+            if (!filterText.equals("") && !messages.get(i).message.toString().toLowerCase().contains(filterText.toLowerCase()))
                 continue;
 
             boolean isEven = i % 2 == 0;
@@ -122,7 +122,7 @@ public class Console extends EditorImGuiWindow implements Observer{
             ImGui.pushStyleColor(ImGuiCol.HeaderHovered, consoleMessage.messageColor.x / 255.0f, consoleMessage.messageColor.y / 255.0f, consoleMessage.messageColor.z / 255.0f, 32 / 255.0f);
             ImGui.pushStyleColor(ImGuiCol.HeaderActive, consoleMessage.messageColor.x / 255.0f, consoleMessage.messageColor.y / 255.0f, consoleMessage.messageColor.z / 255.0f, 28 / 255.0f);
         }
-        float selectableHeight = consoleMessage.messageText.split("\n").length * 19.0f;
+        float selectableHeight = consoleMessage.message.toString().split("\n").length * 19.0f;
         ImGui.selectable("##" + consoleMessage.hashCode(), true, 0, ImGui.getContentRegionAvailX() - ImGui.getScrollX(), selectableHeight);
         ImGui.popStyleColor(3);
         ImGui.setItemAllowOverlap();
@@ -147,7 +147,7 @@ public class Console extends EditorImGuiWindow implements Observer{
         ImGui.sameLine();
         ImGui.setCursorPos(ImGui.getCursorPosX() + 2.0f, ImGui.getCursorPosY() - 0.5f);
 
-        ImGui.textColored(consoleMessage.messageColor.x / 255.0f, consoleMessage.messageColor.y / 255.0f, consoleMessage.messageColor.z / 255.0f, consoleMessage.messageColor.w / 255.0f, "[" + consoleMessage.messageType + "] " + consoleMessage.messageText);
+        ImGui.textColored(consoleMessage.messageColor.x / 255.0f, consoleMessage.messageColor.y / 255.0f, consoleMessage.messageColor.z / 255.0f, consoleMessage.messageColor.w / 255.0f, "[" + consoleMessage.messageType + "] " + consoleMessage.message.toString());
 
         ImGui.endGroup();
     }
@@ -215,11 +215,11 @@ public class Console extends EditorImGuiWindow implements Observer{
         return text;
     }
 
-    private void send(ConsoleMessage.MessageType type, String text, ImVec4 color) {
+    private void send(Object message, ConsoleMessage.MessageType type, ImVec4 color) {
         if (type != ConsoleMessage.MessageType.Custom)
-            messages.add(new ConsoleMessage(type, text));
+            messages.add(new ConsoleMessage(message, type));
         else
-            messages.add(new ConsoleMessage(type, text, color));
+            messages.add(new ConsoleMessage(message, type, color));
 
         if (Window.get().getImGuiLayer().getGameViewWindow().isPlaying() && type == ConsoleMessage.MessageType.Error && pauseOnError) {
             Window.get().getImGuiLayer().showModalPopup("Pause On Error", ConsoleMessage.MessageType.Error);
@@ -245,12 +245,14 @@ public class Console extends EditorImGuiWindow implements Observer{
     public static ConsoleMessage getLastMessage() {
         if (Window.get().getImGuiLayer().getConsole().messages.size() > 0)
             return Window.get().getImGuiLayer().getConsole().messages.get(Window.get().getImGuiLayer().getConsole().messages.size() - 1);
-        return new ConsoleMessage(ConsoleMessage.MessageType.Simple,  "");
+        return new ConsoleMessage("", ConsoleMessage.MessageType.Simple);
     }
 
-    public static void log(ConsoleMessage.MessageType type, String text) { Window.get().getImGuiLayer().getConsole().send(type, text, new ImVec4()); }
+    public static void log(Object message) { Window.get().getImGuiLayer().getConsole().send(message, ConsoleMessage.MessageType.Info, new ImVec4()); }
 
-    public static void log(ConsoleMessage.MessageType type, String text, ImVec4 color) { Window.get().getImGuiLayer().getConsole().send(type, text, color); }
+    public static void log(Object message, ConsoleMessage.MessageType type) { Window.get().getImGuiLayer().getConsole().send(message, type, new ImVec4()); }
+
+    public static void log(Object message, ConsoleMessage.MessageType type, ImVec4 color) { Window.get().getImGuiLayer().getConsole().send(message, type, color); }
 
     @Override
     public void addToEventSystem() { EventSystem.addObserver(this); }

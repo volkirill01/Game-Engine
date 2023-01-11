@@ -93,8 +93,8 @@ public class ProjectStructureWindow extends EditorImGuiWindow {
                 }
 
             boolean isEmpty = folders.size() == 0;
-            startX = ImGui.getCursorStartPosX() - 0.1f + TestFieldsWindow.getFloats[2];
-            ImGui.setCursorPosX(ImGui.getCursorPosX() + TestFieldsWindow.getFloats[3]);
+            startX = ImGui.getCursorStartPosX() - 0.1f;
+            ImGui.setCursorPosX(ImGui.getCursorPosX());
             Vector2f iconPos = new Vector2f(0.0f);
             boolean treeNodeOpen = doTreeNode(Window.get().getImGuiLayer().getAssetsWindow().assetsDirectory, "", 0, iconPos, isEmpty, true, false, itemSpacing);
 
@@ -176,10 +176,10 @@ public class ProjectStructureWindow extends EditorImGuiWindow {
 //        } else
 //            ImGui.setCursorPosX(ImGui.getCursorPosX() + TestFieldsWindow.getFloats[2]);
 
-        iconPos.x = selectablePos.x + 19.0f + TestFieldsWindow.getFloats[0];
+        iconPos.x = selectablePos.x + 19.0f;
         iconPos.y = selectablePos.y + 5.0f;
 
-        ImGui.setCursorPos(selectablePos.x + 6.5f - 8.8f + TestFieldsWindow.getFloats[4], selectablePos.y);
+        ImGui.setCursorPos(selectablePos.x + 6.5f - 8.8f, selectablePos.y);
 
         ImGui.pushStyleColor(ImGuiCol.Header, 0, 0, 0, 0);
         ImGui.pushStyleColor(ImGuiCol.HeaderHovered, 0, 0, 0, 0);

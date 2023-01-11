@@ -112,7 +112,7 @@ public class ParticleSystem extends Component {
                         return componentClass.cast(c);
                     } catch (ClassCastException e) {
                         e.printStackTrace();
-                        Console.log(ConsoleMessage.MessageType.Error, "Error: Casting component.");
+                        Console.log("Error: Casting component.", ConsoleMessage.MessageType.Error);
                         assert false: "Error: Casting component.";
                     }
                 }
